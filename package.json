@@ -25,7 +25,8 @@
     "build:js": "babel -d lib/ src/",
     "clean": "rimraf docs lib",
     "lint": "eslint .",
-    "prepare": "npm test && npm run build",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test",
     "start": "NODE_ENV=development node ./bin/cli.js",
     "test": "npm run lint && mocha",
     "tdd": "mocha --watch --reporter min"
