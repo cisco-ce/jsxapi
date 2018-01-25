@@ -65,6 +65,31 @@ describe('connectSSH', () => {
     });
   });
 
+  describe('emits "close" on transport stream', () => {
+    beforeEach(() => {
+      connectSSH({ client })
+        .on('data', dataSpy)
+        .on('error', errorSpy)
+        .on('close', closeSpy);
+    });
+
+    it('on client close', () => {
+      client.emit('close');
+
+      expect(closeSpy).to.have.been.calledOnce();
+    });
+
+    it('on ssh stream close', () => {
+      const sshStream = new Duplex({ read: () => {} });
+      client.shell.callsArgWith(1, null, sshStream);
+
+      client.emit('ready');
+      sshStream.emit('close');
+
+      expect(closeSpy).to.have.been.calledOnce();
+    });
+  });
+
   describe('stream', () => {
     beforeEach(() => {
       connectSSH({ client })
