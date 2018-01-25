@@ -85,6 +85,7 @@ export default function connectSSH(options) {
     .on('keyboard-interactive', onKeyboardInteractive)
     .on('ready', onReady)
     .on('error', (error) => { transport.emit('error', error.level); })
+    .on('close', () => { transport.emit('close'); })
     .connect(Object.assign({ tryKeyboard: true }, mergedOpts));
 
   transport.close = () => { client.end(); };
