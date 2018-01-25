@@ -1,5 +1,7 @@
 # JSXAPI
 
+[![Build Status](https://travis-ci.org/cisco-ce/jsxapi.svg?branch=master)](https://travis-ci.org/cisco-ce/jsxapi)
+
 A set of tools to integrate with the Cisco Telepresence Endpoint APIs in
 JavaScript.
 
