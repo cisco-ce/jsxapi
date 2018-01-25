@@ -1,0 +1,4 @@
+--compilers js:babel-register
+--recursive
+--reporter dot
+--require ./test/setup.js

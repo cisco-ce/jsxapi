@@ -1,0 +1,7 @@
+Welcome to mmyrseth-sx20
+Cisco Codec Release ce8.1.0 PreAlpha1 (TEST SW, ce-8.0.0-alpha3-7128-g16c75fd)
+SW Release Date: 2015-08-10 18:28:24, matchbox
+*r Login successful
+
+OK
+
