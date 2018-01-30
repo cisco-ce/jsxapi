@@ -1,4 +1,3 @@
 docs/
 .npmignore
-npm-shrinkwrap.json
 *.tgz
