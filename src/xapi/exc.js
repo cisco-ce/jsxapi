@@ -9,7 +9,7 @@ export const METHOD_NOT_FOUND = -32601;
 
 
 export class XAPIError extends Error {
-  constructor(code, reason) {
+  constructor(code, reason, data) {
     if (typeof reason !== 'string') {
       throw new Error('Reason for XAPIError must be a string');
     }
@@ -20,6 +20,9 @@ export class XAPIError extends Error {
 
     super(reason);
     this.code = code;
+    if (data !== undefined) {
+      this.data = data;
+    }
   }
 }
 

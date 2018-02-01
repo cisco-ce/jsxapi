@@ -1,4 +1,5 @@
 import {
+  collapse,
   createCommandResponse,
   createGetResponse,
   createRequest,
@@ -105,6 +106,36 @@ describe('xapi/rpc', () => {
 
       expect(() => createCommandResponse(data))
         .to.throw(XAPIError, 'No Encryption optionkey is installed');
+    });
+
+    it('propagates Error body', () => {
+      const data = JSON.parse(`
+        {
+          "CommandResponse":{
+            "OptionKeyRemoveResult":{
+              "status":"Error",
+              "Error":{
+                "Value":"No Encryption optionkey is installed"
+              },
+              "Messages":[
+                {
+                  "Message":{"Value":"Message 1"}
+                },
+                {
+                  "Message":{"Value":"Message 2"}
+                }
+              ]
+            }
+          }
+        }
+      `);
+
+      expect(() => createCommandResponse(data)).to.throw(
+        XAPIError,
+        'No Encryption optionkey is installed',
+      )
+        .property('data')
+        .deep.equal(collapse(data.CommandResponse.OptionKeyRemoveResult));
     });
 
     describe('handles invalid structure', () => {
