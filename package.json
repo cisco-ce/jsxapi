@@ -27,7 +27,7 @@
     "lint": "eslint .",
     "prepare": "npm run build",
     "prepublishOnly": "npm test",
-    "start": "NODE_ENV=development node ./bin/cli.js",
+    "start": "node -r babel-register ./src/cli.js",
     "test": "npm run lint && mocha",
     "tdd": "mocha --watch --reporter min"
   },
