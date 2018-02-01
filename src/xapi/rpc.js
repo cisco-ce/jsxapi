@@ -18,7 +18,7 @@ const VERSION = '2.0';
 /*
  * Collapse "Value" into parent + skip lowercase props
  */
-function collapse(data) {
+export function collapse(data) {
   if (Array.isArray(data)) {
     return data.map(collapse);
   } else if (isScalar(data)) {
@@ -111,11 +111,12 @@ function assertValidCommandResponse(response) {
 
   switch (root.status) {
     case 'Error': {
-      const { Error, Reason, XPath } = collapse(root);
+      const body = collapse(root);
+      const { Error, Reason, XPath } = body;
       if (XPath) {
         throw new InvalidPathError(Reason, XPath);
       }
-      throw new XAPIError(UNKNOWN_ERROR, Error || Reason);
+      throw new XAPIError(UNKNOWN_ERROR, Error || Reason, body);
     }
     case 'ParameterError':
       throw new ParameterError();
