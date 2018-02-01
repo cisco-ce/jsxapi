@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=6.x",
+    "node": ">=8.x",
     "npm": ">=5.x"
   },
   "main": "lib/index.js",
