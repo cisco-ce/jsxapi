@@ -511,6 +511,20 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
           params: { Number: 'user@example.com' },
         },
         expected: 'xCommand Dial Number: "user@example.com" | resultId="request-1"' },
+      { name: '"xCommand" with number argument',
+        request: {
+          method: 'xCommand/Video/Input/SetVideoMainSource',
+          params: { SourceId: 1 },
+        },
+        expected: 'xCommand Video Input SetVideoMainSource SourceId: 1 | resultId="request-1"',
+      },
+      { name: '"xCommand" with boolean argument',
+        request: {
+          method: 'xCommand/Some/Command',
+          params: { Enabled: false },
+        },
+        expected: 'xCommand Some Command Enabled: False | resultId="request-1"',
+      },
       { name: '"xCommand" with string containing quotes',
         request: {
           method: 'xCommand/Message/Send',
@@ -583,20 +597,37 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
       );
     });
 
-    it('"xCommand" with invalid parameter values (object)', (done) => {
-      tsh.on('data', (error) => {
-        expect(error.error.message).to.match(/invalid.*foo.*bar/i);
-        done();
-      });
-
+    it('"xCommand" with invalid parameter values (object)', () => {
       transport
         .init()
-        .then(() => expect(tsh.execute(Object.assign(defaultProps, {
+        .then(() => tsh.execute(Object.assign(defaultProps, {
           method: 'xCommand/Dial',
           params: {
             Number: { Foo: ['bar'] },
           },
-        }))));
+        })));
+
+      return new Promise((resolve) => { tsh.on('data', resolve); })
+        .then((error) => {
+          expect(error.error.message).to.match(/invalid value.*foo.*bar/i);
+        });
+    });
+
+    it('"xConfiguration" with invalid value', () => {
+      transport
+        .init()
+        .then(() => tsh.execute(Object.assign(defaultProps, {
+          method: 'xSet',
+          params: {
+            Path: ['Configuration', 'SystemUnit', 'Name'],
+            Value: { Foo: ['bar'] },
+          },
+        })));
+
+      return new Promise((resolve) => { tsh.on('data', resolve); })
+        .then((error) => {
+          expect(error.error.message).to.match(/invalid value.*foo.*bar/i);
+        });
     });
 
     it('"xFeedback/Unsubscribe" for status path', () => {

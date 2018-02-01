@@ -10,15 +10,23 @@ import Backend from './';
  */
 
 
+function formatValue(value) {
+  switch (typeof value) {
+    case 'boolean':
+      return value ? 'True' : 'False';
+    case 'number':
+    case 'string':
+      return JSON.stringify(value);
+    default:
+      throw new TypeError(`Invalid value ${JSON.stringify(value)}`);
+  }
+}
+
+
 function paramString(key, value) {
   const values = Array.isArray(value) ? value : [value];
   return values
-    .map((v) => {
-      if (typeof v !== 'string') {
-        throw new TypeError(`Invalid value for parameter ${key}: ${JSON.stringify(v)}`);
-      }
-      return `${key}: ${JSON.stringify(v)}`;
-    })
+    .map(v => `${key}: ${formatValue(v)}`)
     .join(' ');
 }
 
@@ -223,8 +231,8 @@ export default class TSHBackend extends Backend {
   'xSet()'(request, send) { // eslint-disable-line class-methods-use-this
     const { params } = request;
     const path = params.Path.join(' ');
-    const value = params.Value;
-    return send(`x${path}: "${value}"`)
+    const value = formatValue(params.Value);
+    return send(`x${path}: ${value}`)
       .then(response => rpc.createSetResponse(request, response));
   }
 }
