@@ -31,7 +31,9 @@ xapi.config.set('SystemUnit Name', 'My System');
 const off = xapi.event.on('Standby', (event) => {
   // ...
 });
-off(); // De-register feedback
+
+// De-register feedback
+off();
 ```
 
 ## Documentation
