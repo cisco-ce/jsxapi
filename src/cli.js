@@ -37,17 +37,13 @@ commander
     /^(trace|debug|info|warn|error|silent)$/i,
     'warn')
   .action((host, file, options) => {
-    const { port, username, password, loglevel, command } = options;
-
     if (!host) {
       log.error('Please specify a host to connect to');
       commander.help();
     }
 
-    log.setLevel(loglevel);
-
     const source = file && fs.readFileSync(file);
-    const xapi = connect(host, { port, username, password, command })
+    const xapi = connect(host, options)
       .on('error', (error) => { log.error('xapi error:', error); })
       .on('ready', () => {
         if (source) {
