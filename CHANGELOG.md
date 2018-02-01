@@ -1,6 +1,10 @@
 Changes
 -------
 
+#### v4.1.2 (2018-02-01)
+
+  * Support boolean and number as command/config parameter values
+
 #### v4.1.1 (2018-02-01)
 
   * Fix issue with setting log level in the cli
