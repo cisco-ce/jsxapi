@@ -1,6 +1,6 @@
 {
   "name": "jsxapi",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "JavaScript bindings for XAPI",
   "author": {
     "name": "Martin Øinæs Myrseth",
