@@ -1,7 +1,12 @@
 Changes
 -------
 
-#### v4.0.0 (2018-01-25)
+#### v4.1.0 (2018-02-01)
+
+  * Support multiple call signatures for `connect`
+  * Properly handle SSH "close" events
+
+#### v4.0.0/v4.0.1 (2018-01-25)
 
   * Initial public version.
 
