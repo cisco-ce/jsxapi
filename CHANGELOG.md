@@ -1,6 +1,10 @@
 Changes
 -------
 
+#### v4.1.1 (2018-02-01)
+
+  * Fix issue with setting log level in the cli
+
 #### v4.1.0 (2018-02-01)
 
   * Support multiple call signatures for `connect`
