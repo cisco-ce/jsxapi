@@ -1,6 +1,10 @@
 Changes
 -------
 
+##### v4.1.3 (2018-04-10)
+
+  * Avoid circular dependencies in imports
+
 #### v4.1.2 (2018-02-01)
 
   * Support boolean and number as command/config parameter values
