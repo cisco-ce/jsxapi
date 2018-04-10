@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 
 import log from '../log';
 
-import XAPI from './';
+import normalizePath from './normalizePath';
 
 
 /**
@@ -127,15 +127,14 @@ export default class Feedback {
    */
   on(path, listener) {
     log.info(`new feedback listener on: ${path}`);
-    const eventPath = XAPI
-      .normalizePath(path)
+    const eventPath = normalizePath(path)
       .join('/')
       .toLowerCase();
 
     this.eventEmitter.on(eventPath, listener);
 
     const registration = this.xapi.execute('xFeedback/Subscribe', {
-      Query: XAPI.normalizePath(path),
+      Query: normalizePath(path),
     });
 
     const off = () => {

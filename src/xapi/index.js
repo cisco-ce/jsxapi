@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 
 import log from '../log';
 import * as rpc from './rpc';
+import normalizePath from './normalizePath';
 
 import Feedback from './feedback';
 import { Config, Event, Status } from './components';
@@ -35,26 +36,6 @@ import { Config, Event, Status } from './components';
  * });
  */
 export default class XAPI extends EventEmitter {
-
-  /**
-   * Normalizes a path by turning it into an Array of strings.
-   * Removes empty parts of the path and ignores redundant whitespace or
-   * slashes. Each path element is also capitalized.
-   *
-   * @param {Array|string} path - Array or string path to normalize.
-   * @return {Array} - Array of path segments.
-   */
-  static normalizePath(path) {
-    const split = Array.isArray(path) ? path : path.match(/(\w+)/g);
-    return !split ? [] : split
-      .map((element) => {
-        if (/^\d+$/.test(element)) {
-          return parseInt(element, 10);
-        }
-        return element.charAt(0).toUpperCase() + element.slice(1);
-      });
-  }
-
   /**
    * @param {Backend} backend - Backend connected to an XAPI instance.
    * @param {object} options - XAPI object options.
@@ -165,7 +146,7 @@ export default class XAPI extends EventEmitter {
    * @return {Promise} - Resolved with the command response when ready.
    */
   command(path, params, body = '') {
-    const apiPath = XAPI.normalizePath(path).join('/');
+    const apiPath = normalizePath(path).join('/');
     const method = `xCommand/${apiPath}`;
     return this.execute(method, !body ? params : Object.assign({ body }, params));
   }

@@ -1,4 +1,4 @@
-import XAPI from './';
+import normalizePath from './normalizePath';
 import { Listenable, Gettable, Settable, mix } from './mixins';
 
 
@@ -32,7 +32,7 @@ class Component {
    * @return {Array} - Normalized path.
    */
   normalizePath(path) {
-    const normalized = XAPI.normalizePath(path);
+    const normalized = normalizePath(path);
     const { prefix } = this;
     return !prefix ? normalized : [prefix].concat(normalized);
   }
