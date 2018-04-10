@@ -2,7 +2,6 @@ import Backend from '../../src/backend';
 import XAPI from '../../src/xapi';
 import Feedback from '../../src/xapi/feedback';
 
-
 function getPath(obj, ...path) {
   let tmp = obj;
 
@@ -13,7 +12,6 @@ function getPath(obj, ...path) {
 
   return tmp;
 }
-
 
 describe('Feedback', () => {
   let sandbox;
@@ -67,7 +65,9 @@ describe('Feedback', () => {
 
     it('fires events recursively', () => {
       const data = { Status: { Audio: { Volume: '50' } } };
-      const spies = Array(4).fill().map(() => sandbox.spy());
+      const spies = Array(4)
+        .fill()
+        .map(() => sandbox.spy());
 
       feedback.on('', spies[0]);
       feedback.on('Status', spies[1]);
@@ -134,7 +134,7 @@ describe('Feedback', () => {
       feedback.dispatch({ Status: { Audio: { Volume: 50 } } });
 
       expect(spy).to.have.been.calledWith(50);
-      spy.reset();
+      spy.resetHistory();
 
       handler();
 

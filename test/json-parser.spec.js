@@ -98,7 +98,7 @@ describe('Parser', () => {
       },
     });
 
-    spy.reset();
+    spy.resetHistory();
 
     parser.write('"Audio');
     parser.write('": null }}');
