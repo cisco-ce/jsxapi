@@ -4,7 +4,6 @@ import log from '../log';
 
 import normalizePath from './normalizePath';
 
-
 /**
  * Group feedback deregister handlers for bookkeeping.
  */
@@ -41,17 +40,17 @@ export class FeedbackGroup {
    * @return {FeedbackGroup} - this for chaining.
    */
   off() {
-    this.handlers.forEach((handler) => { handler(); });
+    this.handlers.forEach((handler) => {
+      handler();
+    });
     this.handlers = [];
     return this;
   }
 }
 
-
 function defaultInterceptor(payload, emit) {
   emit(payload);
 }
-
 
 function dispatch(feedback, data, root = data, path = []) {
   if (Array.isArray(data)) {
@@ -70,7 +69,6 @@ function dispatch(feedback, data, root = data, path = []) {
     });
   }
 }
-
 
 /**
  * Feedback handler for the XAPI.
@@ -171,8 +169,11 @@ export default class Feedback {
    *
    * @deprecated use deactivation handler from `.on()` and `.once()` instead.
    */
-  off() { // eslint-disable-line class-methods-use-this
-    throw new Error('.off() is deprecated. Use return value deactivate handler from .on() instead.');
+  // eslint-disable-next-line class-methods-use-this
+  off() {
+    throw new Error(
+      '.off() is deprecated. Use return value deactivate handler from .on() instead.',
+    );
   }
 
   /**
@@ -214,7 +215,8 @@ export default class Feedback {
    * // Unregister from all feedback handlers
    * group.off();
    */
-  group(handlers) { // eslint-disable-line class-methods-use-this
+  // eslint-disable-next-line class-methods-use-this
+  group(handlers) {
     return new FeedbackGroup(handlers);
   }
 }

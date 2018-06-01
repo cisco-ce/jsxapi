@@ -75,12 +75,11 @@ describe('Feedback', () => {
       feedback.on('Status/Audio/Volume', spies[3]);
       feedback.dispatch(data);
 
-      [
-        data,
-        data.Status,
-        data.Status.Audio,
-        data.Status.Audio.Volume,
-      ].forEach((d, i) => { expect(spies[i].firstCall).to.have.been.calledWith(d); });
+      [data, data.Status, data.Status.Audio, data.Status.Audio.Volume].forEach(
+        (d, i) => {
+          expect(spies[i].firstCall).to.have.been.calledWith(d);
+        },
+      );
     });
 
     it('does not invoke unrelated handlers', () => {
@@ -205,10 +204,14 @@ describe('Feedback', () => {
       feedback.on('Status/Peripherals/ConnectedDevice/1115/Status', spy3);
       feedback.on('Status/Peripherals/ConnectedDevice[1115]/Status', spy4);
       feedback.dispatch({
-        Status: { Peripherals: { ConnectedDevice: [
-          { id: '1115', Status: 'LostConnection' },
-          { id: '1020', Status: 'Connected' },
-        ] } },
+        Status: {
+          Peripherals: {
+            ConnectedDevice: [
+              { id: '1115', Status: 'LostConnection' },
+              { id: '1020', Status: 'Connected' },
+            ],
+          },
+        },
       });
 
       expect(spy1).to.have.been.calledWith('LostConnection');
@@ -229,13 +232,22 @@ describe('Feedback', () => {
 
       feedback.on('Status/Peripherals/ConnectedDevice', spy);
       feedback.dispatch({
-        Status: { Peripherals: { ConnectedDevice: [{
-          id: '1115',
-          ghost: 'True',
-        }] } },
+        Status: {
+          Peripherals: {
+            ConnectedDevice: [
+              {
+                id: '1115',
+                ghost: 'True',
+              },
+            ],
+          },
+        },
       });
 
-      expect(spy.firstCall).to.have.been.calledWith({ id: '1115', ghost: 'True' });
+      expect(spy.firstCall).to.have.been.calledWith({
+        id: '1115',
+        ghost: 'True',
+      });
     });
 
     it('is called by .once()', () => {
@@ -272,7 +284,9 @@ describe('Feedback', () => {
 
       feedback.on(path, spy);
 
-      const off = () => { feedback.off(path, spy); };
+      const off = () => {
+        feedback.off(path, spy);
+      };
 
       expect(off).to.throw(Error, /deprecated/);
     });
