@@ -214,17 +214,34 @@ describe('Feedback', () => {
         },
       });
 
+      expect(spy1).to.have.been.calledTwice();
       expect(spy1).to.have.been.calledWith('LostConnection');
       expect(spy1).to.have.been.calledWith('Connected');
 
+      expect(spy2).to.have.been.calledTwice();
       expect(spy2).to.have.been.calledWith('LostConnection');
       expect(spy2).to.have.been.calledWith('Connected');
 
+      expect(spy3).to.have.been.calledOnce();
       expect(spy3).to.have.been.calledWith('LostConnection');
       expect(spy3).to.not.have.been.calledWith('Connected');
 
+      expect(spy4).to.have.been.calledOnce();
       expect(spy4).to.have.been.calledWith('LostConnection');
       expect(spy4).to.not.have.been.calledWith('Connected');
+    });
+
+    it('dispatches array elements one-by-one', () => {
+      const spy = sinon.spy();
+
+      feedback.on('foo/bar', spy);
+
+      feedback.dispatch({
+        foo: { bar: [{ baz: 'quux' }] },
+      });
+
+      expect(spy).to.have.been.calledOnce();
+      expect(spy).to.have.been.calledWith({ baz: 'quux' });
     });
 
     it('handles ghost events', () => {

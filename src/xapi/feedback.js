@@ -58,6 +58,7 @@ function dispatch(feedback, data, root = data, path = []) {
       dispatch(feedback, child, root, path);
       dispatch(feedback, child, root, path.concat(child.id));
     });
+    return;
   }
 
   const emitPath = path.join('/').toLowerCase();
