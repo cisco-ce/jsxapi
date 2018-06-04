@@ -91,9 +91,9 @@ describe('XAPI', () => {
       xapi = new XAPI(backend);
     });
 
-    const asyncResponse = response => (request) => {
-      setTimeout(() =>
-        backend.emit(
+    const asyncResponse = (backend_, response) => (request) => {
+      setTimeout(() => {
+        backend_.emit(
           'data',
           Object.assign(
             {
@@ -102,8 +102,8 @@ describe('XAPI', () => {
             },
             response,
           ),
-        ),
-      );
+        );
+      }, 0);
     };
 
     it('returns a Promise object', () => {
@@ -118,7 +118,7 @@ describe('XAPI', () => {
 
     it('resolves promise when backend emits success response', () => {
       sandbox.stub(backend, 'execute').callsFake(
-        asyncResponse({
+        asyncResponse(backend, {
           result: {
             CallId: 3,
             ConferenceId: 2,
@@ -138,7 +138,7 @@ describe('XAPI', () => {
 
     it('rejects promise when backend emits error response', () => {
       sandbox.stub(backend, 'execute').callsFake(
-        asyncResponse({
+        asyncResponse(backend, {
           error: {
             code: XAPI.METHOD_NOT_FOUND,
             message: 'Unknown command',
