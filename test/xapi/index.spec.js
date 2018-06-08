@@ -1,7 +1,6 @@
 import Backend from '../../src/backend';
 import XAPI from '../../src/xapi';
 
-
 describe('XAPI', () => {
   let backend;
   let sandbox;
@@ -66,7 +65,9 @@ describe('XAPI', () => {
     });
 
     it('property is not writable', () => {
-      const fn = () => { xapi.feedback = {}; };
+      const fn = () => {
+        xapi.feedback = {};
+      };
       expect(fn).to.throw(TypeError);
     });
 
@@ -90,11 +91,19 @@ describe('XAPI', () => {
       xapi = new XAPI(backend);
     });
 
-    const asyncResponse = response => (request) => {
-      setTimeout(() => backend.emit('data', Object.assign({
-        jsonrpc: '2.0',
-        id: request.id,
-      }, response)));
+    const asyncResponse = (backend_, response) => (request) => {
+      setTimeout(() => {
+        backend_.emit(
+          'data',
+          Object.assign(
+            {
+              jsonrpc: '2.0',
+              id: request.id,
+            },
+            response,
+          ),
+        );
+      }, 0);
     };
 
     it('returns a Promise object', () => {
@@ -108,14 +117,18 @@ describe('XAPI', () => {
     });
 
     it('resolves promise when backend emits success response', () => {
-      sandbox.stub(backend, 'execute').callsFake(asyncResponse({
-        result: {
-          CallId: 3,
-          ConferenceId: 2,
-        },
-      }));
+      sandbox.stub(backend, 'execute').callsFake(
+        asyncResponse(backend, {
+          result: {
+            CallId: 3,
+            ConferenceId: 2,
+          },
+        }),
+      );
 
-      const result = xapi.execute('xCommand/Dial', { Number: 'user@example.com' });
+      const result = xapi.execute('xCommand/Dial', {
+        Number: 'user@example.com',
+      });
 
       return expect(result).to.eventually.deep.equal({
         CallId: 3,
@@ -124,12 +137,14 @@ describe('XAPI', () => {
     });
 
     it('rejects promise when backend emits error response', () => {
-      sandbox.stub(backend, 'execute').callsFake(asyncResponse({
-        error: {
-          code: XAPI.METHOD_NOT_FOUND,
-          message: 'Unknown command',
-        },
-      }));
+      sandbox.stub(backend, 'execute').callsFake(
+        asyncResponse(backend, {
+          error: {
+            code: XAPI.METHOD_NOT_FOUND,
+            message: 'Unknown command',
+          },
+        }),
+      );
 
       const result = xapi.execute('xCommand/Foo/Bar', { Baz: 'quux' });
 
@@ -154,9 +169,9 @@ describe('XAPI', () => {
         const result = xapi.command('Dial', { Number: 'user@example.com' });
         const call = execStub.firstCall;
 
-        expect(call).to.have.been.calledWith(
-          'xCommand/Dial',
-          { Number: 'user@example.com' });
+        expect(call).to.have.been.calledWith('xCommand/Dial', {
+          Number: 'user@example.com',
+        });
 
         expect(call.returnValue).to.equal(result);
       });
@@ -164,15 +179,21 @@ describe('XAPI', () => {
       it('converts Array path to json-rpc method string', () => {
         xapi.command(['Presentation', 'Start'], { PresentationSource: 1 });
 
-        expect(execStub).to.have.been.calledWith('xCommand/Presentation/Start', {
-          PresentationSource: 1,
-        });
+        expect(execStub).to.have.been.calledWith(
+          'xCommand/Presentation/Start',
+          {
+            PresentationSource: 1,
+          },
+        );
       });
 
       it('accepts whitespace delimited command paths', () => {
         xapi.command('Foo Bar\n  Baz \t');
 
-        expect(execStub).to.have.been.calledWith('xCommand/Foo/Bar/Baz', undefined);
+        expect(execStub).to.have.been.calledWith(
+          'xCommand/Foo/Bar/Baz',
+          undefined,
+        );
       });
 
       it('rejects newline in regular params', () => {
@@ -180,7 +201,9 @@ describe('XAPI', () => {
           Text: 'foo \n bar \n',
         });
 
-        return expect(result).to.eventually.be.rejectedWith(/may not contain newline/);
+        return expect(result).to.eventually.be.rejectedWith(
+          /may not contain newline/,
+        );
       });
 
       it('supports multi-line commands using the third parameter', () => {
@@ -207,12 +230,19 @@ describe('XAPI', () => {
           </Extensions>
         `;
 
-        xapi.command('UserInterface Extensions Set', { ConfigId: 'example' }, body);
-
-        expect(execStub).to.have.been.calledWith('xCommand/UserInterface/Extensions/Set', {
-          ConfigId: 'example',
+        xapi.command(
+          'UserInterface Extensions Set',
+          { ConfigId: 'example' },
           body,
-        });
+        );
+
+        expect(execStub).to.have.been.calledWith(
+          'xCommand/UserInterface/Extensions/Set',
+          {
+            ConfigId: 'example',
+            body,
+          },
+        );
       });
     });
 

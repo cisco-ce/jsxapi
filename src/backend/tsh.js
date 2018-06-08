@@ -160,7 +160,7 @@ export default class TSHBackend extends Backend {
   /**
    * @ignore
    */
-  'xCommand()'({ method, params }, send) { // eslint-disable-line class-methods-use-this
+  ['xCommand()']({ method, params }, send) { // eslint-disable-line class-methods-use-this
     const paramsCopy = Object.assign({}, params);
     const body = paramsCopy.body;
     delete paramsCopy.body;
@@ -184,7 +184,7 @@ export default class TSHBackend extends Backend {
   /**
    * @ignore
    */
-  'xFeedback/Subscribe()'({ params }, send) {
+  ['xFeedback/Subscribe()']({ params }, send) {
     const query = params.Query
       .map(part => (typeof part === 'number' ? `[${part}]` : `/${part}`))
       .join('');
@@ -200,7 +200,7 @@ export default class TSHBackend extends Backend {
   /**
    * @ignore
    */
-  'xFeedback/Unsubscribe()'({ params }, send) {
+  ['xFeedback/Unsubscribe()']({ params }, send) {
     const id = params.Id;
 
     if (!{}.hasOwnProperty.call(this.feedbackQueries, id)) {
@@ -219,7 +219,7 @@ export default class TSHBackend extends Backend {
   /**
    * @ignore
    */
-  'xGet()'(request, send) { // eslint-disable-line class-methods-use-this
+  ['xGet()'](request, send) { // eslint-disable-line class-methods-use-this
     const path = request.params.Path.join(' ');
     return send(`x${path}`)
       .then(response => rpc.createGetResponse(request, response));
@@ -228,7 +228,7 @@ export default class TSHBackend extends Backend {
   /**
    * @ignore
    */
-  'xSet()'(request, send) { // eslint-disable-line class-methods-use-this
+  ['xSet()'](request, send) { // eslint-disable-line class-methods-use-this
     const { params } = request;
     const path = params.Path.join(' ');
     const value = formatValue(params.Value);

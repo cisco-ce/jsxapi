@@ -130,12 +130,17 @@ describe('xapi/rpc', () => {
         }
       `);
 
-      expect(() => createCommandResponse(data)).to.throw(
-        XAPIError,
-        'No Encryption optionkey is installed',
-      )
-        .property('data')
-        .deep.equal(collapse(data.CommandResponse.OptionKeyRemoveResult));
+      try {
+        createCommandResponse(data);
+      } catch (error) {
+        expect(error).to.be.an.instanceof(XAPIError);
+        expect(error.data).to.deep.equal(
+          collapse(data.CommandResponse.OptionKeyRemoveResult),
+        );
+        return;
+      }
+
+      expect.fail();
     });
 
     describe('handles invalid structure', () => {
