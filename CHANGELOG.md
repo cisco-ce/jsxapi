@@ -1,6 +1,10 @@
 Changes
 -------
 
+##### v5.0.0 (UNRELEASED)
+
+  * Change array dispatching to only dispatch once per array element
+
 ##### v4.1.3 (2018-04-10)
 
   * Avoid circular dependencies in imports
