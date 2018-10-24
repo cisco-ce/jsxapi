@@ -118,7 +118,7 @@ export default class Backend extends EventEmitter {
         const promise = new Promise((resolve) => {
           this.requests[id] = resolve;
         });
-        const sender = (cmd, body = '') => {
+        const sender = (cmd, body) => {
           this.send(id, cmd, body);
           return promise;
         };

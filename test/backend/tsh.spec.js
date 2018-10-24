@@ -556,6 +556,31 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
           'xCommand UserInterface Extensions Set ConfigId: "example" | resultId="request-1"',
           extensionsXML,
         ].join('\n') },
+      { name: '"xCommand" with single character body',
+        request: {
+          method: 'xCommand/HttpClient/Post',
+          params: {
+            Url: 'https://example.com',
+            body: '-',
+          },
+        },
+        expected: [
+          '{77} ',  // <-- NB: Space before newline
+          'xCommand HttpClient Post Url: "https://example.com" | resultId="request-1"',
+          '-',
+        ].join('\n') },
+      { name: '"xCommand" with empty body',
+        request: {
+          method: 'xCommand/HttpClient/Post',
+          params: {
+            Url: 'https://example.com',
+            body: '',
+          },
+        },
+        expected: [
+          '{76} ',  // <-- NB: Space before newline
+          'xCommand HttpClient Post Url: "https://example.com" | resultId="request-1"',
+        ].join('\n') },
       // xGet
       { name: '"xGet" for plain config path',
         request: {
