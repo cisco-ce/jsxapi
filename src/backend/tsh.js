@@ -139,9 +139,9 @@ export default class TSHBackend extends Backend {
   /**
    * @override
    */
-  send(id, command, body = '') {
+  send(id, command, body) {
     let cmd = `${command} | resultId="${id}"\n`;
-    if (body) {
+    if (body !== undefined) {
       cmd += `${body}\n`;
       const length = cmd.length;
       cmd = `{${length}} \n${cmd}`;
