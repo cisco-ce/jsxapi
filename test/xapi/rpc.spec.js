@@ -108,6 +108,24 @@ describe('xapi/rpc', () => {
         .to.throw(XAPIError, 'No Encryption optionkey is installed');
     });
 
+    it('handles unknown error', () => {
+      const data = JSON.parse(`
+        {
+          "CommandResponse":{
+            "FooBarResult":{
+              "status":"Error",
+              "ThisIsNotKnown":{
+                "Value": "Some text"
+              }
+            }
+          }
+        }
+      `);
+
+      expect(() => createCommandResponse(data))
+        .to.throw(XAPIError, 'FooBarResult');
+    });
+
     it('propagates Error body', () => {
       const data = JSON.parse(`
         {

@@ -116,7 +116,8 @@ function assertValidCommandResponse(response) {
       if (XPath) {
         throw new InvalidPathError(Reason, XPath);
       }
-      throw new XAPIError(UNKNOWN_ERROR, Error || Reason, body);
+      const reason = Error || Reason || keys[0];
+      throw new XAPIError(UNKNOWN_ERROR, reason, body);
     }
     case 'ParameterError':
       throw new ParameterError();
