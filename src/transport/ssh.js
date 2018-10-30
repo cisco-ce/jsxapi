@@ -34,6 +34,8 @@ if (!DuplexPassThrough.prototype.on.isPatched) {
  * @return {Duplex} - SSH stream.
  */
 export default function connectSSH(options) {
+  let closing = false;
+
   const mergedOpts = Object.assign({
     client: new Client(),
     transport: new DuplexPassThrough(),
@@ -58,6 +60,11 @@ export default function connectSSH(options) {
       log.debug('[SSH] shell ready');
       sshStream
         .on('error', (error) => { transport.emit('error', error); })
+        .on('end', () => {
+          if (!closing) {
+            transport.emit('error', 'Connection terminated remotely');
+          }
+        })
         .on('close', () => { transport.emit('close'); });
 
       if (options.command) {
@@ -88,7 +95,10 @@ export default function connectSSH(options) {
     .on('close', () => { transport.emit('close'); })
     .connect(Object.assign({ tryKeyboard: true }, mergedOpts));
 
-  transport.close = () => { client.end(); };
+  transport.close = () => {
+    closing = true;
+    client.end();
+  };
 
   return transport;
 }

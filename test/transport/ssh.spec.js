@@ -1,9 +1,7 @@
 import { Duplex } from 'stream';
-
 import { Client } from 'ssh2';
 
 import connectSSH from '../../src/transport/ssh';
-
 
 describe('connectSSH', () => {
   let client;
@@ -19,6 +17,7 @@ describe('connectSSH', () => {
     sandbox.stub(client, 'connect');
     sandbox.stub(client, 'shell');
     sandbox.stub(client, 'exec');
+    sandbox.stub(client, 'end');
 
     dataSpy = sandbox.spy();
     errorSpy = sandbox.spy();
@@ -163,5 +162,39 @@ describe('connectSSH', () => {
     const options = client.connect.firstCall.args[0];
     expect(options).to.have.property('username', 'admin');
     expect(options).to.not.have.property('password');
+  });
+
+  it('closing with ".close()" does not emit error', () => {
+    const transport = connectSSH({
+      client,
+    });
+
+    const sshStream = new Duplex({ read: () => {} });
+    client.shell.callsArgWith(1, null, sshStream);
+    client.end.callsFake(() => {
+      sshStream.emit('end');
+    });
+    transport.on('error', errorSpy);
+
+    client.emit('ready');
+    transport.close();
+
+    expect(errorSpy).to.have.not.been.calledOnce();
+  });
+
+  it('remotely ended ssh stream emits errors', () => {
+    const transport = connectSSH({
+      client,
+    });
+
+    const sshStream = new Duplex({ read: () => {} });
+    client.shell.callsArgWith(1, null, sshStream);
+    transport.on('error', errorSpy);
+    client.emit('ready');
+
+    sshStream.emit('end');
+
+    expect(errorSpy).to.have.been.calledOnce();
+    expect(errorSpy.firstCall).to.have.been.calledWith('Connection terminated remotely');
   });
 });
