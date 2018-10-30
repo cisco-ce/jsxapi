@@ -16,6 +16,12 @@ const xapi = jsxapi.connect('ssh://host.example.com', {
   password: 'password',
 });
 
+// Handle errors
+xapi.on('error', (err) => {
+  // !! Note of caution: This event might fire more than once !!
+  console.error(`xapi error: ${err}`);
+});
+
 // Set up a call
 xapi.command('Dial', { Number: 'user@example.com' });
 
