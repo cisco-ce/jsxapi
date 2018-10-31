@@ -2,3 +2,4 @@ cache/
 docs/
 lib/
 node_modules
+yarn-error.log

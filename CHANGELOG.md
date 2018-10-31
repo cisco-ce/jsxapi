@@ -1,9 +1,12 @@
 Changes
 -------
 
-##### v5.0.0 (UNRELEASED)
+##### v4.2.0 (2018-10-31)
 
   * Change array dispatching to only dispatch once per array element
+  * Update dependencies
+  * Properly report uknown error types (previously reported as "Reason for XAPIError must be a string"
+  * Fix bug where ssh not always reports closing events
 
 ##### v4.1.3 (2018-04-10)
 
