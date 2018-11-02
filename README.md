@@ -64,3 +64,19 @@ Then open `./docs/index.html`.
 
 Questions about the xAPI, integrations and customizations? Join the xAPI Devs
 Spark Space community for realtime support [here](https://eurl.io/#rkp76XDrG).
+
+## Development & Contribution
+
+### Release procedure
+
+Making a release is quite simple:
+
+ * Perform all changes/commits.
+ * Determine the version change (`npm help semver`).
+ * Update "CHANGELOG.md" with version number, date and change summary.
+ * Run `npm version` with the appropriate version bump.
+ * Run `npm publish` to push the package version to the registry.
+ 
+Alternatively, use `yarn publish`<sup>[1](#yarnpublish)</sup>
+
+<a name="yarnpublish">[1]</a> Requires a version supporting `npm` 2fa ([yarn#4904](https://github.com/yarnpkg/yarn/issues/4904))
