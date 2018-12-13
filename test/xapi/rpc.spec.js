@@ -3,6 +3,7 @@ import {
   createCommandResponse,
   createGetResponse,
   createRequest,
+  createSetResponse,
 } from '../../src/xapi/rpc';
 
 import {
@@ -222,6 +223,122 @@ describe('xapi/rpc', () => {
 
       const result = createGetResponse(request, response);
       expect(result).to.not.exist(result);
+    });
+  });
+
+  describe('createSetResponse', () => {
+    it('handles Reason error', () => {
+      const request = {
+        jsonrpc: '2.0',
+        method: 'xSet',
+        id: '1',
+        params: {
+          Path: [
+            'Configuration',
+            'Video',
+            'Output',
+            'Connector',
+            99,
+            'MonitorRole',
+          ],
+          Value: 'foo',
+        },
+      };
+      const response = JSON.parse(`
+        {
+          "CommandResponse":{
+            "Configuration":{
+              "status":"Error",
+              "Reason":{
+                "Value":"No match on address expression."
+              },
+              "XPath":{
+                "Value":"Configuration/Video/Output/Connector[99]/MonitorRole"
+              }
+            }
+          },
+          "ResultId":"1"
+        }
+      `);
+
+      expect(() => createSetResponse(request, response))
+        .to.throw(XAPIError, 'No match on address expression');
+    });
+
+    it('handles Error error', () => {
+      const request = {
+        jsonrpc: '2.0',
+        method: 'xSet',
+        id: '1',
+        params: {
+          Path: [
+            'Configuration',
+            'Video',
+            'Output',
+            'Connector',
+            99,
+            'MonitorRole',
+          ],
+          Value: 'foo',
+        },
+      };
+      const response = JSON.parse(`
+        {
+          "CommandResponse":{
+            "Configuration":{
+              "status":"Error",
+              "Error":{
+                "Value":"No match on address expression."
+              },
+              "XPath":{
+                "Value":"Configuration/Video/Output/Connector[99]/MonitorRole"
+              }
+            }
+          },
+          "ResultId":"1"
+        }
+      `);
+
+      expect(() => createSetResponse(request, response))
+        .to.throw(XAPIError, 'No match on address expression');
+    });
+
+    it('handles unknown error', () => {
+      const request = {
+        jsonrpc: '2.0',
+        method: 'xSet',
+        id: '1',
+        params: {
+          Path: [
+            'Configuration',
+            'Video',
+            'Output',
+            'Connector',
+            99,
+            'MonitorRole',
+          ],
+          Value: 'foo',
+        },
+      };
+      const response = JSON.parse(`
+        {
+          "CommandResponse":{
+            "Configuration":{
+              "status":"Error",
+              "ThisIsNotKnown":{
+                "Value":"No match on address expression."
+              },
+              "XPath":{
+                "Value":"Configuration/Video/Output/Connector[99]/MonitorRole"
+              }
+            }
+          },
+          "ResultId":"1"
+        }
+      `);
+
+      expect(() => createSetResponse(request, response))
+        .to.throw(XAPIError, 'Configuration');
     });
   });
 });
