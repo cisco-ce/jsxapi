@@ -113,10 +113,12 @@ function assertValidCommandResponse(response) {
     case 'Error': {
       const body = collapse(root);
       const { Error, Reason, XPath } = body;
-      if (XPath) {
-        throw new InvalidPathError(Reason, XPath);
-      }
       const reason = Error || Reason || keys[0];
+
+      if (XPath) {
+        throw new InvalidPathError(reason, XPath);
+      }
+
       throw new XAPIError(UNKNOWN_ERROR, reason, body);
     }
     case 'ParameterError':
@@ -165,6 +167,10 @@ export function createGetResponse(request, response) {
 
 
 export function createSetResponse(request, response) {
+  if ({}.hasOwnProperty.call(response, 'CommandResponse')) {
+    assertValidCommandResponse(response);
+  }
+
   if (Object.keys(response).length > 1) {
     const leaf = digObj(request.params.Path, response);
     if (leaf.error === 'True') {
