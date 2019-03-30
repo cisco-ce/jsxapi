@@ -6,6 +6,7 @@ import normalizePath from './normalizePath';
 
 import Feedback from './feedback';
 import { Config, Event, Status } from './components';
+import createXapiProxy from './proxy';
 
 
 /**
@@ -40,8 +41,9 @@ export default class XAPI extends EventEmitter {
    * @param {Backend} backend - Backend connected to an XAPI instance.
    * @param {object} options - XAPI object options.
    * @param {function} options.feedbackInterceptor - Feedback interceptor.
+   * @param {function} options.seal - Seal the object from further changes.
    */
-  constructor(backend, options = {}) {
+  constructor(backend, options = { seal: true }) {
     super();
 
     /** @type {Backend} */
@@ -77,14 +79,36 @@ export default class XAPI extends EventEmitter {
      */
     this.status = new Status(this);
 
+    /**
+     * Proxy for XAPI Command.
+     */
+    this.Command = createXapiProxy(this, this.command);
+
+    /**
+     * Proxy for XAPI Configuration.
+     */
+    this.Config = createXapiProxy(this, this.config);
+
+    /**
+     * Proxy for XAPI Event.
+     */
+    this.Event = createXapiProxy(this, this.event);
+
+    /**
+     * Proxy for XAPI Status.
+     */
+    this.Status = createXapiProxy(this, this.status);
+
     // Restrict object mutation
-    Object.defineProperties(this, {
-      config: { writable: false },
-      event: { writable: false },
-      feedback: { writable: false },
-      status: { writable: false },
-    });
-    Object.seal(this);
+    if (options.seal) {
+      Object.defineProperties(this, {
+        config: { writable: false },
+        event: { writable: false },
+        feedback: { writable: false },
+        status: { writable: false },
+      });
+      Object.seal(this);
+    }
 
     backend
       .on('close', () => { this.emit('close'); })
