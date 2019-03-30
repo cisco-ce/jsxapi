@@ -3,15 +3,10 @@ import XAPI from '../../src/xapi';
 
 describe('XAPI', () => {
   let backend;
-  let sandbox;
   let xapi;
 
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
-
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('events', () => {
@@ -21,7 +16,7 @@ describe('XAPI', () => {
     });
 
     it('emits "ready" when backend is ready', () => {
-      const readySpy = sandbox.spy();
+      const readySpy = sinon.spy();
 
       xapi.on('ready', readySpy);
 
@@ -32,7 +27,7 @@ describe('XAPI', () => {
 
     it('emits "error" on backend error', () => {
       const error = new Error('some error');
-      const errorSpy = sandbox.spy();
+      const errorSpy = sinon.spy();
 
       xapi.on('error', errorSpy);
 
@@ -43,7 +38,7 @@ describe('XAPI', () => {
     });
 
     it('emits "close" on backend close', () => {
-      const closeSpy = sandbox.spy();
+      const closeSpy = sinon.spy();
 
       xapi.on('close', closeSpy);
 
@@ -72,7 +67,7 @@ describe('XAPI', () => {
     });
 
     it('is dispatched to feedback handler', () => {
-      const stub = sandbox.stub(xapi.feedback, 'dispatch');
+      const stub = sinon.stub(xapi.feedback, 'dispatch');
       const params = { Status: { Audio: { Volume: 50 } } };
 
       backend.emit('data', {
@@ -107,7 +102,7 @@ describe('XAPI', () => {
     };
 
     it('returns a Promise object', () => {
-      sandbox.stub(backend, 'execute');
+      sinon.stub(backend, 'execute');
 
       const result = xapi.execute('xCommand/Dial', {
         Number: 'user@example.com',
@@ -117,7 +112,7 @@ describe('XAPI', () => {
     });
 
     it('resolves promise when backend emits success response', () => {
-      sandbox.stub(backend, 'execute').callsFake(
+      sinon.stub(backend, 'execute').callsFake(
         asyncResponse(backend, {
           result: {
             CallId: 3,
@@ -137,7 +132,7 @@ describe('XAPI', () => {
     });
 
     it('rejects promise when backend emits error response', () => {
-      sandbox.stub(backend, 'execute').callsFake(
+      sinon.stub(backend, 'execute').callsFake(
         asyncResponse(backend, {
           error: {
             code: XAPI.METHOD_NOT_FOUND,
@@ -156,12 +151,12 @@ describe('XAPI', () => {
     let execStub;
 
     beforeEach(() => {
-      execStub = sandbox.spy(XAPI.prototype, 'execute');
+      execStub = sinon.spy(XAPI.prototype, 'execute');
 
       backend = new Backend();
       xapi = new XAPI(backend);
 
-      sandbox.stub(backend, 'execute');
+      sinon.stub(backend, 'execute');
     });
 
     describe('.command()', () => {
@@ -278,7 +273,7 @@ describe('XAPI', () => {
     describe('.event', () => {
       describe('.on()', () => {
         it('registers feedback with feedback handler', () => {
-          const handler = sandbox.spy();
+          const handler = sinon.spy();
           xapi.event.on('Standby', handler);
 
           xapi.feedback.dispatch({ Event: { Standby: 'Active' } });
@@ -290,7 +285,7 @@ describe('XAPI', () => {
 
       describe('.off()', () => {
         it('can de-register feedback', () => {
-          const handler = sandbox.spy();
+          const handler = sinon.spy();
           const off = xapi.event.on('Standby', handler);
 
           xapi.feedback.dispatch({ Event: { Standby: 'Active' } });

@@ -5,23 +5,20 @@ import connectSSH from '../../src/transport/ssh';
 
 describe('connectSSH', () => {
   let client;
-  let sandbox;
   let dataSpy;
   let errorSpy;
   let closeSpy;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-
     client = new Client();
-    sandbox.stub(client, 'connect');
-    sandbox.stub(client, 'shell');
-    sandbox.stub(client, 'exec');
-    sandbox.stub(client, 'end');
+    sinon.stub(client, 'connect');
+    sinon.stub(client, 'shell');
+    sinon.stub(client, 'exec');
+    sinon.stub(client, 'end');
 
-    dataSpy = sandbox.spy();
-    errorSpy = sandbox.spy();
-    closeSpy = sandbox.spy();
+    dataSpy = sinon.spy();
+    errorSpy = sinon.spy();
+    closeSpy = sinon.spy();
   });
 
   describe('emits "error" on transport stream', () => {

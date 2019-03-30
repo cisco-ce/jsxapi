@@ -12,18 +12,12 @@ describe('TSH Backend', () => {
   let parser;
   let transport;
   let tsh;
-  let sandbox;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     transport = new MockTransport();
     tsh = new TSHBackend(transport);
     ({ parser } = tsh);
     transport.stubBackend(tsh);
-  });
-
-  afterEach(() => {
-    sandbox.restore();
   });
 
   describe('constructor', () => {
@@ -87,7 +81,7 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
 
   describe('events', () => {
     it('emits "close" on transport close', () => {
-      const closeSpy = sandbox.spy();
+      const closeSpy = sinon.spy();
 
       tsh.on('close', closeSpy);
 
@@ -98,7 +92,7 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
 
     it('emits "error" on transport error', () => {
       const error = new Error('some error');
-      const errorSpy = sandbox.spy();
+      const errorSpy = sinon.spy();
 
       tsh.on('error', errorSpy);
 
@@ -110,7 +104,7 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
 
     it('emits "error" on parser error', () => {
       const error = new Error('some error');
-      const errorSpy = sandbox.spy();
+      const errorSpy = sinon.spy();
 
       tsh.on('error', errorSpy);
 
@@ -422,7 +416,7 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
 
     testCases.forEach((test) => {
       it(test.name, () => {
-        sandbox.stub(tsh, 'send').callsFake(() => {
+        sinon.stub(tsh, 'send').callsFake(() => {
           parser.emit('data', JSON.parse(test.response));
         });
 
@@ -435,7 +429,7 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
     });
 
     it('xFeedback/Subscribe wraps indexes in [<n>]', () => {
-      sandbox.stub(tsh, 'send').callsFake(() => {
+      sinon.stub(tsh, 'send').callsFake(() => {
         parser.emit('data', { ResultId: 'request-1' });
       });
 
@@ -460,7 +454,7 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
         '{"ResultId": "request-2"}',
       ];
 
-      sandbox.stub(tsh, 'send').callsFake(() => {
+      sinon.stub(tsh, 'send').callsFake(() => {
         parser.emit('data', JSON.parse(responses.shift()));
       });
 
