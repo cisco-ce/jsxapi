@@ -1,5 +1,7 @@
 import normalizePath from './normalizePath';
-import { Listenable, Gettable, Settable, mix } from './mixins';
+import {
+  Listenable, Gettable, Settable, mix,
+} from './mixins';
 
 
 /**

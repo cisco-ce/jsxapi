@@ -2,7 +2,7 @@ import log from '../log';
 import { JSONParser } from '../json-parser';
 import * as rpc from '../xapi/rpc';
 
-import Backend from './';
+import Backend from '.';
 
 
 /**
@@ -143,7 +143,7 @@ export default class TSHBackend extends Backend {
     let cmd = `${command} | resultId="${id}"\n`;
     if (body !== undefined) {
       cmd += `${body}\n`;
-      const length = cmd.length;
+      const { length } = cmd;
       cmd = `{${length}} \n${cmd}`;
     }
 
@@ -162,7 +162,7 @@ export default class TSHBackend extends Backend {
    */
   ['xCommand()']({ method, params }, send) { // eslint-disable-line class-methods-use-this
     const paramsCopy = Object.assign({}, params);
-    const body = paramsCopy.body;
+    const { body } = paramsCopy;
     delete paramsCopy.body;
 
     const tshParams = paramsCopy

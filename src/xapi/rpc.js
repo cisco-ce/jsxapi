@@ -21,9 +21,11 @@ const VERSION = '2.0';
 export function collapse(data) {
   if (Array.isArray(data)) {
     return data.map(collapse);
-  } else if (isScalar(data)) {
+  }
+  if (isScalar(data)) {
     return data;
-  } else if ({}.hasOwnProperty.call(data, 'Value') && isScalar(data.Value)) {
+  }
+  if ({}.hasOwnProperty.call(data, 'Value') && isScalar(data.Value)) {
     return data.Value;
   }
 
@@ -98,13 +100,15 @@ export function parseFeedbackResponse(response) {
 function assertValidCommandResponse(response) {
   if (!{}.hasOwnProperty.call(response, 'CommandResponse')) {
     throw new XAPIError(
-      INVALID_RESPONSE, 'Invalid command response: Missing "CommandResponse" attribute');
+      INVALID_RESPONSE, 'Invalid command response: Missing "CommandResponse" attribute',
+    );
   }
 
   const keys = Object.keys(response.CommandResponse);
   if (keys.length !== 1) {
     throw new XAPIError(
-      INVALID_RESPONSE, `Invalid command response: Wrong number of keys (${keys.length})`);
+      INVALID_RESPONSE, `Invalid command response: Wrong number of keys (${keys.length})`,
+    );
   }
 
   const root = response.CommandResponse[keys[0]];

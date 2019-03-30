@@ -117,4 +117,3 @@ export function mix(Base, ...Mixins) {
 
   return Class;
 }
-

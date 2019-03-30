@@ -26,7 +26,7 @@ describe('Feedback', () => {
     xapi = new XAPI(new Backend(), {
       feedbackInterceptor: interceptor,
     });
-    feedback = xapi.feedback;
+    ({ feedback } = xapi);
 
     let nextSubscriptionId = 0;
     sandbox.stub(XAPI.prototype, 'execute').callsFake((method) => {

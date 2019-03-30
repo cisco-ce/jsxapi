@@ -18,7 +18,8 @@ describe('xapi/rpc', () => {
       const fn = () => createRequest(
         '1',
         'xCommand/UserInterface/Message/Echo',
-        { Text: 'foo \n bar \n' });
+        { Text: 'foo \n bar \n' },
+      );
 
       expect(fn).to.throw('may not contain newline');
     });

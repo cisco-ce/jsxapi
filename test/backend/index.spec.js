@@ -90,7 +90,9 @@ describe('Backend', () => {
       it(`calls .${name}() handler`, () => {
         const send = sandbox.stub(backend, 'send');
         const handler = sandbox.spy((r, _send) => _send());
-        const request = { jsonrpc: '2.0', id: 'request-1', method, params };
+        const request = {
+          jsonrpc: '2.0', id: 'request-1', method, params,
+        };
 
         backend[`${name}()`] = handler;
         backend.execute(request);

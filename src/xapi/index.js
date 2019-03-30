@@ -174,7 +174,7 @@ export default class XAPI extends EventEmitter {
 
   /** @private */
   nextRequestId() {
-    const requestId = this.requestId;
+    const { requestId } = this;
     this.requestId += 1;
     return requestId.toString();
   }
