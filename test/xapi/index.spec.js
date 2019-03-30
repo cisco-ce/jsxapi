@@ -28,6 +28,7 @@ describe('XAPI', () => {
       backend.emit('ready');
 
       expect(readySpy).to.have.been.calledOnce();
+      expect(readySpy).to.have.been.calledWith(xapi);
     });
 
     it('emits "error" on backend error', () => {
