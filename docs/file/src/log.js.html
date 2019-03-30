@@ -118,8 +118,7 @@ if (!loglevel.isPatched) {
 
     setGlobalLevel(level) {
       const allLoggers = [loglevel].concat(
-        loglevel.getLoggers().map(name =&gt; loglevel.getLogger(name)),
-      );
+        loglevel.getLoggers().map(name =&gt; loglevel.getLogger(name)));
 
       allLoggers.forEach((logger) =&gt; { logger.setLevel(level); });
     },
