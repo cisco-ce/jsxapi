@@ -942,7 +942,7 @@ base@^0.11.1:
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
 
-bcrypt-pbkdf@^1.0.0:
+bcrypt-pbkdf@^1.0.0, bcrypt-pbkdf@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.2.tgz#a4301d389b6a43f9b67ff3ca11a3f6637e360e9e"
   integrity sha1-pDAdOJtqQ/m2f/PKEaP2Y342Dp4=
@@ -4081,7 +4081,7 @@ sax@^1.1.4, sax@^1.2.4:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
 
-"semver@2 || 3 || 4 || 5", semver@^5.1.0, semver@^5.3.0:
+"semver@2 || 3 || 4 || 5", semver@^5.3.0:
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.6.0.tgz#7e74256fbaa49c75aa7c7a205cc22799cac80004"
   integrity sha512-RS9R6R35NYgQn++fkDWaOmqGoj4Ek9gGs+DPxNUZKuwE183xjJroKvyo1IzVFeXvUrvmALy6FWD5xrdJT25gMg==
@@ -4266,21 +4266,21 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
-ssh2-streams@~0.1.18:
-  version "0.1.20"
-  resolved "https://registry.yarnpkg.com/ssh2-streams/-/ssh2-streams-0.1.20.tgz#51118d154555df5469ee1f67e0cf1e7e8a2c0e3a"
-  integrity sha1-URGNFUVV31Rp7h9n4M8efoosDjo=
+ssh2-streams@~0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/ssh2-streams/-/ssh2-streams-0.4.2.tgz#bac0d18727396d16049f5f0c8517a46516b45719"
+  integrity sha512-2rSj3oTIJnbAIzR3+XwIYef9wCOVrPQZNLL+fFPPjnPxf09tKkAbgrlYgh/1qynBTz65AUOS+s1zuko4M/GKCw==
   dependencies:
     asn1 "~0.2.0"
-    semver "^5.1.0"
+    bcrypt-pbkdf "^1.0.2"
     streamsearch "~0.1.2"
 
-ssh2@^0.5.5:
-  version "0.5.5"
-  resolved "https://registry.yarnpkg.com/ssh2/-/ssh2-0.5.5.tgz#c7781ecd2ece7304a253cf620fab5a5c22bb2235"
-  integrity sha1-x3gezS7OcwSiU89iD6taXCK7IjU=
+ssh2@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/ssh2/-/ssh2-0.8.2.tgz#f7a172458d3a7a13d520438264f90de8a3ee72af"
+  integrity sha512-oaXu7faddvPFGavnLBkk0RFwLXvIzCPq6KqAC3ExlnFPAVIE1uo7pWHe9xmhNHXm+nIe7yg9qsssOm+ip2jijw==
   dependencies:
-    ssh2-streams "~0.1.18"
+    ssh2-streams "~0.4.2"
 
 sshpk@^1.7.0:
   version "1.14.2"
