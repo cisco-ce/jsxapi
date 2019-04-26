@@ -1,5 +1,5 @@
-import { Duplex } from 'stream';
 import { Client } from 'ssh2';
+import { Duplex } from 'stream';
 
 import connectSSH from '../../src/transport/ssh';
 

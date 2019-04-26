@@ -1,11 +1,13 @@
 import { EventEmitter } from 'events';
 
 import log from '../log';
-import * as rpc from './rpc';
 import normalizePath from './normalizePath';
+import * as rpc from './rpc';
 
-import Feedback from './feedback';
+import Backend from '../backend';
 import { Config, Event, Status } from './components';
+import Feedback from './feedback';
+import { Path, Requests, XapiOptions, XapiResponse, XapiResult } from './types';
 
 
 /**
@@ -36,22 +38,23 @@ import { Config, Event, Status } from './components';
  * });
  */
 export default class XAPI extends EventEmitter {
+  public feedback: Feedback;
+  public config: Config;
+  public status: Status;
+  public event: Event;
   /**
    * @param {Backend} backend - Backend connected to an XAPI instance.
    * @param {object} options - XAPI object options.
    * @param {function} options.feedbackInterceptor - Feedback interceptor.
    */
-  constructor(backend, options = {}) {
+
+  private requestId = 1;
+  private requests: Requests = {};
+
+  constructor(
+    readonly backend: Backend,
+    options: XapiOptions = {}) {
     super();
-
-    /** @type {Backend} */
-    this.backend = backend;
-
-    /** @ignore */
-    this.requestId = 1;
-
-    /** @ignore */
-    this.requests = {};
 
     /**
      * Interface to XAPI feedback registration.
@@ -98,7 +101,7 @@ export default class XAPI extends EventEmitter {
    *
    * @return {XAPI} - XAPI instance..
    */
-  close() {
+  public close() {
     this.backend.close();
     return this;
   }
@@ -145,7 +148,7 @@ export default class XAPI extends EventEmitter {
    * @param {string} [body] - Multi-line body for commands requiring it.
    * @return {Promise} - Resolved with the command response when ready.
    */
-  command(path, params, body) {
+  public command(path: Path, params: any, body?: string) {
     const apiPath = normalizePath(path).join('/');
     const method = `xCommand/${apiPath}`;
     const executeParams = body === undefined ? params : Object.assign({ body }, params);
@@ -153,7 +156,7 @@ export default class XAPI extends EventEmitter {
   }
 
   /** @private */
-  handleResponse(response) {
+  public handleResponse(response: XapiResponse) {
     const { id, method } = response;
     if (method === 'xFeedback/Event') {
       log.debug('feedback:', response);
@@ -173,7 +176,7 @@ export default class XAPI extends EventEmitter {
   }
 
   /** @private */
-  nextRequestId() {
+  public nextRequestId() {
     const requestId = this.requestId;
     this.requestId += 1;
     return requestId.toString();
@@ -191,7 +194,7 @@ export default class XAPI extends EventEmitter {
    * @param {Object} [params] - Parameters to add to the request.
    * @return {Promise} - Resolved with the command response.
    */
-  execute(method, params) {
+  public execute(method: string, params: any): Promise<XapiResult> {
     return new Promise((resolve, reject) => {
       const id = this.nextRequestId();
       const request = rpc.createRequest(id, method, params);

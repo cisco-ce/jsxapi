@@ -27,7 +27,7 @@ import spawnTSH from './transport/tsh';
  *     Set the internal log level.
  * @return {XAPI} - XAPI interface connected to the given URI.
  */
-export function connect(url, options) { // eslint-disable-line import/prefer-default-export
+export function connect(url: any, options? :any) { // eslint-disable-line import/prefer-default-export
   if (arguments.length === 1 && typeof url === 'object') {
     /* eslint-disable no-param-reassign */
     options = url;
@@ -68,12 +68,12 @@ export function connect(url, options) { // eslint-disable-line import/prefer-def
     case 'ws:':
     case 'wss:': {
       const transport = new WebSocket(url);
-      backend = new WSBackend(transport);
+      backend = new WSBackend(transport as any);
       break;
     }
     default:
       throw new Error(`Invalid protocol: ${opts.protocol}`);
   }
 
-  return new XAPI(backend);
+  return new XAPI(backend as any);
 }

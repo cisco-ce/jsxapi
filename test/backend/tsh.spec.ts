@@ -1,9 +1,9 @@
+import TSHBackend from '../../src/backend/tsh';
 import {
   ILLEGAL_VALUE,
   INVALID_PATH,
   PARAMETER_ERROR,
 } from '../../src/xapi/exc';
-import TSHBackend from '../../src/backend/tsh';
 
 import MockTransport from '../mock_transport';
 
@@ -123,7 +123,7 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
 
   describe('when parser emits "data" response from', () => {
     let spy;
-    const createMessage = message =>
+    const createMessage = (message) =>
       Object.assign({ jsonrpc: '2.0', id: 'request-1' }, message);
 
     beforeEach(() => {

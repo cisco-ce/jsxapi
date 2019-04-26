@@ -2,13 +2,17 @@ import { EventEmitter } from 'events';
 
 import log from '../log';
 
+import XAPI from '.';
 import normalizePath from './normalizePath';
+import { Handler, Listener, Path } from './types';
 
 /**
  * Group feedback deregister handlers for bookkeeping.
  */
 export class FeedbackGroup {
-  constructor(handlers) {
+  public handlers: Handler[];
+
+  constructor(handlers: Handler[]) {
     this.handlers = handlers;
   }
 
@@ -18,7 +22,7 @@ export class FeedbackGroup {
    * @param {function()} handler - Handler to add to the group.
    * @return {FeedbackGroup} - this for chaining.
    */
-  add(handler) {
+  public add(handler: Handler) {
     this.handlers.push(handler);
     return this;
   }
@@ -29,8 +33,8 @@ export class FeedbackGroup {
    * @param {function()} handler - Handler to remove from the group.
    * @return {FeedbackGroup} - this for chaining.
    */
-  remove(handler) {
-    this.handlers = this.handlers.filter(h => h !== handler);
+  public remove(handler: Handler) {
+    this.handlers = this.handlers.filter((h) => h !== handler);
     return this;
   }
 
@@ -39,7 +43,7 @@ export class FeedbackGroup {
    *
    * @return {FeedbackGroup} - this for chaining.
    */
-  off() {
+  public off() {
     this.handlers.forEach((handler) => {
       handler();
     });
@@ -48,11 +52,17 @@ export class FeedbackGroup {
   }
 }
 
-function defaultInterceptor(payload, emit) {
+function defaultInterceptor<T>(
+  payload: T,
+  emit: (payload: T) => void) {
   emit(payload);
 }
 
-function dispatch(feedback, data, root = data, path = []) {
+function dispatch(
+  feedback: Feedback,
+  data: any,
+  root = data,
+  path: string[] = []) {
   if (Array.isArray(data)) {
     data.forEach((child) => {
       dispatch(feedback, child, root, path);
@@ -108,13 +118,11 @@ export default class Feedback {
    * @param {XAPI} xapi - XAPI instance.
    * @param {function} interceptor - Feedback interceptor.
    */
-  constructor(xapi, interceptor = defaultInterceptor) {
-    Object.defineProperties(this, {
-      eventEmitter: { value: new EventEmitter() },
-      interceptor: { value: interceptor },
-      xapi: { value: xapi },
-      subscriptions: { value: [], writable: true },
-    });
+  public readonly eventEmitter = new EventEmitter();
+  public subscriptions = [];
+  constructor(
+    readonly xapi: XAPI,
+    readonly interceptor = defaultInterceptor) {
   }
 
   /**
@@ -124,7 +132,7 @@ export default class Feedback {
    * @param {Array|string} path - Path to subscribe to
    * @param {function} listener - Listener invoked on feedback
    */
-  on(path, listener) {
+  public on(path: Path, listener: Listener) {
     log.info(`new feedback listener on: ${path}`);
     const eventPath = normalizePath(path)
       .join('/')
@@ -154,10 +162,10 @@ export default class Feedback {
    * @param {Array|string} path - Path to subscribe to
    * @param {function} listener - Listener invoked on feedback
    */
-  once(path, listener) {
-    let off;
-    const wrapped = (...args) => {
-      if (typeof off === 'function') off();
+  public once(path: Path, listener: Listener) {
+    let off: () => void | undefined;
+    const wrapped = (...args: any[]) => {
+      if (typeof off === 'function') { off(); }
       listener.call(this, ...args);
     };
     wrapped.listener = listener;
@@ -171,7 +179,7 @@ export default class Feedback {
    * @deprecated use deactivation handler from `.on()` and `.once()` instead.
    */
   // eslint-disable-next-line class-methods-use-this
-  off() {
+  public off() {
     throw new Error(
       '.off() is deprecated. Use return value deactivate handler from .on() instead.',
     );
@@ -183,7 +191,7 @@ export default class Feedback {
    * @param {Object} data - JSON data structure of feedback data.
    * @return {FeedbackHandler} - Returns self for chaining.
    */
-  dispatch(data) {
+  public dispatch(data: any) {
     this.interceptor(data, (d = data) => dispatch(this, d));
     return this;
   }
@@ -217,7 +225,7 @@ export default class Feedback {
    * group.off();
    */
   // eslint-disable-next-line class-methods-use-this
-  group(handlers) {
+  public group(handlers: Handler[]) {
     return new FeedbackGroup(handlers);
   }
 }

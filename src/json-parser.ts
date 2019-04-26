@@ -1,5 +1,6 @@
 import { Transform } from 'stream';
 
+/// <reference path="./jsonparse.d.ts" />
 import Parser from 'jsonparse';
 
 
@@ -12,9 +13,11 @@ import Parser from 'jsonparse';
  * Streaming JSON parser. Implements the Node.js {@link Duplex} stream API.
  */
 export class JSONParser extends Transform {
+  private enc = 'utf8';  // Default encoding
+  private parser: Parser = new Parser;
+
   constructor() {
     super({ objectMode: true });
-    this.enc = 'utf8';  // Default encoding
     this.reset();
   }
 
@@ -24,26 +27,26 @@ export class JSONParser extends Transform {
     this.parser.onValue = this.onValue.bind(this);
   }
 
-  onError(e) {
+  onError(e: any) {
     this.emit('error', e);
     this.reset();
   }
 
-  onValue(value) {
+  onValue(value: any) {
     if (!this.parser.stack.length) {
       this.push(value);
     }
   }
 
-  _flush(callback) {
+  _flush(callback: () => void) {
     if (this.parser.stack.length) {
       this.onError(new Error('Unexpected end of input'));
     }
     callback();
   }
 
-  _transform(chunk, encoding, callback) {
-    const data = chunk.toString(this.enc);
+  _transform(chunk: any, encoding: any, callback: () => void) {
+    const data: string = chunk.toString(this.enc);
     data.split(/\n/).forEach((line) => {
       try {
         this.parser.write(line);
@@ -62,7 +65,7 @@ export class JSONParser extends Transform {
  * @param {string} json - JSON string input.
  * @return {Object} - Parsed JSON object.
  */
-export function parseJSON(json) {
+export function parseJSON(json: string) {
   let obj;
   const parser = new JSONParser();
 

@@ -1,6 +1,5 @@
 import { EventEmitter } from 'events';
 
-
 /**
  * @external {WebSocket} https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
  */
@@ -18,20 +17,23 @@ import { EventEmitter } from 'events';
  * @implements {Backend}
  */
 export default class WSBackend extends EventEmitter {
+  private ws: WebSocket;
+  private isReady: Promise<boolean>;
+
   /**
    * @param {Object|string} urlOrWS - WebSocket object or URL of the server.
    */
-  constructor(urlOrWS) {
+  constructor(urlOrWS: WebSocket | string) {
     super();
     /**
      * @type {WebSocket}
      */
-    this.ws = typeof urlOrWS !== 'string' ? urlOrWS : new global.WebSocket(urlOrWS);
+    this.ws = typeof urlOrWS !== 'string' ? urlOrWS : new WebSocket(urlOrWS);
     this.ws.onclose = this.handleClose.bind(this);
     this.ws.onerror = this.handleError.bind(this);
     this.ws.onmessage = this.handleMessage.bind(this);
 
-    let resolveReady;
+    let resolveReady: () => void;
     /**
      * @type {Promise}
      */
@@ -42,11 +44,11 @@ export default class WSBackend extends EventEmitter {
     };
   }
 
-  close() {
+  public close() {
     this.ws.close();
   }
 
-  handleClose(event) {
+  public handleClose(event: CloseEvent) {
     if (event.code !== 1000) {
       this.emit('error', 'WebSocket closed unexpectedly');
     } else {
@@ -54,16 +56,16 @@ export default class WSBackend extends EventEmitter {
     }
   }
 
-  handleError() {
+  public handleError() {
     this.emit('error', 'WebSocket error');
   }
 
-  handleMessage(message) {
+  public handleMessage(message: MessageEvent) {
     const data = JSON.parse(message.data);
     this.emit('data', data);
   }
 
-  execute(command) {
+  public execute(command: any) {
     this.isReady.then(() => {
       this.ws.send(JSON.stringify(command));
     });

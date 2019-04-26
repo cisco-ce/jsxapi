@@ -2,21 +2,24 @@
 
 import commander from 'commander';
 
-import fs from 'fs';
-import REPL from 'repl';
+import * as fs from 'fs';
+import * as REPL from 'repl';
 
-import pkg from '../package.json';
+// this import messes up the package structure after running tsc
+// import * as pkg from '../package.json';
 import log from './log';
 import { connect } from './';
+import XAPI from './xapi/index.js';
 
+const pkg = { version: "4.2.0" };
 
-function evalFile(source, xapi) {
+function evalFile(source: any, xapi: XAPI) {
   const context = new Function('xapi', source); // eslint-disable-line no-new-func
   context(xapi);
 }
 
 
-function startRepl(xapi) {
+function startRepl(xapi: XAPI) {
   const repl = REPL.start({});
   repl.on('exit', () => xapi.close());
   repl.context.xapi = xapi;
@@ -44,7 +47,7 @@ commander
 
     const source = file && fs.readFileSync(file);
     const xapi = connect(host, options)
-      .on('error', (error) => { log.error('xapi error:', error); })
+      .on('error', (error: any) => { log.error('xapi error:', error); })
       .on('ready', () => {
         if (source) {
           evalFile(source, xapi);

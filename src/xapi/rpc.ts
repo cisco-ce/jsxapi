@@ -1,15 +1,16 @@
 import {
   IllegalValueError,
-  InvalidPathError,
-  ParameterError,
-  XAPIError,
-  UNKNOWN_ERROR,
   INVALID_RESPONSE,
   INVALID_STATUS,
+  InvalidPathError,
+  ParameterError,
+  UNKNOWN_ERROR,
+  XAPIError,
 } from './exc';
+import { XapiRequest } from './types';
 
 const scalars = ['number', 'string'];
-const isScalar = value => scalars.indexOf(typeof value) >= 0;
+const isScalar = (value: any) => scalars.indexOf(typeof value) >= 0;
 
 
 const VERSION = '2.0';
@@ -18,7 +19,7 @@ const VERSION = '2.0';
 /*
  * Collapse "Value" into parent + skip lowercase props
  */
-export function collapse(data) {
+export function collapse(data: any): any {
   if (Array.isArray(data)) {
     return data.map(collapse);
   } else if (isScalar(data)) {
@@ -27,7 +28,7 @@ export function collapse(data) {
     return data.Value;
   }
 
-  const result = {};
+  const result: {[idx: string]: any} = {};
 
   Object.keys(data).forEach((key) => {
     result[key] = collapse(data[key]);
@@ -37,8 +38,8 @@ export function collapse(data) {
 }
 
 
-export function createRequest(id, method, params) {
-  const request = { jsonrpc: VERSION, method };
+export function createRequest(id: string | null, method: string, params: any) {
+  const request: XapiRequest = { jsonrpc: VERSION, method };
 
   if (id) {
     request.id = id;
@@ -62,13 +63,13 @@ export function createRequest(id, method, params) {
 }
 
 
-export function createResponse(id, result) {
+export function createResponse(id: string, result: any) {
   return { jsonrpc: VERSION, id, result };
 }
 
 
-export function createErrorResponse(id, error) {
-  let payload;
+export function createErrorResponse(id: string, error: any) {
+  let payload: {[idx: string]: any};
 
   if (error instanceof XAPIError) {
     payload = {
@@ -90,12 +91,12 @@ export function createErrorResponse(id, error) {
 }
 
 
-export function parseFeedbackResponse(response) {
+export function parseFeedbackResponse(response: any) {
   return collapse(response);
 }
 
 
-function assertValidCommandResponse(response) {
+function assertValidCommandResponse(response: any) {
   if (!{}.hasOwnProperty.call(response, 'CommandResponse')) {
     throw new XAPIError(
       INVALID_RESPONSE, 'Invalid command response: Missing "CommandResponse" attribute');
@@ -131,21 +132,21 @@ function assertValidCommandResponse(response) {
 }
 
 
-export function createCommandResponse(response) {
+export function createCommandResponse(response: any) {
   const root = assertValidCommandResponse(response);
   const collapsed = collapse(root);
   return Object.keys(collapsed).length ? collapsed : null;
 }
 
 
-function digObj(path, obj) {
+function digObj(path: Array<string | number>, obj: any) {
   const parts = path.slice();
   let value = obj;
 
   while (parts.length) {
-    const part = parts.shift();
+    const part = parts.shift()!;
     if (Array.isArray(value)) {
-      value = value.find(v => parseInt(v.id, 10) === part);
+      value = value.find((v) => parseInt(v.id, 10) === part);
     } else if (!{}.hasOwnProperty.call(value, part)) {
       return undefined;
     } else {
@@ -157,7 +158,7 @@ function digObj(path, obj) {
 }
 
 
-export function createGetResponse(request, response) {
+export function createGetResponse(request: any, response: any) {
   if ({}.hasOwnProperty.call(response, 'CommandResponse')) {
     assertValidCommandResponse(response);
   }
@@ -166,7 +167,7 @@ export function createGetResponse(request, response) {
 }
 
 
-export function createSetResponse(request, response) {
+export function createSetResponse(request: any, response: any) {
   if ({}.hasOwnProperty.call(response, 'CommandResponse')) {
     assertValidCommandResponse(response);
   }

@@ -4,12 +4,12 @@
  * their level can be set independently.
  */
 
-import loglevel from 'loglevel';
+import * as loglevel from 'loglevel';
 
 
-if (!loglevel.isPatched) {
+if (!(loglevel as any).isPatched) {
   const origMethodFactory = loglevel.methodFactory;
-  const loggers = new Set();
+  const loggers = new Set<string>();
 
 
   /*
@@ -18,12 +18,12 @@ if (!loglevel.isPatched) {
   Object.assign(loglevel, {
     isPatched: true,
 
-    methodFactory(methodName, logLevel, loggerName) {
+    methodFactory(methodName: string, logLevel: any, loggerName: string) {
       if (loggerName) {
         loggers.add(loggerName);
       }
       const rawMethod = origMethodFactory(methodName, logLevel, loggerName);
-      return (...args) => {
+      return (...args: any[]) => {
         rawMethod(`[${loggerName || 'root'}]`, ...args);
       };
     },
@@ -32,21 +32,21 @@ if (!loglevel.isPatched) {
      * Returns a list of logger names, excluding the root logger.
      */
     getLoggers() {
-      return [...loggers];
+      return Array.from(loggers);
     },
 
-    setGlobalLevel(level) {
+    setGlobalLevel(level: loglevel.LogLevelDesc) {
       const allLoggers = [loglevel].concat(
-        loglevel.getLoggers().map(name => loglevel.getLogger(name)));
+        (loglevel as any).getLoggers().map((name: string) => loglevel.getLogger(name)));
 
       allLoggers.forEach((logger) => { logger.setLevel(level); });
     },
 
-    setLevelTrace() { loglevel.setGlobalLevel('trace'); },
-    setLevelDebug() { loglevel.setGlobalLevel('debug'); },
-    setLevelInfo() { loglevel.setGlobalLevel('info'); },
-    setLevelWarn() { loglevel.setGlobalLevel('warn'); },
-    setLevelError() { loglevel.setGlobalLevel('error'); },
+    setLevelTrace() { (loglevel as any).setGlobalLevel('trace'); },
+    setLevelDebug() { (loglevel as any).setGlobalLevel('debug'); },
+    setLevelInfo() { (loglevel as any).setGlobalLevel('info'); },
+    setLevelWarn() { (loglevel as any).setGlobalLevel('warn'); },
+    setLevelError() { (loglevel as any).setGlobalLevel('error'); },
   });
 
 

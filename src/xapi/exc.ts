@@ -9,7 +9,12 @@ export const METHOD_NOT_FOUND = -32601;
 
 
 export class XAPIError extends Error {
-  constructor(code, reason, data) {
+  constructor(
+    readonly code: number,
+    reason: string,
+    readonly data?: any) {
+    super(reason);
+
     if (typeof reason !== 'string') {
       throw new Error('Reason for XAPIError must be a string');
     }
@@ -17,27 +22,20 @@ export class XAPIError extends Error {
     if (typeof code !== 'number') {
       throw new Error('Error code for XAPIError must be a number');
     }
-
-    super(reason);
-    this.code = code;
-    if (data !== undefined) {
-      this.data = data;
-    }
   }
 }
 
 
 export class IllegalValueError extends XAPIError {
-  constructor(reason) {
+  constructor(reason: string) {
     super(ILLEGAL_VALUE, reason);
   }
 }
 
 
 export class InvalidPathError extends XAPIError {
-  constructor(reason, xpath) {
-    super(INVALID_PATH, reason);
-    this.data = { xpath };
+  constructor(reason: string, xpath: string) {
+    super(INVALID_PATH, reason, { xpath });
   }
 }
 

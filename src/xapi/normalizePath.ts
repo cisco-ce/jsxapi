@@ -1,3 +1,5 @@
+import { NormalizedPath, Path } from './types';
+
 /**
  * Normalizes a path by turning it into an Array of strings.
  * Removes empty parts of the path and ignores redundant whitespace or
@@ -6,7 +8,7 @@
  * @param {Array|string} path - Array or string path to normalize.
  * @return {Array} - Array of path segments.
  */
-export default function normalizePath(path) {
+export default function normalizePath(path: Path): NormalizedPath {
   const split = Array.isArray(path) ? path : path.match(/(\w+)/g);
   return !split ? [] : split
     .map((element) => {

@@ -1,9 +1,16 @@
+import XAPI from '.';
+import normalizePath from './normalizePath';
+import { Listener, Path } from './types';
+
 /**
  * Mixin for XAPI sections that can trigger feedback.
  *
  * @interface
  */
 export class Listenable {
+  public xapi!: XAPI;
+  public normalizePath!: typeof normalizePath;
+
   /**
    * Register a new listener on the given path.
    *
@@ -11,8 +18,8 @@ export class Listenable {
    * @param {function(data: Object): null} listener - Callback handler called on changes.
    * @return {function()} - Handler to deregister the feedback registration.
    */
-  on(path, listener) {
-    return this.xapi.feedback.on(this.normalizePath(path), listener);
+  public on(path: Path, listener: Listener) {
+    return this.xapi.feedback.on(this.normalizePath(path) as any, listener);
   }
 
   /**
@@ -23,8 +30,8 @@ export class Listenable {
    * @param {function(data: Object): null} listener - Callback handler called on changes.
    * @return {Object} - Handler to deregister the feedback registration.
    */
-  once(path, listener) {
-    return this.xapi.feedback.once(this.normalizePath(path), listener);
+  public once(path: Path, listener: Listener) {
+    return this.xapi.feedback.once(this.normalizePath(path) as any, listener);
   }
 
 
@@ -33,7 +40,7 @@ export class Listenable {
    *
    * @deprecated use deactivation handler from `.on()` and `.once()` instead.
    */
-  off() {
+  public off() {
     this.xapi.feedback.off();
   }
 }
@@ -45,6 +52,8 @@ export class Listenable {
  * @interface
  */
 export class Gettable {
+  public xapi!: XAPI;
+  public normalizePath!: typeof normalizePath;
   /**
    * Gets the value of the given path.
    *
@@ -61,7 +70,7 @@ export class Gettable {
    * @param {string} path - Path to configuration node.
    * @return {Promise} - Resolved to the configuration value when ready.
    */
-  get(path) {
+  public get(path: Path) {
     return this.xapi.execute('xGet', {
       Path: this.normalizePath(path),
     });
@@ -75,6 +84,8 @@ export class Gettable {
  * @interface
  */
 export class Settable {
+  public xapi!: XAPI;
+  public normalizePath!: typeof normalizePath;
   /**
    * Sets the path to the given value.
    *
@@ -86,7 +97,7 @@ export class Settable {
    * @param {number|string} value - Configuration value.
    * @return {Promise} - Resolved to the status value when ready.
    */
-  set(path, value) {
+  public set(path: Path, value: number | string) {
     return this.xapi.execute('xSet', {
       Path: this.normalizePath(path),
       Value: value,
@@ -102,19 +113,19 @@ export class Settable {
  * @param {Array} Mixins - Mixins to apply.
  * @return Object - New ad-hoc base class with mixins applied.
  */
-export function mix(Base, ...Mixins) {
+export function mix(Base: any, ...Mixins: any[]) {
   class Class extends Base {}
 
   Mixins.forEach((mixin) => {
     Object
       .getOwnPropertyNames(mixin.prototype)
-      .map(key => [key, mixin.prototype[key]])
+      .map((key) => [key, mixin.prototype[key]])
       .filter(([, v]) => typeof v === 'function' && v !== 'constructor')
       .forEach(([name, method]) => {
         Class.prototype[name] = method;
       });
   });
 
-  return Class;
+  return Class as any;
 }
 

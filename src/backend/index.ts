@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 
 import log from '../log';
 import * as rpc from '../xapi/rpc';
+import { XapiRequest, XapiResult } from '../xapi/types';
 
 
 /**
@@ -43,17 +44,14 @@ import * as rpc from '../xapi/rpc';
  * }
  */
 export default class Backend extends EventEmitter {
-  constructor() {
-    super();
-    this.requests = {};
-  }
+  private requests: { [idx: string]: (res: XapiResult) => void } = {};
 
   /**
    * Close the backend connection and free up resources. The backend should not
    * be used after it is closed and a new instance is required in order
    * re-initialize.
    */
-  close() { // eslint-disable-line class-methods-use-this
+  public close() { // eslint-disable-line class-methods-use-this
   }
 
   /**
@@ -72,7 +70,7 @@ export default class Backend extends EventEmitter {
    * @param {Object} request - JSON-RPC request
    * @param {Function} send - Function for dispatching the request to the backend service.
    */
-  defaultHandler({ method }, send) { // eslint-disable-line class-methods-use-this, no-unused-vars
+  public defaultHandler({ method }: any, send: any) { // eslint-disable-line class-methods-use-this, no-unused-vars
     return Promise.reject(new Error(`Invalid request method: ${method}`));
   }
 
@@ -84,7 +82,7 @@ export default class Backend extends EventEmitter {
    * @param {Object} request - JSON-RPC request
    * @return {string} - Request method type.
    */
-  getRequestType({ method }) { // eslint-disable-line class-methods-use-this
+  public getRequestType({ method }: XapiRequest) { // eslint-disable-line class-methods-use-this
     if (method.startsWith('xCommand')) {
       return 'xCommand';
     }
@@ -105,12 +103,12 @@ export default class Backend extends EventEmitter {
    * @param {Object} request - JSON-RPC request to execute agains the backend service.
    * @return {Promise} - Promise resolved when response is received.
    */
-  execute(request) {
-    const { id } = request;
+  public execute(request: XapiRequest) {
+    const id = request.id!; // TODO
     const type = this.getRequestType(request);
     const handlerName = `${type}()`;
-    const handler = typeof this[handlerName] === 'function'
-      ? this[handlerName]
+    const handler = typeof (this as any)[handlerName] === 'function'
+      ? (this as any)[handlerName]
       : this.defaultHandler;
 
     return this.isReady
@@ -118,7 +116,7 @@ export default class Backend extends EventEmitter {
         const promise = new Promise((resolve) => {
           this.requests[id] = resolve;
         });
-        const sender = (cmd, body) => {
+        const sender = (cmd: string, body: string) => {
           this.send(id, cmd, body);
           return promise;
         };
@@ -141,7 +139,7 @@ export default class Backend extends EventEmitter {
    *
    * @param {Object} result - JSON-RPC params data for the feedback event.
    */
-  onFeedback(result) {
+  public onFeedback(result: any) {
     this.emit('data', rpc.createRequest(null, 'xFeedback/Event', result));
   }
 
@@ -153,7 +151,7 @@ export default class Backend extends EventEmitter {
    * @param {string} id - Request id of the JSON-RPC request.
    * @param {Object} result - Result from the backend service.
    */
-  onResult(id, result) {
+  public onResult(id: string, result: XapiResult) {
     if (id) {
       const resolve = this.requests[id];
       delete this.requests[id];
@@ -169,7 +167,7 @@ export default class Backend extends EventEmitter {
    * @param {Array|Object|number|string} command - Command from method handler.
    * @abstract
    */
-  send(id, command) { // eslint-disable-line class-methods-use-this, no-unused-vars
+  public send(id: string, command: string, body: string) { // eslint-disable-line class-methods-use-this, no-unused-vars
     throw new Error('Backend class must override .send()');
   }
 }

@@ -1,4 +1,4 @@
-import { Duplex } from 'stream';
+import { Duplex, DuplexOptions } from 'stream';
 
 
 /**
@@ -6,24 +6,23 @@ import { Duplex } from 'stream';
  * access to the network or local ipc. E.g. for sandboxing or test stubs.
  */
 export default class StreamTransport extends Duplex {
+  private buffer: string[] = [];
+  private canPush = false;
   /**
    * Creates a {@link Duplex} stream.
    *
    * @param {function(data: string)} send - Callback for outbound data
    * @return {Duplex} - Duplex stream.
    */
-  constructor(send, options) {
+  constructor(readonly send: any, options: DuplexOptions) {
     super(options);
-    this.buffer = [];
-    this.canPush = false;
-    this.send = send;
     this.on('finish', () => { this.emit('close'); });
   }
 
   /**
    * Closes the stream transport
    */
-  close() {
+  public close() {
     this.end();
   }
 
@@ -31,24 +30,24 @@ export default class StreamTransport extends Duplex {
    * @param {string} data - Push inbound data from the XAPI service to JSXAPI.
    * @return {boolean} - Boolean signaling if the stream can receive more data.
    */
-  push(data) {
+  public push(data: string) {
     this.buffer.push(data);
     return this.attemptFlush();
   }
 
-  attemptFlush() {
+  public attemptFlush() {
     while (this.canPush && this.buffer.length) {
       this.canPush = super.push(this.buffer.shift());
     }
     return this.canPush;
   }
 
-  _read() {
+  public _read() {
     this.canPush = true;
     this.attemptFlush();
   }
 
-  _write(chunk, encoding, callback) {
+  public _write(chunk: any, encoding: string, callback: any) {
     this.send(chunk, encoding, callback);
   }
 }
