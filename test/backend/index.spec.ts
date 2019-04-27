@@ -1,6 +1,8 @@
+import * as sinon from 'sinon';
+import { expect} from 'chai';
+
 import Backend from '../../src/backend';
 import { XAPIError } from '../../src/xapi/exc';
-
 
 describe('Backend', () => {
   let backend;

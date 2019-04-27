@@ -1,4 +1,5 @@
 import { Duplex } from 'stream';
+import * as sinon from 'sinon';
 
 
 export default class MockTransport extends Duplex {

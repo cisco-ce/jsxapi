@@ -9,11 +9,17 @@ export const METHOD_NOT_FOUND = -32601;
 
 
 export class XAPIError extends Error {
+  public data?: any;
   constructor(
     readonly code: number,
     reason: string,
-    readonly data?: any) {
+    data?: any) {
+
     super(reason);
+    Object.setPrototypeOf(this, XAPIError.prototype);
+    if (data !== undefined) {
+      this.data = data;
+    }
 
     if (typeof reason !== 'string') {
       throw new Error('Reason for XAPIError must be a string');
@@ -29,6 +35,7 @@ export class XAPIError extends Error {
 export class IllegalValueError extends XAPIError {
   constructor(reason: string) {
     super(ILLEGAL_VALUE, reason);
+    Object.setPrototypeOf(this, IllegalValueError.prototype);
   }
 }
 
@@ -36,6 +43,7 @@ export class IllegalValueError extends XAPIError {
 export class InvalidPathError extends XAPIError {
   constructor(reason: string, xpath: string) {
     super(INVALID_PATH, reason, { xpath });
+    Object.setPrototypeOf(this, InvalidPathError.prototype);
   }
 }
 
@@ -43,5 +51,6 @@ export class InvalidPathError extends XAPIError {
 export class ParameterError extends XAPIError {
   constructor() {
     super(PARAMETER_ERROR, 'Invalid or missing parameters');
+    Object.setPrototypeOf(this, ParameterError.prototype);
   }
 }

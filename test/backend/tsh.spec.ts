@@ -1,3 +1,6 @@
+import { expect } from 'chai';
+import * as sinon from 'sinon';
+
 import TSHBackend from '../../src/backend/tsh';
 import {
   ILLEGAL_VALUE,

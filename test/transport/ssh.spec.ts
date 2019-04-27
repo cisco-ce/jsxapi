@@ -1,3 +1,5 @@
+import * as sinon from 'sinon';
+import { expect } from 'chai';
 import { Client } from 'ssh2';
 import { Duplex } from 'stream';
 
