@@ -9,7 +9,6 @@ import { Config, Event, Status } from './components';
 import Feedback from './feedback';
 import { Path, Requests, XapiOptions, XapiResponse, XapiResult } from './types';
 
-
 /**
  * User-facing API towards the XAPI. Requires a backend for communicating
  * with an XAPI instance. It should be possible to write backends for all kinds
@@ -51,9 +50,7 @@ export default class XAPI extends EventEmitter {
   private requestId = 1;
   private requests: Requests = {};
 
-  constructor(
-    readonly backend: Backend,
-    options: XapiOptions = {}) {
+  constructor(readonly backend: Backend, options: XapiOptions = {}) {
     super();
 
     /**
@@ -90,9 +87,15 @@ export default class XAPI extends EventEmitter {
     Object.seal(this);
 
     backend
-      .on('close', () => { this.emit('close'); })
-      .on('error', (error) => { this.emit('error', error); })
-      .on('ready', () => { this.emit('ready', this); })
+      .on('close', () => {
+        this.emit('close');
+      })
+      .on('error', (error) => {
+        this.emit('error', error);
+      })
+      .on('ready', () => {
+        this.emit('ready', this);
+      })
       .on('data', this.handleResponse.bind(this));
   }
 
@@ -151,7 +154,8 @@ export default class XAPI extends EventEmitter {
   public command(path: Path, params: any, body?: string) {
     const apiPath = normalizePath(path).join('/');
     const method = `xCommand/${apiPath}`;
-    const executeParams = body === undefined ? params : Object.assign({ body }, params);
+    const executeParams =
+      body === undefined ? params : Object.assign({ body }, params);
     return this.execute(method, executeParams);
   }
 

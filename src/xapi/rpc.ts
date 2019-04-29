@@ -12,9 +12,7 @@ import { XapiRequest } from './types';
 const scalars = ['number', 'string'];
 const isScalar = (value: any) => scalars.indexOf(typeof value) >= 0;
 
-
 const VERSION = '2.0';
-
 
 /*
  * Collapse "Value" into parent + skip lowercase props
@@ -28,7 +26,7 @@ export function collapse(data: any): any {
     return data.Value;
   }
 
-  const result: {[idx: string]: any} = {};
+  const result: { [idx: string]: any } = {};
 
   Object.keys(data).forEach((key) => {
     result[key] = collapse(data[key]);
@@ -36,7 +34,6 @@ export function collapse(data: any): any {
 
   return result;
 }
-
 
 export function createRequest(id: string | null, method: string, params: any) {
   const request: XapiRequest = { jsonrpc: VERSION, method };
@@ -51,7 +48,11 @@ export function createRequest(id: string | null, method: string, params: any) {
     Object.keys(params).forEach((key) => {
       const value = params[key];
 
-      if (key !== 'body' && typeof value === 'string' && value.indexOf('\n') !== -1) {
+      if (
+        key !== 'body' &&
+        typeof value === 'string' &&
+        value.indexOf('\n') !== -1
+      ) {
         throw new Error('Parameters may not contain newline characters');
       }
 
@@ -62,14 +63,12 @@ export function createRequest(id: string | null, method: string, params: any) {
   return request;
 }
 
-
 export function createResponse(id: string, result: any) {
   return { jsonrpc: VERSION, id, result };
 }
 
-
 export function createErrorResponse(id: string, error: any) {
-  let payload: {[idx: string]: any};
+  let payload: { [idx: string]: any };
 
   if (error instanceof XAPIError) {
     payload = {
@@ -90,22 +89,24 @@ export function createErrorResponse(id: string, error: any) {
   return { jsonrpc: VERSION, id, error: payload };
 }
 
-
 export function parseFeedbackResponse(response: any) {
   return collapse(response);
 }
 
-
 function assertValidCommandResponse(response: any) {
   if (!{}.hasOwnProperty.call(response, 'CommandResponse')) {
     throw new XAPIError(
-      INVALID_RESPONSE, 'Invalid command response: Missing "CommandResponse" attribute');
+      INVALID_RESPONSE,
+      'Invalid command response: Missing "CommandResponse" attribute',
+    );
   }
 
   const keys = Object.keys(response.CommandResponse);
   if (keys.length !== 1) {
     throw new XAPIError(
-      INVALID_RESPONSE, `Invalid command response: Wrong number of keys (${keys.length})`);
+      INVALID_RESPONSE,
+      `Invalid command response: Wrong number of keys (${keys.length})`,
+    );
   }
 
   const root = response.CommandResponse[keys[0]];
@@ -127,17 +128,18 @@ function assertValidCommandResponse(response: any) {
     case 'OK':
       return root;
     default:
-      throw new XAPIError(INVALID_STATUS, `Invalid command status: ${root.status}`);
+      throw new XAPIError(
+        INVALID_STATUS,
+        `Invalid command status: ${root.status}`,
+      );
   }
 }
-
 
 export function createCommandResponse(response: any) {
   const root = assertValidCommandResponse(response);
   const collapsed = collapse(root);
   return Object.keys(collapsed).length ? collapsed : null;
 }
-
 
 function digObj(path: Array<string | number>, obj: any) {
   const parts = path.slice();
@@ -157,7 +159,6 @@ function digObj(path: Array<string | number>, obj: any) {
   return value;
 }
 
-
 export function createGetResponse(request: any, response: any) {
   if ({}.hasOwnProperty.call(response, 'CommandResponse')) {
     assertValidCommandResponse(response);
@@ -165,7 +166,6 @@ export function createGetResponse(request: any, response: any) {
 
   return digObj(request.params.Path, collapse(response));
 }
-
 
 export function createSetResponse(request: any, response: any) {
   if ({}.hasOwnProperty.call(response, 'CommandResponse')) {

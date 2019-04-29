@@ -34,7 +34,6 @@ export class Listenable {
     return this.xapi.feedback.once(this.normalizePath(path) as any, listener);
   }
 
-
   /**
    * De-register the given listener on the given path.
    *
@@ -44,7 +43,6 @@ export class Listenable {
     this.xapi.feedback.off();
   }
 }
-
 
 /**
  * Mixin for XAPI sections that can hold a value that may be fetched.
@@ -77,7 +75,6 @@ export class Gettable {
   }
 }
 
-
 /**
  * Mixin for XAPI sections that can hold a value that may be fetched.
  *
@@ -105,7 +102,6 @@ export class Settable {
   }
 }
 
-
 /**
  * Extend {Base} class and apply {Mixins}.
  *
@@ -117,8 +113,7 @@ export function mix(Base: any, ...Mixins: any[]) {
   class Class extends Base {}
 
   Mixins.forEach((mixin) => {
-    Object
-      .getOwnPropertyNames(mixin.prototype)
+    Object.getOwnPropertyNames(mixin.prototype)
       .map((key) => [key, mixin.prototype[key]])
       .filter(([, v]) => typeof v === 'function' && v !== 'constructor')
       .forEach(([name, method]) => {
@@ -128,4 +123,3 @@ export function mix(Base: any, ...Mixins: any[]) {
 
   return Class as any;
 }
-

@@ -52,9 +52,7 @@ export class FeedbackGroup {
   }
 }
 
-function defaultInterceptor<T>(
-  payload: T,
-  emit: (payload: T) => void) {
+function defaultInterceptor<T>(payload: T, emit: (payload: T) => void) {
   emit(payload);
 }
 
@@ -62,7 +60,8 @@ function dispatch(
   feedback: Feedback,
   data: any,
   root = data,
-  path: string[] = []) {
+  path: string[] = [],
+) {
   if (Array.isArray(data)) {
     data.forEach((child) => {
       dispatch(feedback, child, root, path);
@@ -120,10 +119,7 @@ export default class Feedback {
    */
   public readonly eventEmitter = new EventEmitter();
   public subscriptions = [];
-  constructor(
-    readonly xapi: XAPI,
-    readonly interceptor = defaultInterceptor) {
-  }
+  constructor(readonly xapi: XAPI, readonly interceptor = defaultInterceptor) {}
 
   /**
    * Registers a feedback listener with the backend service which is invoked
@@ -165,7 +161,9 @@ export default class Feedback {
   public once(path: Path, listener: Listener) {
     let off: () => void | undefined;
     const wrapped = (...args: any[]) => {
-      if (typeof off === 'function') { off(); }
+      if (typeof off === 'function') {
+        off();
+      }
       listener.call(this, ...args);
     };
     wrapped.listener = listener;

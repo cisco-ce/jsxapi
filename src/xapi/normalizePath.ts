@@ -10,11 +10,12 @@ import { NormalizedPath, Path } from './types';
  */
 export default function normalizePath(path: Path): NormalizedPath {
   const split = Array.isArray(path) ? path : path.match(/(\w+)/g);
-  return !split ? [] : split
-    .map((element) => {
-      if (/^\d+$/.test(element)) {
-        return parseInt(element, 10);
-      }
-      return element.charAt(0).toUpperCase() + element.slice(1);
-    });
+  return !split
+    ? []
+    : split.map((element) => {
+        if (/^\d+$/.test(element)) {
+          return parseInt(element, 10);
+        }
+        return element.charAt(0).toUpperCase() + element.slice(1);
+      });
 }

@@ -4,7 +4,6 @@ import { Client } from 'ssh2';
 import { Stream } from 'stream';
 import log from '../log';
 
-
 /*
  * Patch DuplexPassThrough.prototype.on to always return "this".
  * For some event types it delegates and return the return value of
@@ -43,17 +42,24 @@ interface SshOptions {
 export default function connectSSH(options: Partial<SshOptions>) {
   let closing = false;
 
-  const mergedOpts: SshOptions = Object.assign({
-    client: new Client(),
-    transport: new DuplexPassThrough(),
-  }, options);
+  const mergedOpts: SshOptions = Object.assign(
+    {
+      client: new Client(),
+      transport: new DuplexPassThrough(),
+    },
+    options,
+  );
 
   const { client, password, transport } = mergedOpts;
   delete mergedOpts.password;
 
   function onKeyboardInteractive(
-    n: any, i: any, il: any, p: any,
-    finish: (args: any[]) => void) {
+    n: any,
+    i: any,
+    il: any,
+    p: any,
+    finish: (args: any[]) => void,
+  ) {
     finish([password]);
   }
 
@@ -68,28 +74,35 @@ export default function connectSSH(options: Partial<SshOptions>) {
 
       log.debug('[SSH] shell ready');
       sshStream
-        .on('error', (error: any) => { transport.emit('error', error); })
+        .on('error', (error: any) => {
+          transport.emit('error', error);
+        })
         .on('end', () => {
           if (!closing) {
             transport.emit('error', 'Connection terminated remotely');
           }
         })
-        .on('close', () => { transport.emit('close'); });
+        .on('close', () => {
+          transport.emit('close');
+        });
 
       if (options.command) {
-        client.exec(options.command, (binaryErr: string, binaryStream: Stream) => {
-          if (binaryErr) {
-            log.error('[SSH] exec error:', err);
-            transport.emit('error', binaryErr);
-            return;
-          }
-          binaryStream.on('error', (error) => {
-            log.error('[SSH] stream error:', error);
-            transport.emit('error', error);
-          });
-          log.debug('[SSH] exec ready');
-          transport.wrapStream(binaryStream);
-        });
+        client.exec(
+          options.command,
+          (binaryErr: string, binaryStream: Stream) => {
+            if (binaryErr) {
+              log.error('[SSH] exec error:', err);
+              transport.emit('error', binaryErr);
+              return;
+            }
+            binaryStream.on('error', (error) => {
+              log.error('[SSH] stream error:', error);
+              transport.emit('error', error);
+            });
+            log.debug('[SSH] exec ready');
+            transport.wrapStream(binaryStream);
+          },
+        );
         return;
       }
 
@@ -100,8 +113,12 @@ export default function connectSSH(options: Partial<SshOptions>) {
   client
     .on('keyboard-interactive', onKeyboardInteractive)
     .on('ready', onReady)
-    .on('error', (error: any) => { transport.emit('error', error.level); })
-    .on('close', () => { transport.emit('close'); })
+    .on('error', (error: any) => {
+      transport.emit('error', error.level);
+    })
+    .on('close', () => {
+      transport.emit('close');
+    })
     .connect(Object.assign({ tryKeyboard: true }, mergedOpts));
 
   transport.close = () => {

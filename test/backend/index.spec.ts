@@ -1,5 +1,5 @@
 import * as sinon from 'sinon';
-import { expect} from 'chai';
+import { expect } from 'chai';
 
 import Backend from '../../src/backend';
 import { XAPIError } from '../../src/xapi/exc';
@@ -24,7 +24,9 @@ describe('Backend', () => {
         params: { Number: 'user@example.com' },
       });
 
-      return expect(result).to.eventually.be.rejectedWith('Invalid request method');
+      return expect(result).to.eventually.be.rejectedWith(
+        'Invalid request method',
+      );
     });
   });
 
@@ -63,30 +65,36 @@ describe('Backend', () => {
       });
     });
 
-    const testCases = [{
-      name: 'xCommand',
-      method: 'xCommand/Dial',
-      params: { Number: 'user@example.com' },
-    }, {
-      name: 'xFeedback/Subscribe',
-      method: 'xFeedback/Subscribe',
-      params: { Query: ['Status', 'Audio', 'Volume'] },
-    }, {
-      name: 'xFeedback/Unsubscribe',
-      method: 'xFeedback/Unsubscribe',
-      params: { Id: 1 },
-    }, {
-      name: 'xGet',
-      method: 'xGet',
-      params: { Path: ['Status', 'Audio', 'Volume'] },
-    }, {
-      name: 'xSet',
-      method: 'xSet',
-      params: {
-        Path: ['Configuration', 'Audio', 'DefaultVolume'],
-        Value: 50,
+    const testCases = [
+      {
+        name: 'xCommand',
+        method: 'xCommand/Dial',
+        params: { Number: 'user@example.com' },
       },
-    }];
+      {
+        name: 'xFeedback/Subscribe',
+        method: 'xFeedback/Subscribe',
+        params: { Query: ['Status', 'Audio', 'Volume'] },
+      },
+      {
+        name: 'xFeedback/Unsubscribe',
+        method: 'xFeedback/Unsubscribe',
+        params: { Id: 1 },
+      },
+      {
+        name: 'xGet',
+        method: 'xGet',
+        params: { Path: ['Status', 'Audio', 'Volume'] },
+      },
+      {
+        name: 'xSet',
+        method: 'xSet',
+        params: {
+          Path: ['Configuration', 'Audio', 'DefaultVolume'],
+          Value: 50,
+        },
+      },
+    ];
 
     testCases.forEach(({ name, method, params }) => {
       it(`calls .${name}() handler`, () => {
@@ -122,7 +130,11 @@ describe('Backend', () => {
         done();
       });
 
-      backend.execute({ jsonrpc: '2.0', id: 'request', method: 'xCommand/Foo/Bar' });
+      backend.execute({
+        jsonrpc: '2.0',
+        id: 'request',
+        method: 'xCommand/Foo/Bar',
+      });
     });
   });
 });

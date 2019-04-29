@@ -8,7 +8,6 @@ import TSHBackend from './backend/tsh';
 import WSBackend from './backend/ws';
 import spawnTSH from './transport/tsh';
 
-
 /**
  * Connect to an XAPI endpoint.
  *
@@ -27,7 +26,8 @@ import spawnTSH from './transport/tsh';
  *     Set the internal log level.
  * @return {XAPI} - XAPI interface connected to the given URI.
  */
-export function connect(url: any, options? :any) { // eslint-disable-line import/prefer-default-export
+export function connect(url: any, options?: any) {
+  // eslint-disable-line import/prefer-default-export
   if (arguments.length === 1 && typeof url === 'object') {
     /* eslint-disable no-param-reassign */
     options = url;
@@ -37,13 +37,17 @@ export function connect(url: any, options? :any) { // eslint-disable-line import
 
   const parsedUrl = parseUrl(url.match(/^\w+:\/\//) ? url : `ssh://${url}`);
 
-  const opts = Object.assign({
-    host: '',
-    password: '',
-    protocol: 'ssh:',
-    username: 'admin',
-    loglevel: 'warn',
-  }, parsedUrl, options);
+  const opts = Object.assign(
+    {
+      host: '',
+      password: '',
+      protocol: 'ssh:',
+      username: 'admin',
+      loglevel: 'warn',
+    },
+    parsedUrl,
+    options,
+  );
 
   const { hostname: host, port } = opts;
   delete opts.hostname;

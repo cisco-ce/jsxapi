@@ -20,9 +20,9 @@ class Component {
    * @param {XAPI} xapi - XAPI instance.
    */
   constructor(readonly xapi: XAPI) {}
-    /**
-     * @type {XAPI}
-     */
+  /**
+   * @type {XAPI}
+   */
 
   /**
    * Normalizes a path including the component prefix.
@@ -33,10 +33,11 @@ class Component {
   public normalizePath(path: Path) {
     const normalized = normalizePath(path);
     const { prefix } = this;
-    return !prefix ? normalized : ([prefix] as Array<string | number>).concat(normalized);
+    return !prefix
+      ? normalized
+      : ([prefix] as Array<string | number>).concat(normalized);
   }
 }
-
 
 /**
  * Interface to XAPI configurations.
@@ -47,11 +48,11 @@ class Component {
  * @extends {Settable}
  */
 export class Config extends mix(Component, Listenable, Gettable, Settable)
-                    implements Component, Listenable, Gettable, Settable {
+  implements Component, Listenable, Gettable, Settable {
   public prefix = 'Configuration';
 
   // fake mixins
-  public normalizePath!: (path: Path) => Array<string|number>;
+  public normalizePath!: (path: Path) => Array<string | number>;
 
   public on!: (path: Path, listener: Listener) => () => void;
   public once!: (path: Path, listener: Listener) => () => void;
@@ -60,9 +61,10 @@ export class Config extends mix(Component, Listenable, Gettable, Settable)
   public get!: (path: Path) => Promise<any>;
   public set!: (path: Path, value: number | string) => Promise<any>;
 
-  constructor(readonly xapi: XAPI) { super(); }
+  constructor(readonly xapi: XAPI) {
+    super();
+  }
 }
-
 
 /**
  * Interface to XAPI events.
@@ -70,19 +72,21 @@ export class Config extends mix(Component, Listenable, Gettable, Settable)
  * @extends {Component}
  * @extends {Listenable}
  */
-export class Event extends mix(Component, Listenable) implements Component, Listenable {
+export class Event extends mix(Component, Listenable)
+  implements Component, Listenable {
   public prefix = 'Event';
 
   // fake mixins
-  public normalizePath!: (path: Path) => Array<string|number>;
+  public normalizePath!: (path: Path) => Array<string | number>;
 
   public on!: (path: Path, listener: Listener) => () => void;
   public once!: (path: Path, listener: Listener) => () => void;
   public off!: () => void;
 
-  constructor(readonly xapi: XAPI) { super(); }
+  constructor(readonly xapi: XAPI) {
+    super();
+  }
 }
-
 
 /**
  * Interface to XAPI statuses.
@@ -91,11 +95,12 @@ export class Event extends mix(Component, Listenable) implements Component, List
  * @extends {Listenable}
  * @extends {Gettable}
  */
-export class Status extends mix(Component, Listenable, Gettable) implements Component, Listenable, Gettable {
+export class Status extends mix(Component, Listenable, Gettable)
+  implements Component, Listenable, Gettable {
   public prefix = 'Status';
 
   // fake mixins
-  public normalizePath!: (path: Path) => Array<string|number>;
+  public normalizePath!: (path: Path) => Array<string | number>;
 
   public on!: (path: Path, listener: Listener) => () => void;
   public once!: (path: Path, listener: Listener) => () => void;
@@ -103,5 +108,7 @@ export class Status extends mix(Component, Listenable, Gettable) implements Comp
 
   public get!: (path: Path) => Promise<any>;
 
-  constructor(readonly xapi: XAPI) { super(); }
+  constructor(readonly xapi: XAPI) {
+    super();
+  }
 }

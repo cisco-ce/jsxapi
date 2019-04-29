@@ -10,7 +10,6 @@ import {
 
 import MockTransport from '../mock_transport';
 
-
 describe('TSH Backend', () => {
   let parser;
   let transport;
@@ -30,20 +29,24 @@ describe('TSH Backend', () => {
   });
 
   describe('constructor', () => {
-    it('disables echo', () => transport.sendWelcomeText().then(() => {
-      expect(transport.writeBuffer).to.deep.equal(['echo off']);
-    }));
+    it('disables echo', () =>
+      transport.sendWelcomeText().then(() => {
+        expect(transport.writeBuffer).to.deep.equal(['echo off']);
+      }));
 
-    it('sets xpreferences', () => transport.init().then(() => {
-      expect(transport.writeBuffer).to.deep.equal([
-        'xpreferences outputmode json',
-        'echo off',
-      ]);
-    }));
+    it('sets xpreferences', () =>
+      transport.init().then(() => {
+        expect(transport.writeBuffer).to.deep.equal([
+          'xpreferences outputmode json',
+          'echo off',
+        ]);
+      }));
 
     it('resolves `.isReady` when ready', () => {
       transport.init();
-      return tsh.isReady.then((result) => { expect(result).to.equal(true); });
+      return tsh.isReady.then((result) => {
+        expect(result).to.equal(true);
+      });
     });
 
     it('emits "ready" event when ready', (done) => {
@@ -137,7 +140,8 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
 
     const testCases = [
       // xCommand
-      { name: 'xCommand, it handles empty successful command result',
+      {
+        name: 'xCommand, it handles empty successful command result',
         request: { method: 'xCommand/Audio/Volume/Increase' },
         response: `
           {
@@ -149,8 +153,10 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
             ,"ResultId": "request-1"
           }
         `,
-        expected: { result: { status: 'OK' } } },
-      { name: 'xCommand, it handles XPath error',
+        expected: { result: { status: 'OK' } },
+      },
+      {
+        name: 'xCommand, it handles XPath error',
         request: { method: 'xCommand/Dila' },
         response: `
           {
@@ -172,7 +178,8 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
           },
         },
       },
-      { name: 'xCommand, it handles ParameterError',
+      {
+        name: 'xCommand, it handles ParameterError',
         request: { method: 'xCommand/Dial' },
         response: `
           {
@@ -191,7 +198,8 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
           },
         },
       },
-      { name: 'xCommand, it extracts nested command result',
+      {
+        name: 'xCommand, it extracts nested command result',
         request: {
           method: 'xCommand/Dial',
           params: { Number: 'user@example.com' },
@@ -214,8 +222,10 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
         `,
         expected: {
           result: { status: 'OK', CallId: '2', ConferenceId: '1' },
-        } },
-      { name: 'xCommand, it collapses "Value" nodes',
+        },
+      },
+      {
+        name: 'xCommand, it collapses "Value" nodes',
         request: { method: 'xCommand/Phonebook/Search' },
         response: `
           {
@@ -256,22 +266,28 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
           result: {
             id: '1',
             status: 'OK',
-            Contact: [{
-              id: '1',
-              Name: 'asdf',
-              ContactId: 'localContactId-2',
-              FolderId: 'localGroupId-1',
-              ContactMethod: [{
+            Contact: [
+              {
                 id: '1',
-                ContactMethodId: '1',
-                Number: 'asdf',
-                CallType: 'Video',
-              }],
-            }],
+                Name: 'asdf',
+                ContactId: 'localContactId-2',
+                FolderId: 'localGroupId-1',
+                ContactMethod: [
+                  {
+                    id: '1',
+                    ContactMethodId: '1',
+                    Number: 'asdf',
+                    CallType: 'Video',
+                  },
+                ],
+              },
+            ],
           },
-        } },
+        },
+      },
       // xGet
-      { name: 'xGet, it finds the leaf node of the result',
+      {
+        name: 'xGet, it finds the leaf node of the result',
         request: {
           method: 'xGet',
           params: { Path: ['Status', 'SystemUnit', 'Uptime'] },
@@ -288,8 +304,10 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
             ,"ResultId": "request-1"
           }
         `,
-        expected: { result: '29038' } },
-      { name: 'xGet, handles invalid path',
+        expected: { result: '29038' },
+      },
+      {
+        name: 'xGet, handles invalid path',
         request: {
           method: 'xGet',
           params: { Path: ['Configuration', 'Foo', 'Bar'] },
@@ -319,12 +337,20 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
           },
         },
       },
-      { name: 'xGet, it handles array indices',
+      {
+        name: 'xGet, it handles array indices',
         request: {
           method: 'xGet',
           params: {
             Path: [
-              'Status', 'Video', 'Layout', 'Site', 1, 'Output', 1, 'FamilyName',
+              'Status',
+              'Video',
+              'Layout',
+              'Site',
+              1,
+              'Output',
+              1,
+              'FamilyName',
             ],
           },
         },
@@ -348,9 +374,11 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
             ,"ResultId": "request-1"
           }
         `,
-        expected: { result: 'overlay' } },
+        expected: { result: 'overlay' },
+      },
       // xSet
-      { name: 'xSet, gives empty responses',
+      {
+        name: 'xSet, gives empty responses',
         request: {
           method: 'xSet',
           params: {
@@ -363,8 +391,10 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
             "ResultId": "request-1"
           }
         `,
-        expected: { result: null } },
-      { name: 'xSet, handles value error',
+        expected: { result: null },
+      },
+      {
+        name: 'xSet, handles value error',
         request: {
           method: 'xSet',
           params: {
@@ -393,7 +423,8 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
         },
       },
       // Feedback
-      { name: 'register feedback',
+      {
+        name: 'register feedback',
         request: {
           method: 'xFeedback/Subscribe',
           params: { Query: ['Status', 'Audio', 'Volume'] },
@@ -403,7 +434,8 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
             "ResultId": "request-1"
           }
         `,
-        expected: { result: { Id: 0 } } },
+        expected: { result: { Id: 0 } },
+      },
     ];
 
     testCases.forEach((test) => {
@@ -412,11 +444,10 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
           parser.emit('data', JSON.parse(test.response));
         });
 
-        return tsh.execute(createMessage(test.request))
-          .then(() => {
-            const expected = createMessage(test.expected);
-            expect(spy).to.have.been.calledWith(expected);
-          });
+        return tsh.execute(createMessage(test.request)).then(() => {
+          const expected = createMessage(test.expected);
+          expect(spy).to.have.been.calledWith(expected);
+        });
       });
     });
 
@@ -425,13 +456,14 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
         parser.emit('data', { ResultId: 'request-1' });
       });
 
-      return tsh.execute({
-        id: 'request-1',
-        method: 'xFeedback/Subscribe',
-        params: {
-          Query: ['Status', 'Video', 'Layout', 'Prediction', 'Site', 1],
-        },
-      })
+      return tsh
+        .execute({
+          id: 'request-1',
+          method: 'xFeedback/Subscribe',
+          params: {
+            Query: ['Status', 'Video', 'Layout', 'Prediction', 'Site', 1],
+          },
+        })
         .then(() => {
           expect(tsh.send.firstCall).to.have.been.calledWith(
             'request-1',
@@ -450,16 +482,23 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
         parser.emit('data', JSON.parse(responses.shift()));
       });
 
-      return tsh.execute(createMessage({
-        id: 'request-1',
-        method: 'xFeedback/Subscribe',
-        params: { Query: ['Status', 'Audio', 'Volume'] },
-      }))
-        .then(() => tsh.execute(createMessage({
-          id: 'request-2',
-          method: 'xFeedback/Unsubscribe',
-          params: { Id: 0 },
-        })))
+      return tsh
+        .execute(
+          createMessage({
+            id: 'request-1',
+            method: 'xFeedback/Subscribe',
+            params: { Query: ['Status', 'Audio', 'Volume'] },
+          }),
+        )
+        .then(() =>
+          tsh.execute(
+            createMessage({
+              id: 'request-2',
+              method: 'xFeedback/Unsubscribe',
+              params: { Id: 0 },
+            }),
+          ),
+        )
         .then(() => {
           const expected = createMessage({ id: 'request-2', result: true });
           expect(spy.secondCall).to.have.been.calledWith(expected);
@@ -467,7 +506,9 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
     });
 
     it('feedback event', () => {
-      parser.emit('data', JSON.parse(`
+      parser.emit(
+        'data',
+        JSON.parse(`
         {
           "Status": {
             "Audio": {
@@ -478,7 +519,8 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
             }
           }
         }
-      `));
+      `),
+      );
 
       expect(spy).to.have.been.calledWith({
         jsonrpc: '2.0',
@@ -505,48 +547,66 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
 
     const testCases = [
       // xCommand
-      { name: '"xCommand" without params',
+      {
+        name: '"xCommand" without params',
         request: { method: 'xCommand/Standby/Deactivate' },
-        expected: 'xCommand Standby Deactivate | resultId="request-1"' },
-      { name: '"xCommand" with params',
+        expected: 'xCommand Standby Deactivate | resultId="request-1"',
+      },
+      {
+        name: '"xCommand" with params',
         request: {
           method: 'xCommand/Dial',
           params: { Number: 'user@example.com' },
         },
-        expected: 'xCommand Dial Number: "user@example.com" | resultId="request-1"' },
-      { name: '"xCommand" with number argument',
+        expected:
+          'xCommand Dial Number: "user@example.com" | resultId="request-1"',
+      },
+      {
+        name: '"xCommand" with number argument',
         request: {
           method: 'xCommand/Video/Input/SetVideoMainSource',
           params: { SourceId: 1 },
         },
-        expected: 'xCommand Video Input SetVideoMainSource SourceId: 1 | resultId="request-1"',
+        expected:
+          'xCommand Video Input SetVideoMainSource SourceId: 1 | resultId="request-1"',
       },
-      { name: '"xCommand" with boolean argument',
+      {
+        name: '"xCommand" with boolean argument',
         request: {
           method: 'xCommand/Some/Command',
           params: { Enabled: false },
         },
         expected: 'xCommand Some Command Enabled: False | resultId="request-1"',
       },
-      { name: '"xCommand" with string containing quotes',
+      {
+        name: '"xCommand" with string containing quotes',
         request: {
           method: 'xCommand/Message/Send',
           params: { Text: 'foo "bar" bin' },
         },
-        expected: 'xCommand Message Send Text: "foo \\"bar\\" bin" | resultId="request-1"' },
-      { name: '"xCommand" with array of strings containing quotes',
+        expected:
+          'xCommand Message Send Text: "foo \\"bar\\" bin" | resultId="request-1"',
+      },
+      {
+        name: '"xCommand" with array of strings containing quotes',
         request: {
           method: 'xCommand/Message/Send',
           params: { Text1: 'foo "bar" bin', Text2: 'baz "boo" boing' },
         },
-        expected: 'xCommand Message Send Text1: "foo \\"bar\\" bin" Text2: "baz \\"boo\\" boing" | resultId="request-1"' },
-      { name: '"xCommand" with array params',
+        expected:
+          'xCommand Message Send Text1: "foo \\"bar\\" bin" Text2: "baz \\"boo\\" boing" | resultId="request-1"',
+      },
+      {
+        name: '"xCommand" with array params',
         request: {
           method: 'xCommand/UserManagement/User/Add',
           params: { Username: 'user', Role: ['Admin', 'User'] },
         },
-        expected: 'xCommand UserManagement User Add Role: "Admin" Role: "User" Username: "user" | resultId="request-1"' },
-      { name: '"xCommand" with multi-line body',
+        expected:
+          'xCommand UserManagement User Add Role: "Admin" Role: "User" Username: "user" | resultId="request-1"',
+      },
+      {
+        name: '"xCommand" with multi-line body',
         request: {
           method: 'xCommand/UserInterface/Extensions/Set',
           params: {
@@ -555,11 +615,13 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
           },
         },
         expected: [
-          '{208} ',  // <-- NB: Space before newline
+          '{208} ', // <-- NB: Space before newline
           'xCommand UserInterface Extensions Set ConfigId: "example" | resultId="request-1"',
           extensionsXML,
-        ].join('\n') },
-      { name: '"xCommand" with single character body',
+        ].join('\n'),
+      },
+      {
+        name: '"xCommand" with single character body',
         request: {
           method: 'xCommand/HttpClient/Post',
           params: {
@@ -568,11 +630,13 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
           },
         },
         expected: [
-          '{77} ',  // <-- NB: Space before newline
+          '{77} ', // <-- NB: Space before newline
           'xCommand HttpClient Post Url: "https://example.com" | resultId="request-1"',
           '-',
-        ].join('\n') },
-      { name: '"xCommand" with empty body',
+        ].join('\n'),
+      },
+      {
+        name: '"xCommand" with empty body',
         request: {
           method: 'xCommand/HttpClient/Post',
           params: {
@@ -581,9 +645,10 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
           },
         },
         expected: [
-          '{76} ',  // <-- NB: Space before newline
+          '{76} ', // <-- NB: Space before newline
           'xCommand HttpClient Post Url: "https://example.com" | resultId="request-1"',
-        ].join('\n') },
+        ].join('\n')
+      },
       { name: '"xCommand" with non-ascii body`',
         request: {
           method: 'xCommand/HttpClient/Post',
@@ -596,22 +661,28 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
           '{104} ',  // <-- NB: Space before newline
           'xCommand HttpClient Post Url: "https://example.com" | resultId="request-1"',
           '(╯°□°)╯︵ ┻━┻',
-        ].join('\n') },
+        ].join('\n')
+      },
       // xGet
-      { name: '"xGet" for plain config path',
+      {
+        name: '"xGet" for plain config path',
         request: {
           method: 'xGet',
           params: { Path: ['Configuration', 'SystemUnit', 'Name'] },
         },
-        expected: 'xConfiguration SystemUnit Name | resultId="request-1"' },
-      { name: '"xGet" for plain status path',
+        expected: 'xConfiguration SystemUnit Name | resultId="request-1"',
+      },
+      {
+        name: '"xGet" for plain status path',
         request: {
           method: 'xGet',
           params: { Path: ['Status', 'SystemUnit', 'Uptime'] },
         },
-        expected: 'xStatus SystemUnit Uptime | resultId="request-1"' },
+        expected: 'xStatus SystemUnit Uptime | resultId="request-1"',
+      },
       // xSet
-      { name: '"xSet" for configuration value',
+      {
+        name: '"xSet" for configuration value',
         request: {
           method: 'xSet',
           params: {
@@ -619,80 +690,107 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
             Value: 'My System',
           },
         },
-        expected: 'xConfiguration SystemUnit Name: "My System" | resultId="request-1"' },
+        expected:
+          'xConfiguration SystemUnit Name: "My System" | resultId="request-1"',
+      },
       // xFeedback/Subscribe
-      { name: '"xFeedback/Subscribe" for status path',
+      {
+        name: '"xFeedback/Subscribe" for status path',
         request: {
           method: 'xFeedback/Subscribe',
           params: {
             Query: ['Status', 'Audio', 'Volume'],
           },
         },
-        expected: 'xfeedback register /Status/Audio/Volume | resultId="request-1"' },
+        expected:
+          'xfeedback register /Status/Audio/Volume | resultId="request-1"',
+      },
     ];
 
     testCases.forEach(({ name, request, expected }) => {
-      it(name, () => transport.init()
-        .then(() => { tsh.execute(Object.assign(defaultProps, request)); })
-        .then(() => { expect(transport.writeBuffer[0]).to.deep.equal(expected); }),
+      it(name, () =>
+        transport
+          .init()
+          .then(() => {
+            tsh.execute(Object.assign(defaultProps, request));
+          })
+          .then(() => {
+            expect(transport.writeBuffer[0]).to.deep.equal(expected);
+          }),
       );
     });
 
     it('"xCommand" with invalid parameter values (object)', () => {
-      transport
-        .init()
-        .then(() => tsh.execute(Object.assign(defaultProps, {
-          method: 'xCommand/Dial',
-          params: {
-            Number: { Foo: ['bar'] },
-          },
-        })));
+      transport.init().then(() =>
+        tsh.execute(
+          Object.assign(defaultProps, {
+            method: 'xCommand/Dial',
+            params: {
+              Number: { Foo: ['bar'] },
+            },
+          }),
+        ),
+      );
 
-      return new Promise((resolve) => { tsh.on('data', resolve); })
-        .then((error) => {
-          expect(error.error.message).to.match(/invalid value.*foo.*bar/i);
-        });
+      return new Promise((resolve) => {
+        tsh.on('data', resolve);
+      }).then((error) => {
+        expect(error.error.message).to.match(/invalid value.*foo.*bar/i);
+      });
     });
 
     it('"xConfiguration" with invalid value', () => {
-      transport
-        .init()
-        .then(() => tsh.execute(Object.assign(defaultProps, {
-          method: 'xSet',
-          params: {
-            Path: ['Configuration', 'SystemUnit', 'Name'],
-            Value: { Foo: ['bar'] },
-          },
-        })));
+      transport.init().then(() =>
+        tsh.execute(
+          Object.assign(defaultProps, {
+            method: 'xSet',
+            params: {
+              Path: ['Configuration', 'SystemUnit', 'Name'],
+              Value: { Foo: ['bar'] },
+            },
+          }),
+        ),
+      );
 
-      return new Promise((resolve) => { tsh.on('data', resolve); })
-        .then((error) => {
-          expect(error.error.message).to.match(/invalid value.*foo.*bar/i);
-        });
+      return new Promise((resolve) => {
+        tsh.on('data', resolve);
+      }).then((error) => {
+        expect(error.error.message).to.match(/invalid value.*foo.*bar/i);
+      });
     });
 
     it('"xFeedback/Unsubscribe" for status path', () => {
-      const expected = 'xfeedback deregister /Status/Audio/Volume | resultId="request-2"';
+      const expected =
+        'xfeedback deregister /Status/Audio/Volume | resultId="request-2"';
 
-      return transport.init()
+      return transport
+        .init()
         .then(() => {
-          tsh.execute(Object.assign(defaultProps, {
-            id: 'request-1',
-            method: 'xFeedback/Subscribe',
-            params: {
-              Query: ['Status', 'Audio', 'Volume'],
-            },
-          }));
+          tsh.execute(
+            Object.assign(defaultProps, {
+              id: 'request-1',
+              method: 'xFeedback/Subscribe',
+              params: {
+                Query: ['Status', 'Audio', 'Volume'],
+              },
+            }),
+          );
         })
-        .then(() => { transport.send('{"ResultId":"request-1"}'); })
         .then(() => {
-          tsh.execute(Object.assign(defaultProps, {
-            id: 'request-2',
-            method: 'xFeedback/Unsubscribe',
-            params: { Id: 0 },
-          }));
+          transport.send('{"ResultId":"request-1"}');
         })
-        .then(() => { expect(transport.writeBuffer[0]).to.deep.equal(expected); });
+        .then(() => {
+          tsh.execute(
+            Object.assign(defaultProps, {
+              id: 'request-2',
+              method: 'xFeedback/Unsubscribe',
+              params: { Id: 0 },
+            }),
+          );
+        })
+        .then(() => {
+          expect(transport.writeBuffer[0]).to.deep.equal(expected);
+        });
     });
   });
 });

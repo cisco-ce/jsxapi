@@ -11,20 +11,18 @@ import log from './log';
 import { connect } from './';
 import XAPI from './xapi/index.js';
 
-const pkg = { version: "4.2.0" };
+const pkg = { version: '4.2.0' };
 
 function evalFile(source: any, xapi: XAPI) {
   const context = new Function('xapi', source); // eslint-disable-line no-new-func
   context(xapi);
 }
 
-
 function startRepl(xapi: XAPI) {
   const repl = REPL.start({});
   repl.on('exit', () => xapi.close());
   repl.context.xapi = xapi;
 }
-
 
 commander
   .version(pkg.version)
@@ -38,7 +36,8 @@ commander
     '-l, --loglevel <level>',
     'set application log level (trace|debug|info|warn|error|silent)',
     /^(trace|debug|info|warn|error|silent)$/i,
-    'warn')
+    'warn',
+  )
   .action((host, file, options) => {
     if (!host) {
       log.error('Please specify a host to connect to');
@@ -46,8 +45,13 @@ commander
     }
 
     const source = file && fs.readFileSync(file);
-    const xapi = connect(host, options)
-      .on('error', (error: any) => { log.error('xapi error:', error); })
+    const xapi = connect(
+      host,
+      options,
+    )
+      .on('error', (error: any) => {
+        log.error('xapi error:', error);
+      })
       .on('ready', () => {
         if (source) {
           evalFile(source, xapi);

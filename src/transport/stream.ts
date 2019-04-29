@@ -1,6 +1,5 @@
 import { Duplex, DuplexOptions } from 'stream';
 
-
 /**
  * Duplex stream transport for integrations where JSXAPI does not have direct
  * access to the network or local ipc. E.g. for sandboxing or test stubs.
@@ -16,7 +15,9 @@ export default class StreamTransport extends Duplex {
    */
   constructor(readonly send: any, options: DuplexOptions) {
     super(options);
-    this.on('finish', () => { this.emit('close'); });
+    this.on('finish', () => {
+      this.emit('close');
+    });
   }
 
   /**

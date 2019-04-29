@@ -3,18 +3,16 @@ import { Transform } from 'stream';
 /// <reference path="./jsonparse.d.ts" />
 import Parser from 'jsonparse';
 
-
 /**
  * @external {Transform} https://nodejs.org/api/stream.html#stream_class_stream_transform
  */
-
 
 /**
  * Streaming JSON parser. Implements the Node.js {@link Duplex} stream API.
  */
 export class JSONParser extends Transform {
-  private enc = 'utf8';  // Default encoding
-  private parser: Parser = new Parser;
+  private enc = 'utf8'; // Default encoding
+  private parser: Parser = new Parser();
 
   constructor() {
     super({ objectMode: true });
@@ -58,7 +56,6 @@ export class JSONParser extends Transform {
   }
 }
 
-
 /**
  * Synchronous frontend to {@link JSONparser}.
  *
@@ -69,7 +66,9 @@ export function parseJSON(json: string) {
   let obj;
   const parser = new JSONParser();
 
-  parser.on('data', (_obj) => { obj = _obj; });
+  parser.on('data', (_obj) => {
+    obj = _obj;
+  });
   parser.end(json);
 
   return obj;

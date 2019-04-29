@@ -5,11 +5,9 @@ import * as rpc from '../xapi/rpc';
 import { CloseableStream } from '../xapi/types';
 import Backend from './';
 
-
 /**
  * @external {Duplex} https://nodejs.org/api/stream.html#stream_class_stream_duplex
  */
-
 
 function formatValue(value: any) {
   switch (typeof value) {
@@ -25,11 +23,8 @@ function formatValue(value: any) {
 
 function paramString(key: string, value: string | string[]) {
   const values = Array.isArray(value) ? value : [value];
-  return values
-    .map((v) => `${key}: ${formatValue(v)}`)
-    .join(' ');
+  return values.map((v) => `${key}: ${formatValue(v)}`).join(' ');
 }
-
 
 type State = 'idle' | 'connecting' | 'initializing' | 'closed' | 'ready';
 /**
@@ -130,7 +125,10 @@ export default class TSHBackend extends Backend {
         this.parser.write(data);
         break;
       default:
-        this.emit('error', new Error('TSHBackend is in an invalid state for input'));
+        this.emit(
+          'error',
+          new Error('TSHBackend is in an invalid state for input'),
+        );
     }
   }
 
@@ -158,19 +156,16 @@ export default class TSHBackend extends Backend {
   /**
    * @ignore
    */
-  public ['xCommand()'](
-    { method, params }: any,
-    send: any,
-  ) { // eslint-disable-line class-methods-use-this
+  public ['xCommand()']({ method, params }: any, send: any) {
+    // eslint-disable-line class-methods-use-this
     const paramsCopy = Object.assign({}, params);
     const body = paramsCopy.body;
     delete paramsCopy.body;
 
     const tshParams = paramsCopy
-      ? Object
-        .keys(paramsCopy)
-        .sort()
-        .map((k) => paramString(k, paramsCopy[k]))
+      ? Object.keys(paramsCopy)
+          .sort()
+          .map((k) => paramString(k, paramsCopy[k]))
       : [];
 
     const cmd = method
@@ -178,36 +173,28 @@ export default class TSHBackend extends Backend {
       .concat(tshParams)
       .join(' ');
 
-    return send(cmd, body)
-      .then(rpc.createCommandResponse);
+    return send(cmd, body).then(rpc.createCommandResponse);
   }
 
   /**
    * @ignore
    */
-  public ['xFeedback/Subscribe()'](
-    { params }: any,
-    send: any,
-  ) {
-    const query: string = params.Query
-        .map((part: number | string) => (typeof part === 'number' ? `[${part}]` : `/${part}`))
-      .join('');
-    return send(`xfeedback register ${query}`)
-      .then(() => {
-        const id = this.nextFeedbackId;
-        this.nextFeedbackId += 1;
-        this.feedbackQueries[id] = query;
-        return { Id: id };
-      });
+  public ['xFeedback/Subscribe()']({ params }: any, send: any) {
+    const query: string = params.Query.map((part: number | string) =>
+      typeof part === 'number' ? `[${part}]` : `/${part}`,
+    ).join('');
+    return send(`xfeedback register ${query}`).then(() => {
+      const id = this.nextFeedbackId;
+      this.nextFeedbackId += 1;
+      this.feedbackQueries[id] = query;
+      return { Id: id };
+    });
   }
 
   /**
    * @ignore
    */
-  public ['xFeedback/Unsubscribe()'](
-    { params }: any,
-    send: any,
-  ) {
+  public ['xFeedback/Unsubscribe()']({ params }: any, send: any) {
     const id = params.Id;
 
     if (!{}.hasOwnProperty.call(this.feedbackQueries, id)) {
@@ -216,37 +203,36 @@ export default class TSHBackend extends Backend {
 
     const path = this.feedbackQueries[id];
 
-    return send(`xfeedback deregister ${path}`)
-      .then(() => {
-        delete this.feedbackQueries[id];
-        return true;
-      });
+    return send(`xfeedback deregister ${path}`).then(() => {
+      delete this.feedbackQueries[id];
+      return true;
+    });
   }
 
   /**
    * @ignore
    */
-  public ['xGet()'](
-    request: any,
-    send: any,
-  ) { // eslint-disable-line class-methods-use-this
+  public ['xGet()'](request: any, send: any) {
+    // eslint-disable-line class-methods-use-this
     const path = request.params.Path.join(' ');
-    return send(`x${path}`)
-      .then((response: any) => rpc.createGetResponse(request, response));
+    return send(`x${path}`).then((response: any) =>
+      rpc.createGetResponse(request, response),
+    );
   }
 
   /**
    * @ignore
    */
-  public ['xSet()'](
-    request: any,
-    send: any,
-  ) { // eslint-disable-line class-methods-use-this
+  public ['xSet()'](request: any, send: any) {
+    // eslint-disable-line class-methods-use-this
     const { params } = request;
     const path = params.Path.join(' ');
     const value = formatValue(params.Value);
-    return send(`x${path}: ${value}`)
-      .then((response: any) => rpc.createSetResponse(request, response));
+    return send(`x${path}: ${value}`).then((response: any) =>
+      rpc.createSetResponse(request, response),
+    );
   }
-  private connectResolve: (ok: boolean) => void = () => { /* noop */ };
+  private connectResolve: (ok: boolean) => void = () => {
+    /* noop */
+  }
 }

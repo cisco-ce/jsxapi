@@ -28,8 +28,13 @@ export interface XapiResponse {
   error: XapiError;
 }
 
-export interface XapiResult { Id: string; _foo: 'bar'; }
-export interface XapiError { _foo: 'bar'; }
+export interface XapiResult {
+  Id: string;
+  _foo: 'bar';
+}
+export interface XapiError {
+  _foo: 'bar';
+}
 export interface Requests {
   [idx: string]: {
     resolve(result: XapiResult): void;

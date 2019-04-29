@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import * as sinon from 'sinon';
 import StreamTransport from '../../src/transport/stream';
 
-
 describe('StreamTransport', () => {
   let sandbox;
 
@@ -39,7 +38,9 @@ describe('StreamTransport', () => {
   it('emits close on .close()', (done) => {
     const stream = new StreamTransport();
 
-    stream.on('close', () => { done(); });
+    stream.on('close', () => {
+      done();
+    });
 
     stream.close();
   });

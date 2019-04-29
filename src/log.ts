@@ -6,11 +6,9 @@
 
 import * as loglevel from 'loglevel';
 
-
 if (!(loglevel as any).isPatched) {
   const origMethodFactory = loglevel.methodFactory;
   const loggers = new Set<string>();
-
 
   /*
    * Bless the `log` object with custom plugins
@@ -37,22 +35,35 @@ if (!(loglevel as any).isPatched) {
 
     setGlobalLevel(level: loglevel.LogLevelDesc) {
       const allLoggers = [loglevel].concat(
-        (loglevel as any).getLoggers().map((name: string) => loglevel.getLogger(name)));
+        (loglevel as any)
+          .getLoggers()
+          .map((name: string) => loglevel.getLogger(name)),
+      );
 
-      allLoggers.forEach((logger) => { logger.setLevel(level); });
+      allLoggers.forEach((logger) => {
+        logger.setLevel(level);
+      });
     },
 
-    setLevelTrace() { (loglevel as any).setGlobalLevel('trace'); },
-    setLevelDebug() { (loglevel as any).setGlobalLevel('debug'); },
-    setLevelInfo() { (loglevel as any).setGlobalLevel('info'); },
-    setLevelWarn() { (loglevel as any).setGlobalLevel('warn'); },
-    setLevelError() { (loglevel as any).setGlobalLevel('error'); },
+    setLevelTrace() {
+      (loglevel as any).setGlobalLevel('trace');
+    },
+    setLevelDebug() {
+      (loglevel as any).setGlobalLevel('debug');
+    },
+    setLevelInfo() {
+      (loglevel as any).setGlobalLevel('info');
+    },
+    setLevelWarn() {
+      (loglevel as any).setGlobalLevel('warn');
+    },
+    setLevelError() {
+      (loglevel as any).setGlobalLevel('error');
+    },
   });
-
 
   // Required to apply the plugin to log
   loglevel.setLevel(loglevel.getLevel());
 }
-
 
 export default loglevel.getLogger('jsxapi');

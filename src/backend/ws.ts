@@ -4,7 +4,6 @@ import { EventEmitter } from 'events';
  * @external {WebSocket} https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
  */
 
-
 /**
  * Backend to communicate with a WebSocket server.
  *
@@ -37,7 +36,9 @@ export default class WSBackend extends EventEmitter {
     /**
      * @type {Promise}
      */
-    this.isReady = new Promise((r) => { resolveReady = r; });
+    this.isReady = new Promise((r) => {
+      resolveReady = r;
+    });
     this.ws.onopen = () => {
       this.emit('ready');
       resolveReady();

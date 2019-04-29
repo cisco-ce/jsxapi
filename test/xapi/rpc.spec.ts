@@ -8,19 +8,15 @@ import {
   createSetResponse,
 } from '../../src/xapi/rpc';
 
-import {
-  ParameterError,
-  XAPIError,
-} from '../../src/xapi/exc';
-
+import { ParameterError, XAPIError } from '../../src/xapi/exc';
 
 describe('xapi/rpc', () => {
   describe('createRequest', () => {
     it('escapes newlines in string parameters', () => {
-      const fn = () => createRequest(
-        '1',
-        'xCommand/UserInterface/Message/Echo',
-        { Text: 'foo \n bar \n' });
+      const fn = () =>
+        createRequest('1', 'xCommand/UserInterface/Message/Echo', {
+          Text: 'foo \n bar \n',
+        });
 
       expect(fn).to.throw('may not contain newline');
     });
@@ -46,12 +42,14 @@ describe('xapi/rpc', () => {
 
       expect(createCommandResponse(data)).to.deep.equal({
         status: 'OK',
-        OptionKey: [{
-          id: '1',
-          Active: 'False',
-          Installed: 'False',
-          Type: 'MultiSite',
-        }],
+        OptionKey: [
+          {
+            id: '1',
+            Active: 'False',
+            Installed: 'False',
+            Type: 'MultiSite',
+          },
+        ],
       });
     });
 
@@ -69,7 +67,7 @@ describe('xapi/rpc', () => {
         }
       `);
 
-      expect((() => createCommandResponse(data))).to.throw(ParameterError);
+      expect(() => createCommandResponse(data)).to.throw(ParameterError);
     });
 
     it('handles Reason error', () => {
@@ -89,8 +87,10 @@ describe('xapi/rpc', () => {
         }
       `);
 
-      expect(() => createCommandResponse(data))
-        .to.throw(XAPIError, 'Unknown command');
+      expect(() => createCommandResponse(data)).to.throw(
+        XAPIError,
+        'Unknown command',
+      );
     });
 
     it('handles Error error', () => {
@@ -107,8 +107,10 @@ describe('xapi/rpc', () => {
         }
       `);
 
-      expect(() => createCommandResponse(data))
-        .to.throw(XAPIError, 'No Encryption optionkey is installed');
+      expect(() => createCommandResponse(data)).to.throw(
+        XAPIError,
+        'No Encryption optionkey is installed',
+      );
     });
 
     it('handles unknown error', () => {
@@ -125,8 +127,10 @@ describe('xapi/rpc', () => {
         }
       `);
 
-      expect(() => createCommandResponse(data))
-        .to.throw(XAPIError, 'FooBarResult');
+      expect(() => createCommandResponse(data)).to.throw(
+        XAPIError,
+        'FooBarResult',
+      );
     });
 
     it('propagates Error body', () => {
@@ -172,8 +176,10 @@ describe('xapi/rpc', () => {
           }
         `);
 
-        expect(() => createCommandResponse(data))
-          .to.throw(XAPIError, /Missing "CommandResponse" attribute/);
+        expect(() => createCommandResponse(data)).to.throw(
+          XAPIError,
+          /Missing "CommandResponse" attribute/,
+        );
       });
 
       it('wrong number of keys', () => {
@@ -185,8 +191,10 @@ describe('xapi/rpc', () => {
           }
         `);
 
-        expect(() => createCommandResponse(data))
-          .to.throw(XAPIError, /Wrong number of keys/);
+        expect(() => createCommandResponse(data)).to.throw(
+          XAPIError,
+          /Wrong number of keys/,
+        );
       });
     });
   });
@@ -209,8 +217,7 @@ describe('xapi/rpc', () => {
         },
       };
 
-      expect(createGetResponse(request, response))
-        .to.equal('30');
+      expect(createGetResponse(request, response)).to.equal('30');
     });
 
     it('returns undefined for empty responses', () => {
@@ -263,8 +270,10 @@ describe('xapi/rpc', () => {
         }
       `);
 
-      expect(() => createSetResponse(request, response))
-        .to.throw(XAPIError, 'No match on address expression');
+      expect(() => createSetResponse(request, response)).to.throw(
+        XAPIError,
+        'No match on address expression',
+      );
     });
 
     it('handles Error error', () => {
@@ -301,8 +310,10 @@ describe('xapi/rpc', () => {
         }
       `);
 
-      expect(() => createSetResponse(request, response))
-        .to.throw(XAPIError, 'No match on address expression');
+      expect(() => createSetResponse(request, response)).to.throw(
+        XAPIError,
+        'No match on address expression',
+      );
     });
 
     it('handles unknown error', () => {
@@ -339,8 +350,10 @@ describe('xapi/rpc', () => {
         }
       `);
 
-      expect(() => createSetResponse(request, response))
-        .to.throw(XAPIError, 'Configuration');
+      expect(() => createSetResponse(request, response)).to.throw(
+        XAPIError,
+        'Configuration',
+      );
     });
   });
 });

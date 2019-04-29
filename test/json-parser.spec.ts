@@ -1,25 +1,28 @@
 import { JSONParser, parseJSON } from '../src/json-parser';
 
-
 describe('parseJSON', () => {
   it('can parse top-level status', () => {
-    expect(parseJSON('{"StatusSchema":null}'))
-      .to.deep.equal({ StatusSchema: null });
+    expect(parseJSON('{"StatusSchema":null}')).to.deep.equal({
+      StatusSchema: null,
+    });
   });
 
   it('can parse text', () => {
-    expect(parseJSON('{ "StatusSchema": "text" }'))
-      .to.deep.equal({ StatusSchema: 'text' });
+    expect(parseJSON('{ "StatusSchema": "text" }')).to.deep.equal({
+      StatusSchema: 'text',
+    });
   });
 
   it('can parse nested structure', () => {
-    expect(parseJSON(`{
+    expect(
+      parseJSON(`{
       "StatusSchema": {
         "Audio": {
           "Input": null
         }
       }
-    }`)).to.deep.equal({
+    }`),
+    ).to.deep.equal({
       StatusSchema: {
         Audio: {
           Input: null,
@@ -29,12 +32,14 @@ describe('parseJSON', () => {
   });
 
   it('can parse siblings', () => {
-    expect(parseJSON(`{
+    expect(
+      parseJSON(`{
       "StatusSchema": {
         "Audio": null,
         "Call": null
       }
-    }`)).to.deep.equal({
+    }`),
+    ).to.deep.equal({
       StatusSchema: {
         Audio: null,
         Call: null,
@@ -43,7 +48,8 @@ describe('parseJSON', () => {
   });
 
   it('can parse tree', () => {
-    expect(parseJSON(`{
+    expect(
+      parseJSON(`{
       "StatusSchema": {
         "Audio": {
           "public": "True",
@@ -58,7 +64,8 @@ describe('parseJSON', () => {
           }
         }
       }
-    }`)).to.deep.equal({
+    }`),
+    ).to.deep.equal({
       StatusSchema: {
         Audio: {
           public: 'True',
@@ -76,7 +83,6 @@ describe('parseJSON', () => {
     });
   });
 });
-
 
 describe('Parser', () => {
   it('can parse incremental chunks', () => {

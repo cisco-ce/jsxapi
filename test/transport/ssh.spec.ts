@@ -197,6 +197,8 @@ describe('connectSSH', () => {
     sshStream.emit('end');
 
     expect(errorSpy).to.have.been.calledOnce();
-    expect(errorSpy.firstCall).to.have.been.calledWith('Connection terminated remotely');
+    expect(errorSpy.firstCall).to.have.been.calledWith(
+      'Connection terminated remotely',
+    );
   });
 });

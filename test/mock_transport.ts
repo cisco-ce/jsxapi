@@ -1,7 +1,6 @@
 import { Duplex } from 'stream';
 import * as sinon from 'sinon';
 
-
 export default class MockTransport extends Duplex {
   constructor() {
     super();
@@ -41,9 +40,7 @@ export default class MockTransport extends Duplex {
   }
 
   init() {
-    return this
-      .sendWelcomeText()
-      .then(() => this.sendEchoResponse());
+    return this.sendWelcomeText().then(() => this.sendEchoResponse());
   }
 
   sendEchoResponse() {

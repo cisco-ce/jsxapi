@@ -4,9 +4,7 @@ import { spawn } from 'child_process';
 import duplex from 'duplexer';
 import { CloseableStream } from '../xapi/types';
 
-
 const TSH_BIN = 'tsh';
-
 
 /**
  * Use the TSH binary to connect to a TSH server.
@@ -15,9 +13,7 @@ const TSH_BIN = 'tsh';
  * @param {number} port - Port to connect to.
  * @return {Promise<Duplex>} - TSH {@link Duplex} stream.
  */
-export default function spawnTSH(
-  host: string,
-  port: string) {
+export default function spawnTSH(host: string, port: string) {
   const child = spawn(TSH_BIN, ['--port', port]);
   const stream: CloseableStream = duplex(child.stdin, child.stdout) as any;
   stream.close = () => child.kill();

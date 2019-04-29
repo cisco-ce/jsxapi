@@ -7,14 +7,9 @@ export const INVALID_RESPONSE = 5;
 export const INVALID_STATUS = 6;
 export const METHOD_NOT_FOUND = -32601;
 
-
 export class XAPIError extends Error {
   public data?: any;
-  constructor(
-    readonly code: number,
-    reason: string,
-    data?: any) {
-
+  constructor(readonly code: number, reason: string, data?: any) {
     super(reason);
     Object.setPrototypeOf(this, XAPIError.prototype);
     if (data !== undefined) {
@@ -31,7 +26,6 @@ export class XAPIError extends Error {
   }
 }
 
-
 export class IllegalValueError extends XAPIError {
   constructor(reason: string) {
     super(ILLEGAL_VALUE, reason);
@@ -39,14 +33,12 @@ export class IllegalValueError extends XAPIError {
   }
 }
 
-
 export class InvalidPathError extends XAPIError {
   constructor(reason: string, xpath: string) {
     super(INVALID_PATH, reason, { xpath });
     Object.setPrototypeOf(this, InvalidPathError.prototype);
   }
 }
-
 
 export class ParameterError extends XAPIError {
   constructor() {
