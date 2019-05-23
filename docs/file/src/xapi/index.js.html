@@ -170,7 +170,7 @@ export default class XAPI extends EventEmitter {
     backend
       .on(&apos;close&apos;, () =&gt; { this.emit(&apos;close&apos;); })
       .on(&apos;error&apos;, (error) =&gt; { this.emit(&apos;error&apos;, error); })
-      .on(&apos;ready&apos;, () =&gt; { this.emit(&apos;ready&apos;); })
+      .on(&apos;ready&apos;, () =&gt; { this.emit(&apos;ready&apos;, this); })
       .on(&apos;data&apos;, this.handleResponse.bind(this));
   }
 

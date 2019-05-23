@@ -224,7 +224,7 @@ export default class TSHBackend extends Backend {
     let cmd = `${command} | resultId=&quot;${id}&quot;\n`;
     if (body !== undefined) {
       cmd += `${body}\n`;
-      const length = cmd.length;
+      const length = Buffer.byteLength(cmd, &apos;utf8&apos;);
       cmd = `{${length}} \n${cmd}`;
     }
 
