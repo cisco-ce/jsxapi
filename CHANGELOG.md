@@ -1,6 +1,10 @@
 Changes
 -------
 
+##### v4.3.1 (2019-05-23)
+
+ * Clean up accidental artifacts from 4.3.0
+
 ##### v4.3.0 (2019-05-23)
 
  * Improve error propagation for `config.set`
