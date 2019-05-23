@@ -1,6 +1,12 @@
 Changes
 -------
 
+##### v4.3.0 (2019-05-23)
+
+ * Improve error propagation for `config.set`
+ * Fix utf8 body length issues in `tsh` backend
+ * Pass the `xapi` instance when invoking the `ready` event handler
+
 ##### v4.2.0 (2018-10-31)
 
   * Change array dispatching to only dispatch once per array element
