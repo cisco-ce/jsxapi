@@ -50,7 +50,10 @@ export default class XAPI extends EventEmitter {
   private requestId = 1;
   private requests: Requests = {};
 
-  constructor(readonly backend: Backend, options: XapiOptions = {}) {
+  constructor(
+    private readonly backend: Backend,
+    options: XapiOptions = {})
+  {
     super();
 
     /**
@@ -160,7 +163,7 @@ export default class XAPI extends EventEmitter {
   }
 
   /** @private */
-  public handleResponse(response: XapiResponse) {
+  private handleResponse(response: XapiResponse) {
     const { id, method } = response;
     if (method === 'xFeedback/Event') {
       log.debug('feedback:', response);
@@ -180,7 +183,7 @@ export default class XAPI extends EventEmitter {
   }
 
   /** @private */
-  public nextRequestId() {
+  private nextRequestId() {
     const requestId = this.requestId;
     this.requestId += 1;
     return requestId.toString();

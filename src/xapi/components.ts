@@ -19,7 +19,7 @@ class Component {
   /**
    * @param {XAPI} xapi - XAPI instance.
    */
-  constructor(readonly xapi: XAPI) {}
+  constructor(public readonly xapi: XAPI) {}
   /**
    * @type {XAPI}
    */
@@ -61,7 +61,7 @@ export class Config extends mix(Component, Listenable, Gettable, Settable)
   public get!: (path: Path) => Promise<any>;
   public set!: (path: Path, value: number | string) => Promise<any>;
 
-  constructor(readonly xapi: XAPI) {
+  constructor(public readonly xapi: XAPI) {
     super();
   }
 }
@@ -108,7 +108,7 @@ export class Status extends mix(Component, Listenable, Gettable)
 
   public get!: (path: Path) => Promise<any>;
 
-  constructor(readonly xapi: XAPI) {
+  constructor(public readonly xapi: XAPI) {
     super();
   }
 }

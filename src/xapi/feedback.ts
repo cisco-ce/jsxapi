@@ -10,7 +10,7 @@ import { Handler, Listener, Path } from './types';
  * Group feedback deregister handlers for bookkeeping.
  */
 export class FeedbackGroup {
-  public handlers: Handler[];
+  private handlers: Handler[];
 
   constructor(handlers: Handler[]) {
     this.handlers = handlers;
@@ -22,7 +22,7 @@ export class FeedbackGroup {
    * @param {function()} handler - Handler to add to the group.
    * @return {FeedbackGroup} - this for chaining.
    */
-  public add(handler: Handler) {
+  private add(handler: Handler) {
     this.handlers.push(handler);
     return this;
   }
@@ -33,7 +33,7 @@ export class FeedbackGroup {
    * @param {function()} handler - Handler to remove from the group.
    * @return {FeedbackGroup} - this for chaining.
    */
-  public remove(handler: Handler) {
+  private remove(handler: Handler) {
     this.handlers = this.handlers.filter((h) => h !== handler);
     return this;
   }
@@ -43,7 +43,7 @@ export class FeedbackGroup {
    *
    * @return {FeedbackGroup} - this for chaining.
    */
-  public off() {
+  private off() {
     this.handlers.forEach((handler) => {
       handler();
     });
@@ -118,7 +118,7 @@ export default class Feedback {
    * @param {function} interceptor - Feedback interceptor.
    */
   public readonly eventEmitter = new EventEmitter();
-  public subscriptions = [];
+  private subscriptions = [];
   constructor(readonly xapi: XAPI, readonly interceptor = defaultInterceptor) {}
 
   /**

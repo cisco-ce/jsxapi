@@ -70,7 +70,7 @@ export default class Backend extends EventEmitter {
    * @param {Object} request - JSON-RPC request
    * @param {Function} send - Function for dispatching the request to the backend service.
    */
-  public defaultHandler({ method }: any, send: any) {
+  private defaultHandler({ method }: any, send: any) {
     // eslint-disable-line class-methods-use-this, no-unused-vars
     return Promise.reject(new Error(`Invalid request method: ${method}`));
   }
@@ -83,7 +83,7 @@ export default class Backend extends EventEmitter {
    * @param {Object} request - JSON-RPC request
    * @return {string} - Request method type.
    */
-  public getRequestType({ method }: XapiRequest) {
+  private getRequestType({ method }: XapiRequest) {
     // eslint-disable-line class-methods-use-this
     if (method.startsWith('xCommand')) {
       return 'xCommand';

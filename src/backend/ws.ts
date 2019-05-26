@@ -45,11 +45,11 @@ export default class WSBackend extends EventEmitter {
     };
   }
 
-  public close() {
+  private close() {
     this.ws.close();
   }
 
-  public handleClose(event: CloseEvent) {
+  private handleClose(event: CloseEvent) {
     if (event.code !== 1000) {
       this.emit('error', 'WebSocket closed unexpectedly');
     } else {
@@ -57,16 +57,16 @@ export default class WSBackend extends EventEmitter {
     }
   }
 
-  public handleError() {
+  private handleError() {
     this.emit('error', 'WebSocket error');
   }
 
-  public handleMessage(message: MessageEvent) {
+  private handleMessage(message: MessageEvent) {
     const data = JSON.parse(message.data);
     this.emit('data', data);
   }
 
-  public execute(command: any) {
+  private execute(command: any) {
     this.isReady.then(() => {
       this.ws.send(JSON.stringify(command));
     });

@@ -23,7 +23,7 @@ export default class StreamTransport extends Duplex {
   /**
    * Closes the stream transport
    */
-  public close() {
+  private close() {
     this.end();
   }
 
@@ -36,7 +36,7 @@ export default class StreamTransport extends Duplex {
     return this.attemptFlush();
   }
 
-  public attemptFlush() {
+  private attemptFlush() {
     while (this.canPush && this.buffer.length) {
       this.canPush = super.push(this.buffer.shift());
     }

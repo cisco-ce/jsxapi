@@ -8,7 +8,7 @@ export const INVALID_STATUS = 6;
 export const METHOD_NOT_FOUND = -32601;
 
 export class XAPIError extends Error {
-  public data?: any;
+  private data?: any;
   constructor(readonly code: number, reason: string, data?: any) {
     super(reason);
     Object.setPrototypeOf(this, XAPIError.prototype);

@@ -71,7 +71,7 @@ export default class TSHBackend extends Backend {
       });
   }
 
-  public bufferHasOK(buffer: any) {
+  private bufferHasOK(buffer: any) {
     const lines = (this.buffer + buffer.toString()).split('\n');
     if (lines.length) {
       this.buffer = lines[lines.length - 1];
@@ -79,7 +79,7 @@ export default class TSHBackend extends Backend {
     return lines.some((line) => line === 'OK');
   }
 
-  public setState(newState: State) {
+  private setState(newState: State) {
     this.state = newState;
   }
 
@@ -90,7 +90,7 @@ export default class TSHBackend extends Backend {
     this.transport.close();
   }
 
-  public onParserData(data: any) {
+  private onParserData(data: any) {
     if (!{}.hasOwnProperty.call(data, 'ResultId')) {
       log.debug('[tsh] (feedback):', JSON.stringify(data));
       this.onFeedback(rpc.parseFeedbackResponse(data));
@@ -100,7 +100,7 @@ export default class TSHBackend extends Backend {
     }
   }
 
-  public onTransportData(data: any) {
+  private onTransportData(data: any) {
     switch (this.state) {
       case 'connecting':
         if (this.bufferHasOK(data)) {
@@ -146,7 +146,7 @@ export default class TSHBackend extends Backend {
     this.write(cmd);
   }
 
-  public write(data: string) {
+  private write(data: string) {
     log.debug(`write: ${JSON.stringify(data)}`);
     this.transport.write(data);
   }
@@ -156,7 +156,7 @@ export default class TSHBackend extends Backend {
   /**
    * @ignore
    */
-  public ['xCommand()']({ method, params }: any, send: any) {
+  private ['xCommand()']({ method, params }: any, send: any) {
     // eslint-disable-line class-methods-use-this
     const paramsCopy = Object.assign({}, params);
     const body = paramsCopy.body;
@@ -179,7 +179,7 @@ export default class TSHBackend extends Backend {
   /**
    * @ignore
    */
-  public ['xFeedback/Subscribe()']({ params }: any, send: any) {
+  private ['xFeedback/Subscribe()']({ params }: any, send: any) {
     const query: string = params.Query.map((part: number | string) =>
       typeof part === 'number' ? `[${part}]` : `/${part}`,
     ).join('');
@@ -194,7 +194,7 @@ export default class TSHBackend extends Backend {
   /**
    * @ignore
    */
-  public ['xFeedback/Unsubscribe()']({ params }: any, send: any) {
+  private ['xFeedback/Unsubscribe()']({ params }: any, send: any) {
     const id = params.Id;
 
     if (!{}.hasOwnProperty.call(this.feedbackQueries, id)) {
@@ -212,7 +212,7 @@ export default class TSHBackend extends Backend {
   /**
    * @ignore
    */
-  public ['xGet()'](request: any, send: any) {
+  private ['xGet()'](request: any, send: any) {
     // eslint-disable-line class-methods-use-this
     const path = request.params.Path.join(' ');
     return send(`x${path}`).then((response: any) =>
@@ -223,7 +223,7 @@ export default class TSHBackend extends Backend {
   /**
    * @ignore
    */
-  public ['xSet()'](request: any, send: any) {
+  private ['xSet()'](request: any, send: any) {
     // eslint-disable-line class-methods-use-this
     const { params } = request;
     const path = params.Path.join(' ');
