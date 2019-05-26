@@ -30,11 +30,10 @@ export interface XapiResponse {
 
 export interface XapiResult {
   Id: string;
-  _foo: 'bar';
 }
-export interface XapiError {
-  _foo: 'bar';
-}
+
+export type XapiError = unknown;
+
 export interface Requests {
   [idx: string]: {
     resolve(result: XapiResult): void;
