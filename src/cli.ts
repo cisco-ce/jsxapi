@@ -7,8 +7,8 @@ import * as REPL from 'repl';
 
 // this import messes up the package structure after running tsc
 // import * as pkg from '../package.json';
-import log from './log';
 import { connect } from './';
+import log from './log';
 import XAPI from './xapi/index.js';
 
 const pkg = { version: '4.2.0' };

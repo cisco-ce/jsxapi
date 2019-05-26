@@ -1,9 +1,9 @@
 declare module 'jsonparse' {
   class Parser {
-    onError: any;
-    onValue: any;
-    stack: { length: number };
-    write(line: string): void;
+    public onError: any;
+    public onValue: any;
+    public stack: { length: number };
+    public write(line: string): void;
   }
   export default Parser;
 }

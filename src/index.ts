@@ -1,12 +1,12 @@
 import parseUrl from 'url-parse';
 import WebSocket from 'ws';
 
-import log from './log';
-import connectSSH from './transport/ssh';
-import XAPI from './xapi';
 import TSHBackend from './backend/tsh';
 import WSBackend from './backend/ws';
+import log from './log';
+import connectSSH from './transport/ssh';
 import spawnTSH from './transport/tsh';
+import XAPI from './xapi';
 
 /**
  * Connect to an XAPI endpoint.
@@ -40,10 +40,10 @@ export function connect(url: any, options?: any) {
   const opts = Object.assign(
     {
       host: '',
+      loglevel: 'warn',
       password: '',
       protocol: 'ssh:',
       username: 'admin',
-      loglevel: 'warn',
     },
     parsedUrl,
     options,
