@@ -71,6 +71,27 @@ export default class TSHBackend extends Backend {
       });
   }
 
+  /**
+   * @override
+   */
+  public close() {
+    this.transport.close();
+  }
+
+  /**
+   * @override
+   */
+  public send(id: string, command: string, body: string) {
+    let cmd = `${command} | resultId="${id}"\n`;
+    if (body !== undefined) {
+      cmd += `${body}\n`;
+      const length = Buffer.byteLength(cmd, 'utf8');
+      cmd = `{${length}} \n${cmd}`;
+    }
+
+    this.write(cmd);
+  }
+
   private bufferHasOK(buffer: any) {
     const lines = (this.buffer + buffer.toString()).split('\n');
     if (lines.length) {
@@ -81,13 +102,6 @@ export default class TSHBackend extends Backend {
 
   private setState(newState: State) {
     this.state = newState;
-  }
-
-  /**
-   * @override
-   */
-  public close() {
-    this.transport.close();
   }
 
   private onParserData(data: any) {
@@ -130,20 +144,6 @@ export default class TSHBackend extends Backend {
           new Error('TSHBackend is in an invalid state for input'),
         );
     }
-  }
-
-  /**
-   * @override
-   */
-  public send(id: string, command: string, body: string) {
-    let cmd = `${command} | resultId="${id}"\n`;
-    if (body !== undefined) {
-      cmd += `${body}\n`;
-      const length = Buffer.byteLength(cmd, 'utf8');
-      cmd = `{${length}} \n${cmd}`;
-    }
-
-    this.write(cmd);
   }
 
   private write(data: string) {

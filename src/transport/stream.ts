@@ -21,26 +21,12 @@ export default class StreamTransport extends Duplex {
   }
 
   /**
-   * Closes the stream transport
-   */
-  private close() {
-    this.end();
-  }
-
-  /**
    * @param {string} data - Push inbound data from the XAPI service to JSXAPI.
    * @return {boolean} - Boolean signaling if the stream can receive more data.
    */
   public push(data: string) {
     this.buffer.push(data);
     return this.attemptFlush();
-  }
-
-  private attemptFlush() {
-    while (this.canPush && this.buffer.length) {
-      this.canPush = super.push(this.buffer.shift());
-    }
-    return this.canPush;
   }
 
   public _read() {
@@ -50,5 +36,19 @@ export default class StreamTransport extends Duplex {
 
   public _write(chunk: any, encoding: string, callback: any) {
     this.send(chunk, encoding, callback);
+  }
+
+  /**
+   * Closes the stream transport
+   */
+  private close() {
+    this.end();
+  }
+
+  private attemptFlush() {
+    while (this.canPush && this.buffer.length) {
+      this.canPush = super.push(this.buffer.shift());
+    }
+    return this.canPush;
   }
 }

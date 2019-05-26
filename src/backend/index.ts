@@ -42,16 +42,6 @@ import { XapiRequest, XapiResult } from '../xapi/types';
  * }
  */
 export default class Backend extends EventEmitter {
-  private requests: { [idx: string]: (res: XapiResult) => void } = {};
-
-  /**
-   * Close the backend connection and free up resources. The backend should not
-   * be used after it is closed and a new instance is required in order
-   * re-initialize.
-   */
-  public close() {
-    // eslint-disable-line class-methods-use-this
-  }
 
   /**
    * Promise that is resolved once the backend is ready to receive commands.
@@ -62,33 +52,15 @@ export default class Backend extends EventEmitter {
     // eslint-disable-line class-methods-use-this
     return Promise.resolve(true);
   }
+  private requests: { [idx: string]: (res: XapiResult) => void } = {};
 
   /**
-   * Default method handler. Called if there isn't a handler specified for the
-   * method type. The default handler dies unless it is overridden in a sub-class.
-   *
-   * @param {Object} request - JSON-RPC request
-   * @param {Function} send - Function for dispatching the request to the backend service.
+   * Close the backend connection and free up resources. The backend should not
+   * be used after it is closed and a new instance is required in order
+   * re-initialize.
    */
-  private defaultHandler({ method }: any, send: any) {
-    // eslint-disable-line class-methods-use-this, no-unused-vars
-    return Promise.reject(new Error(`Invalid request method: ${method}`));
-  }
-
-  /**
-   * Determine the type of the JSON-RPC request. The type is used for
-   * dispatching the request to the different rpc handlers. Sub-classes may
-   * override this for custom routing behavior.
-   *
-   * @param {Object} request - JSON-RPC request
-   * @return {string} - Request method type.
-   */
-  private getRequestType({ method }: XapiRequest) {
+  public close() {
     // eslint-disable-line class-methods-use-this
-    if (method.startsWith('xCommand')) {
-      return 'xCommand';
-    }
-    return method;
   }
 
   /**
@@ -173,5 +145,33 @@ export default class Backend extends EventEmitter {
   public send(id: string, command: string, body: string) {
     // eslint-disable-line class-methods-use-this, no-unused-vars
     throw new Error('Backend class must override .send()');
+  }
+
+  /**
+   * Default method handler. Called if there isn't a handler specified for the
+   * method type. The default handler dies unless it is overridden in a sub-class.
+   *
+   * @param {Object} request - JSON-RPC request
+   * @param {Function} send - Function for dispatching the request to the backend service.
+   */
+  private defaultHandler({ method }: any, send: any) {
+    // eslint-disable-line class-methods-use-this, no-unused-vars
+    return Promise.reject(new Error(`Invalid request method: ${method}`));
+  }
+
+  /**
+   * Determine the type of the JSON-RPC request. The type is used for
+   * dispatching the request to the different rpc handlers. Sub-classes may
+   * override this for custom routing behavior.
+   *
+   * @param {Object} request - JSON-RPC request
+   * @return {string} - Request method type.
+   */
+  private getRequestType({ method }: XapiRequest) {
+    // eslint-disable-line class-methods-use-this
+    if (method.startsWith('xCommand')) {
+      return 'xCommand';
+    }
+    return method;
   }
 }

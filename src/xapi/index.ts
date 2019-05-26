@@ -52,8 +52,7 @@ export default class XAPI extends EventEmitter {
 
   constructor(
     private readonly backend: Backend,
-    options: XapiOptions = {})
-  {
+    options: XapiOptions = {}) {
     super();
 
     /**
@@ -162,6 +161,27 @@ export default class XAPI extends EventEmitter {
     return this.execute(method, executeParams);
   }
 
+  /**
+   * Execute the given JSON-RPC request on the backend.
+   *
+   * @example
+   * xapi.execute('xFeedback/Subscribe', {
+   *   Query: ['Status', 'Audio'],
+   * });
+   *
+   * @param {String} method - Name of RPC method to invoke.
+   * @param {Object} [params] - Parameters to add to the request.
+   * @return {Promise} - Resolved with the command response.
+   */
+  public execute(method: string, params: any): Promise<XapiResult> {
+    return new Promise((resolve, reject) => {
+      const id = this.nextRequestId();
+      const request = rpc.createRequest(id, method, params);
+      this.backend.execute(request);
+      this.requests[id] = { resolve, reject };
+    });
+  }
+
   /** @private */
   private handleResponse(response: XapiResponse) {
     const { id, method } = response;
@@ -187,26 +207,5 @@ export default class XAPI extends EventEmitter {
     const requestId = this.requestId;
     this.requestId += 1;
     return requestId.toString();
-  }
-
-  /**
-   * Execute the given JSON-RPC request on the backend.
-   *
-   * @example
-   * xapi.execute('xFeedback/Subscribe', {
-   *   Query: ['Status', 'Audio'],
-   * });
-   *
-   * @param {String} method - Name of RPC method to invoke.
-   * @param {Object} [params] - Parameters to add to the request.
-   * @return {Promise} - Resolved with the command response.
-   */
-  public execute(method: string, params: any): Promise<XapiResult> {
-    return new Promise((resolve, reject) => {
-      const id = this.nextRequestId();
-      const request = rpc.createRequest(id, method, params);
-      this.backend.execute(request);
-      this.requests[id] = { resolve, reject };
-    });
   }
 }
