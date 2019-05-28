@@ -47,6 +47,7 @@
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/chai-as-promised": "^7.1.0",
+    "@types/dirty-chai": "^2.0.0",
     "@types/loglevel": "^1.5.4",
     "@types/mocha": "^5.2.6",
     "@types/sinon": "^7.0.11",
