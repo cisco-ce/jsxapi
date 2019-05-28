@@ -153,7 +153,7 @@ export default class XAPI extends EventEmitter {
    * @param {string} [body] - Multi-line body for commands requiring it.
    * @return {Promise} - Resolved with the command response when ready.
    */
-  public command(path: Path, params: any, body?: string) {
+  public command(path: Path, params?: any, body?: string) {
     const apiPath = normalizePath(path).join('/');
     const method = `xCommand/${apiPath}`;
     const executeParams =

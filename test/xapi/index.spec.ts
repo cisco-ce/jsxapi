@@ -3,11 +3,13 @@ import * as sinon from 'sinon';
 
 import Backend from '../../src/backend';
 import XAPI from '../../src/xapi';
+import { XapiRequest, XapiResult } from '../../src/xapi/types';
+import { METHOD_NOT_FOUND } from '../../src/xapi/exc';
 
 describe('XAPI', () => {
-  let backend;
-  let sandbox;
-  let xapi;
+  let backend: Backend;
+  let sandbox: sinon.SinonSandbox;
+  let xapi: XAPI;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
@@ -70,7 +72,7 @@ describe('XAPI', () => {
 
     it('property is not writable', () => {
       const fn = () => {
-        xapi.feedback = {};
+        xapi.feedback = {} as any;
       };
       expect(fn).to.throw(TypeError);
     });
@@ -95,19 +97,31 @@ describe('XAPI', () => {
       xapi = new XAPI(backend);
     });
 
-    const asyncResponse = (backend_, response) => (request) => {
-      setTimeout(() => {
-        backend_.emit(
-          'data',
-          Object.assign(
-            {
-              jsonrpc: '2.0',
-              id: request.id,
-            },
-            response,
-          ),
-        );
-      }, 0);
+    type Response = {
+      result: any;
+    } | {
+      error: {
+        code: any;
+        message: string;
+      }
+    };
+
+    const asyncResponse = (backend_: Backend, response: Response) => (request: XapiRequest) => {
+      return new Promise<void>(resolve => {
+        setTimeout(() => {
+          backend_.emit(
+            'data',
+            Object.assign(
+              {
+                jsonrpc: '2.0',
+                id: request.id,
+              },
+              response,
+            ),
+          );
+        }, 0);
+        resolve();
+      });
     };
 
     it('returns a Promise object', () => {
@@ -144,7 +158,7 @@ describe('XAPI', () => {
       sandbox.stub(backend, 'execute').callsFake(
         asyncResponse(backend, {
           error: {
-            code: XAPI.METHOD_NOT_FOUND,
+            code: METHOD_NOT_FOUND,
             message: 'Unknown command',
           },
         }),
@@ -157,7 +171,7 @@ describe('XAPI', () => {
   });
 
   describe('Components', () => {
-    let execStub;
+    let execStub: sinon.SinonSpy<[string, any], Promise<XapiResult>>;
 
     beforeEach(() => {
       execStub = sandbox.spy(XAPI.prototype, 'execute');

@@ -3,7 +3,7 @@ import * as sinon from 'sinon';
 import StreamTransport from '../../src/transport/stream';
 
 describe('StreamTransport', () => {
-  let sandbox;
+  let sandbox: sinon.SinonSandbox;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
@@ -14,7 +14,7 @@ describe('StreamTransport', () => {
   });
 
   it('can push before listening', (done) => {
-    const stream = new StreamTransport();
+    const stream = new StreamTransport(null);
 
     stream.push('foo bar baz');
 
@@ -25,7 +25,7 @@ describe('StreamTransport', () => {
   });
 
   it('can push after listening', (done) => {
-    const stream = new StreamTransport();
+    const stream = new StreamTransport(null);
 
     stream.on('data', (data) => {
       expect(data.toString()).to.equal('foo bar baz');
@@ -36,7 +36,7 @@ describe('StreamTransport', () => {
   });
 
   it('emits close on .close()', (done) => {
-    const stream = new StreamTransport();
+    const stream = new StreamTransport(null);
 
     stream.on('close', () => {
       done();

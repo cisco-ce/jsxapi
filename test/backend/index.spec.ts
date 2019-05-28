@@ -5,8 +5,8 @@ import Backend from '../../src/backend';
 import { XAPIError } from '../../src/xapi/exc';
 
 describe('Backend', () => {
-  let backend;
-  let sandbox;
+  let backend: Backend;
+  let sandbox: sinon.SinonSandbox;
 
   beforeEach(() => {
     backend = new Backend();
@@ -35,18 +35,20 @@ describe('Backend', () => {
       const request = {
         method: 'xCommand/Dial',
         params: { Number: 'user@example.com' },
+        jsonrpc: '2.0',
       };
 
       sandbox.stub(backend, 'defaultHandler').callsFake((actual) => {
         expect(actual).to.deep.equal(request);
         done();
+        return Promise.resolve();
       });
 
       backend.execute(request);
     });
 
     it('handler can return plain values', (done) => {
-      backend['xCommand()'] = () => 42;
+      (backend as any)['xCommand()'] = () => 42;
 
       backend.on('data', (result) => {
         expect(result).to.deep.equal({
@@ -99,10 +101,10 @@ describe('Backend', () => {
     testCases.forEach(({ name, method, params }) => {
       it(`calls .${name}() handler`, () => {
         const send = sandbox.stub(backend, 'send');
-        const handler = sandbox.spy((r, _send) => _send());
+        const handler = sandbox.spy((_r, _send) => _send());
         const request = { jsonrpc: '2.0', id: 'request-1', method, params };
 
-        backend[`${name}()`] = handler;
+        (backend as any)[`${name}()`] = handler;
         backend.execute(request);
 
         expect(handler).to.not.have.been.called();
@@ -117,15 +119,13 @@ describe('Backend', () => {
 
     it('handles error', (done) => {
       const send = sandbox.stub(backend, 'send');
-      backend['xCommand()'] = sandbox.spy((r, _send) => _send());
+      (backend as any)['xCommand()'] = sandbox.spy((_r, _send) => _send());
       send.throws(new XAPIError(0, 'Some XAPI thing went wrong'));
 
       backend.on('data', (data) => {
-        expect(data).to.have.properties({
-          error: {
-            code: 0,
-            message: 'Some XAPI thing went wrong',
-          },
+        expect(data.error).to.contain({
+          code: 0,
+          message: 'Some XAPI thing went wrong',
         });
         done();
       });

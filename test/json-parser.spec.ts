@@ -1,3 +1,5 @@
+import { expect } from 'chai';
+import * as sinon from 'sinon';
 import { JSONParser, parseJSON } from '../src/json-parser';
 
 describe('parseJSON', () => {

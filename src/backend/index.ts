@@ -154,7 +154,7 @@ export default class Backend extends EventEmitter {
    * @param {Object} request - JSON-RPC request
    * @param {Function} send - Function for dispatching the request to the backend service.
    */
-  private defaultHandler({ method }: any, send: any) {
+  public defaultHandler({ method }: any, send?: any): Promise<void> {
     // eslint-disable-line class-methods-use-this, no-unused-vars
     return Promise.reject(new Error(`Invalid request method: ${method}`));
   }

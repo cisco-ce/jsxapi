@@ -22,7 +22,7 @@ export class FeedbackGroup {
    * @param {function()} handler - Handler to add to the group.
    * @return {FeedbackGroup} - this for chaining.
    */
-  private add(handler: Handler) {
+  public add(handler: Handler) {
     this.handlers.push(handler);
     return this;
   }
@@ -33,7 +33,7 @@ export class FeedbackGroup {
    * @param {function()} handler - Handler to remove from the group.
    * @return {FeedbackGroup} - this for chaining.
    */
-  private remove(handler: Handler) {
+  public remove(handler: Handler) {
     this.handlers = this.handlers.filter((h) => h !== handler);
     return this;
   }
@@ -43,7 +43,7 @@ export class FeedbackGroup {
    *
    * @return {FeedbackGroup} - this for chaining.
    */
-  private off() {
+  public off() {
     this.handlers.forEach((handler) => {
       handler();
     });

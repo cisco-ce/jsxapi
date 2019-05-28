@@ -10,7 +10,7 @@ export type NormalizedPath = Array<string | number>;
 export type Listener = (...args: any[]) => void;
 
 export interface XapiOptions {
-  feedbackInterceptor?: never;
+  feedbackInterceptor?: (data?: any) => void;
 }
 
 export interface XapiRequest {
@@ -29,10 +29,12 @@ export interface XapiResponse {
 }
 
 export interface XapiResult {
-  Id: string;
+  Id: number;
 }
 
-export type XapiError = unknown;
+export interface XapiError {
+  message: string;
+}
 
 export interface Requests {
   [idx: string]: {

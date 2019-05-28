@@ -6,20 +6,24 @@ import { Duplex } from 'stream';
 import connectSSH from '../../src/transport/ssh';
 
 describe('connectSSH', () => {
-  let client;
-  let sandbox;
-  let dataSpy;
-  let errorSpy;
-  let closeSpy;
+  let client: Client;
+  let sandbox: sinon.SinonSandbox;
+  let dataSpy: sinon.SinonSpy;
+  let errorSpy: sinon.SinonSpy;
+  let closeSpy: sinon.SinonSpy;
+  let clientConnectStub: sinon.SinonStub;
+  let clientShellStub: sinon.SinonStub;
+  let clientExecStub: sinon.SinonStub;
+  let clientEndStub: sinon.SinonStub;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
 
     client = new Client();
-    sandbox.stub(client, 'connect');
-    sandbox.stub(client, 'shell');
-    sandbox.stub(client, 'exec');
-    sandbox.stub(client, 'end');
+    clientConnectStub = sandbox.stub(client, 'connect');
+    clientShellStub = sandbox.stub(client, 'shell');
+    clientExecStub = sandbox.stub(client, 'exec');
+    clientEndStub = sandbox.stub(client, 'end');
 
     dataSpy = sandbox.spy();
     errorSpy = sandbox.spy();
@@ -35,7 +39,7 @@ describe('connectSSH', () => {
     });
 
     it('on client error (extracts .level property)', () => {
-      const error = new Error('some error');
+      const error: any = new Error('some error');
       error.level = 'client-error';
       client.emit('error', error);
 
@@ -45,7 +49,7 @@ describe('connectSSH', () => {
 
     it('on shell error', () => {
       const error = new Error('some error');
-      client.shell.callsArgWith(1, error);
+      clientShellStub.callsArgWith(1, error);
 
       client.emit('ready');
 
@@ -56,7 +60,7 @@ describe('connectSSH', () => {
     it('on ssh stream error', () => {
       const error = new Error('some error');
       const sshStream = new Duplex({ read: () => {} });
-      client.shell.callsArgWith(1, null, sshStream);
+      clientShellStub.callsArgWith(1, null, sshStream);
 
       client.emit('ready');
       sshStream.emit('error', error);
@@ -82,7 +86,7 @@ describe('connectSSH', () => {
 
     it('on ssh stream close', () => {
       const sshStream = new Duplex({ read: () => {} });
-      client.shell.callsArgWith(1, null, sshStream);
+      clientShellStub.callsArgWith(1, null, sshStream);
 
       client.emit('ready');
       sshStream.emit('close');
@@ -101,7 +105,7 @@ describe('connectSSH', () => {
 
     it('passes through ssh stream data', () => {
       const sshStream = new Duplex({ read: () => {} });
-      client.shell.callsArgWith(1, null, sshStream);
+      clientShellStub.callsArgWith(1, null, sshStream);
 
       client.emit('ready');
       sshStream.push('foo bar baz');
@@ -112,7 +116,7 @@ describe('connectSSH', () => {
 
     it('"close" is emitted on stream end', () => {
       const sshStream = new Duplex({ read: () => {} });
-      client.shell.callsArgWith(1, null, sshStream);
+      clientShellStub.callsArgWith(1, null, sshStream);
 
       client.emit('ready');
       sshStream.emit('close');
@@ -132,8 +136,8 @@ describe('connectSSH', () => {
     it('passes through ssh binary stream data', () => {
       const sshStream = new Duplex({ read: () => {} });
       const binaryStream = new Duplex({ read: () => {} });
-      client.shell.callsArgWith(1, null, sshStream);
-      client.exec.callsArgWith(1, null, binaryStream);
+      clientShellStub.callsArgWith(1, null, sshStream);
+      clientExecStub.callsArgWith(1, null, binaryStream);
 
       client.emit('ready');
       sshStream.push('boing boing');
@@ -145,12 +149,12 @@ describe('connectSSH', () => {
 
     it('correct command is sent', () => {
       const sshStream = new Duplex({ read: () => {} });
-      client.shell.callsArgWith(1, null, sshStream);
+      clientShellStub.callsArgWith(1, null, sshStream);
 
       client.emit('ready');
 
-      expect(client.exec).to.have.been.calledOnce();
-      expect(client.exec.firstCall.args[0].toString()).to.equal('/bin/foo');
+      expect(clientExecStub).to.have.been.calledOnce();
+      expect(clientExecStub.firstCall.args[0].toString()).to.equal('/bin/foo');
     });
   });
 
@@ -161,7 +165,7 @@ describe('connectSSH', () => {
       password: 'password',
     });
 
-    const options = client.connect.firstCall.args[0];
+    const options = clientConnectStub.firstCall.args[0];
     expect(options).to.have.property('username', 'admin');
     expect(options).to.not.have.property('password');
   });
@@ -172,8 +176,8 @@ describe('connectSSH', () => {
     });
 
     const sshStream = new Duplex({ read: () => {} });
-    client.shell.callsArgWith(1, null, sshStream);
-    client.end.callsFake(() => {
+    clientShellStub.callsArgWith(1, null, sshStream);
+    clientEndStub.callsFake(() => {
       sshStream.emit('end');
     });
     transport.on('error', errorSpy);
@@ -190,7 +194,7 @@ describe('connectSSH', () => {
     });
 
     const sshStream = new Duplex({ read: () => {} });
-    client.shell.callsArgWith(1, null, sshStream);
+    clientShellStub.callsArgWith(1, null, sshStream);
     transport.on('error', errorSpy);
     client.emit('ready');
 

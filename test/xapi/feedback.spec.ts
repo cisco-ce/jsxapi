@@ -3,9 +3,9 @@ import * as sinon from 'sinon';
 
 import Backend from '../../src/backend';
 import XAPI from '../../src/xapi';
-import Feedback from '../../src/xapi/feedback';
+import Feedback, { FeedbackGroup } from '../../src/xapi/feedback';
 
-function getPath(obj, ...path) {
+function getPath(obj: any, ...path: any[]) {
   let tmp = obj;
 
   while (typeof tmp === 'object' && path.length) {
@@ -17,10 +17,10 @@ function getPath(obj, ...path) {
 }
 
 describe('Feedback', () => {
-  let sandbox;
-  let interceptor;
-  let feedback;
-  let xapi;
+  let sandbox: sinon.SinonSandbox;
+  let interceptor: sinon.SinonStub<any | undefined, void>;
+  let feedback: Feedback;
+  let xapi: XAPI;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
@@ -40,7 +40,7 @@ describe('Feedback', () => {
           return Promise.resolve({ Id: id });
         }
         default:
-          return Promise.resolve();
+          return Promise.resolve({ Id: 52 });
       }
     });
   });
@@ -68,9 +68,7 @@ describe('Feedback', () => {
 
     it('fires events recursively', () => {
       const data = { Status: { Audio: { Volume: '50' } } };
-      const spies = Array(4)
-        .fill()
-        .map(() => sandbox.spy());
+      const spies = [sandbox.spy(), sandbox.spy(), sandbox.spy(), sandbox.spy()];
 
       feedback.on('', spies[0]);
       feedback.on('Status', spies[1]);
@@ -274,13 +272,13 @@ describe('Feedback', () => {
       const path = 'Status/Audio/Volume';
       const listener = () => {};
 
-      sandbox.spy(feedback, 'on');
+      const spy = sandbox.spy(feedback, 'on');
       feedback.once(path, listener);
 
-      const [callPath, callListener] = feedback.on.firstCall.args;
+      const [callPath, callListener] = spy.firstCall.args;
 
       expect(callPath).to.equal(path);
-      expect(callListener.listener).to.equal(listener);
+      expect((callListener as any).listener).to.equal(listener);
     });
   });
 
@@ -305,7 +303,7 @@ describe('Feedback', () => {
       feedback.on(path, spy);
 
       const off = () => {
-        feedback.off(path, spy);
+        feedback.off();
       };
 
       expect(off).to.throw(Error, /deprecated/);
@@ -337,7 +335,7 @@ describe('Feedback', () => {
     it('can change the data', () => {
       const spy = sandbox.spy();
 
-      interceptor.callsFake((data, dispatch) => {
+      interceptor.callsFake((data: any, dispatch: (d: any) => void) => {
         const item = getPath(data, 'Status', 'Audio', 'Volume');
         if (item) {
           // eslint-disable-next-line no-param-reassign
@@ -357,9 +355,9 @@ describe('Feedback', () => {
   });
 
   describe('.group()', () => {
-    let group;
-    let muteSpy;
-    let volumeSpy;
+    let group: FeedbackGroup;
+    let muteSpy: sinon.SinonSpy;
+    let volumeSpy: sinon.SinonSpy;
 
     beforeEach(() => {
       muteSpy = sandbox.spy();

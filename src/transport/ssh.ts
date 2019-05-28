@@ -21,6 +21,7 @@ if (!DuplexPassThrough.prototype.on.isPatched) {
 }
 
 interface SshOptions {
+  username?: string;
   client: any;
   password?: string;
   transport: any;

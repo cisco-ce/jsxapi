@@ -92,29 +92,7 @@ export default class TSHBackend extends Backend {
     this.write(cmd);
   }
 
-  private bufferHasOK(buffer: any) {
-    const lines = (this.buffer + buffer.toString()).split('\n');
-    if (lines.length) {
-      this.buffer = lines[lines.length - 1];
-    }
-    return lines.some((line) => line === 'OK');
-  }
-
-  private setState(newState: State) {
-    this.state = newState;
-  }
-
-  private onParserData(data: any) {
-    if (!{}.hasOwnProperty.call(data, 'ResultId')) {
-      log.debug('[tsh] (feedback):', JSON.stringify(data));
-      this.onFeedback(rpc.parseFeedbackResponse(data));
-    } else {
-      log.debug('[tsh] (result):', JSON.stringify(data));
-      this.onResult(data.ResultId, data);
-    }
-  }
-
-  private onTransportData(data: any) {
+  public onTransportData(data: any) {
     switch (this.state) {
       case 'connecting':
         if (this.bufferHasOK(data)) {
@@ -143,6 +121,28 @@ export default class TSHBackend extends Backend {
           'error',
           new Error('TSHBackend is in an invalid state for input'),
         );
+    }
+  }
+
+  private bufferHasOK(buffer: any) {
+    const lines = (this.buffer + buffer.toString()).split('\n');
+    if (lines.length) {
+      this.buffer = lines[lines.length - 1];
+    }
+    return lines.some((line) => line === 'OK');
+  }
+
+  private setState(newState: State) {
+    this.state = newState;
+  }
+
+  private onParserData(data: any) {
+    if (!{}.hasOwnProperty.call(data, 'ResultId')) {
+      log.debug('[tsh] (feedback):', JSON.stringify(data));
+      this.onFeedback(rpc.parseFeedbackResponse(data));
+    } else {
+      log.debug('[tsh] (result):', JSON.stringify(data));
+      this.onResult(data.ResultId, data);
     }
   }
 

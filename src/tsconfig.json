@@ -4,13 +4,12 @@
     "esModuleInterop": true,
     "lib": ["es2015"],
     "module": "commonjs",
+    "declaration": true,
+    "declarationDir": "../lib",
     "strict": true,
     "noImplicitThis": false,
     "removeComments": true,
-    "typeRoots": ["typings", "node_modules/@types"]
-  },
-  "include": [
-    "src/**/*",
-    "test/**/*"
-  ]
+    "outDir": "../lib",
+    "typeRoots": ["../typings", "../node_modules/@types"]
+  }
 }

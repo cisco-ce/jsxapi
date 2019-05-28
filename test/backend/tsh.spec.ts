@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 
 import TSHBackend from '../../src/backend/tsh';
 import {
@@ -9,18 +9,20 @@ import {
 } from '../../src/xapi/exc';
 
 import MockTransport from '../mock_transport';
+import { JSONParser } from '../../src/json-parser';
+import { XapiResponse, XapiRequest } from '../../src/xapi/types';
 
 describe('TSH Backend', () => {
-  let parser;
-  let transport;
-  let tsh;
-  let sandbox;
+  let parser: JSONParser;
+  let transport: MockTransport;
+  let tsh: TSHBackend;
+  let sandbox: sinon.SinonSandbox;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    transport = new MockTransport();
+    transport = new MockTransport()
     tsh = new TSHBackend(transport);
-    parser = tsh.parser;
+    parser = (tsh as any).parser;
     transport.stubBackend(tsh);
   });
 
@@ -128,9 +130,19 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
   });
 
   describe('when parser emits "data" response from', () => {
-    let spy;
-    const createMessage = (message) =>
-      Object.assign({ jsonrpc: '2.0', id: 'request-1' }, message);
+    let spy: sinon.SinonSpy;
+    interface TestCase {
+      id?: string;
+      method?: string;
+      params?: any;
+      result?: string | boolean;
+    }
+
+    type Omit<T, K> = Pick<T, Exclude<keyof T,K>>;
+    const createMessage = (message: TestCase) => {
+      const request: Omit<XapiRequest, 'method'>  = Object.assign({ jsonrpc: '2.0', id: 'request-1' }, message);
+      return request as XapiRequest;
+    };
 
     beforeEach(() => {
       spy = sinon.spy();
@@ -138,7 +150,13 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
       return transport.init();
     });
 
-    const testCases = [
+
+    const testCases: {
+      request: TestCase,
+      name: string,
+      response: string,
+      expected: any,
+    }[] = [
       // xCommand
       {
         name: 'xCommand, it handles empty successful command result',
@@ -452,7 +470,7 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
     });
 
     it('xFeedback/Subscribe wraps indexes in [<n>]', () => {
-      sandbox.stub(tsh, 'send').callsFake(() => {
+      const send = sandbox.stub(tsh, 'send').callsFake(() => {
         parser.emit('data', { ResultId: 'request-1' });
       });
 
@@ -463,9 +481,10 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
           params: {
             Query: ['Status', 'Video', 'Layout', 'Prediction', 'Site', 1],
           },
+          jsonrpc: '2.0',
         })
         .then(() => {
-          expect(tsh.send.firstCall).to.have.been.calledWith(
+          expect(send.firstCall).to.have.been.calledWith(
             'request-1',
             'xfeedback register /Status/Video/Layout/Prediction/Site[1]',
           );
@@ -479,7 +498,7 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
       ];
 
       sandbox.stub(tsh, 'send').callsFake(() => {
-        parser.emit('data', JSON.parse(responses.shift()));
+        parser.emit('data', JSON.parse(responses.shift()!));
       });
 
       return tsh
@@ -734,8 +753,8 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
 
       return new Promise((resolve) => {
         tsh.on('data', resolve);
-      }).then((error) => {
-        expect(error.error.message).to.match(/invalid value.*foo.*bar/i);
+      }).then((error: any) => {
+        expect((error as XapiResponse).error.message).to.match(/invalid value.*foo.*bar/i);
       });
     });
 
@@ -754,8 +773,8 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
 
       return new Promise((resolve) => {
         tsh.on('data', resolve);
-      }).then((error) => {
-        expect(error.error.message).to.match(/invalid value.*foo.*bar/i);
+      }).then((error: any) => {
+        expect((error as any).error.message).to.match(/invalid value.*foo.*bar/i);
       });
     });
 

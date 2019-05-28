@@ -13,7 +13,7 @@ export default class StreamTransport extends Duplex {
    * @param {function(data: string)} send - Callback for outbound data
    * @return {Duplex} - Duplex stream.
    */
-  constructor(readonly send: any, options: DuplexOptions) {
+  constructor(readonly send: any, options?: DuplexOptions) {
     super(options);
     this.on('finish', () => {
       this.emit('close');
@@ -41,7 +41,7 @@ export default class StreamTransport extends Duplex {
   /**
    * Closes the stream transport
    */
-  private close() {
+  public close() {
     this.end();
   }
 
