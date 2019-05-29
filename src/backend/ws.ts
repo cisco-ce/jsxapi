@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import WebSocket from 'ws';
 
 /**
  * @external {WebSocket} https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
@@ -45,11 +46,17 @@ export default class WSBackend extends EventEmitter {
     };
   }
 
-  private close() {
+  public close() {
     this.ws.close();
   }
 
-  private handleClose(event: CloseEvent) {
+  public execute(command: any) {
+    this.isReady.then(() => {
+      this.ws.send(JSON.stringify(command));
+    });
+  }
+
+  private handleClose: WebSocket['onclose'] = (event) => {
     if (event.code !== 1000) {
       this.emit('error', 'WebSocket closed unexpectedly');
     } else {
@@ -57,18 +64,12 @@ export default class WSBackend extends EventEmitter {
     }
   }
 
-  private handleError() {
+  private handleError: WebSocket['onerror'] = () => {
     this.emit('error', 'WebSocket error');
   }
 
-  private handleMessage(message: MessageEvent) {
-    const data = JSON.parse(message.data);
+  private handleMessage: WebSocket['onmessage'] = (message) => {
+    const data = JSON.parse(message.data as string);
     this.emit('data', data);
-  }
-
-  private execute(command: any) {
-    this.isReady.then(() => {
-      this.ws.send(JSON.stringify(command));
-    });
   }
 }
