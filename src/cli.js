@@ -7,7 +7,7 @@ import REPL from 'repl';
 
 import pkg from '../package.json';
 import log from './log';
-import { connect } from './';
+import { connect } from '.';
 
 
 function evalFile(source, xapi) {
@@ -35,7 +35,8 @@ commander
     '-l, --loglevel <level>',
     'set application log level (trace|debug|info|warn|error|silent)',
     /^(trace|debug|info|warn|error|silent)$/i,
-    'warn')
+    'warn',
+  )
   .action((host, file, options) => {
     if (!host) {
       log.error('Please specify a host to connect to');

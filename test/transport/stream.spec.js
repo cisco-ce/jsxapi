@@ -2,16 +2,6 @@ import StreamTransport from '../../src/transport/stream';
 
 
 describe('StreamTransport', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   it('can push before listening', (done) => {
     const stream = new StreamTransport();
 

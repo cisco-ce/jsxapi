@@ -37,14 +37,14 @@
     "duplexer": "^0.1.1",
     "jsonparse": "^1.3.1",
     "loglevel": "^1.6.1",
-    "ssh2": "^0.5.5",
-    "url-parse": "^1.2.0",
-    "ws": "^4.0.0",
+    "ssh2": "^0.8.2",
+    "url-parse": "^1.4.4",
+    "ws": "^6.2.1",
     "xml-escape": "^1.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",
-    "babel-eslint": "^7.1.1",
+    "babel-eslint": "^10.0.1",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
     "babel-plugin-transform-class-properties": "^6.23.0",
     "babel-preset-env": "^1.6.1",
@@ -57,14 +57,14 @@
     "esdoc-ecmascript-proposal-plugin": "^1.0.0",
     "esdoc-importpath-plugin": "^1.0.2",
     "esdoc-standard-plugin": "^1.0.0",
-    "eslint": "^3.16.1",
-    "eslint-config-airbnb-base": "^11.1.0",
-    "eslint-plugin-import": "^2.2.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
     "json-loader": "^0.5.4",
-    "mocha": "^5.2.0",
-    "rimraf": "^2.6.1",
-    "sinon": "^4.5.0",
-    "sinon-chai": "^2.14.0"
+    "mocha": "^6.0.2",
+    "rimraf": "^2.6.3",
+    "sinon": "^7.3.1",
+    "sinon-chai": "^3.3.0"
   },
   "babel": {
     "plugins": [

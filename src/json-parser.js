@@ -14,7 +14,7 @@ import Parser from 'jsonparse';
 export class JSONParser extends Transform {
   constructor() {
     super({ objectMode: true });
-    this.enc = 'utf8';  // Default encoding
+    this.enc = 'utf8'; // Default encoding
     this.reset();
   }
 

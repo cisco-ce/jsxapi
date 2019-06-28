@@ -14,22 +14,20 @@ function getPath(obj, ...path) {
 }
 
 describe('Feedback', () => {
-  let sandbox;
   let interceptor;
   let feedback;
   let xapi;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-    interceptor = sandbox.stub();
+    interceptor = sinon.stub();
     interceptor.callsArg(1);
     xapi = new XAPI(new Backend(), {
       feedbackInterceptor: interceptor,
     });
-    feedback = xapi.feedback;
+    ({ feedback } = xapi);
 
     let nextSubscriptionId = 0;
-    sandbox.stub(XAPI.prototype, 'execute').callsFake((method) => {
+    sinon.stub(XAPI.prototype, 'execute').callsFake((method) => {
       switch (method) {
         case 'xFeedback/Subscribe': {
           const id = nextSubscriptionId;
@@ -43,7 +41,7 @@ describe('Feedback', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   it('is instance of Feedback', () => {
@@ -56,7 +54,7 @@ describe('Feedback', () => {
     });
 
     it('fires event', () => {
-      const spy = sandbox.spy();
+      const spy = sinon.spy();
       feedback.on('Status', spy);
       feedback.dispatch({ Status: 'foo' });
       expect(spy).to.have.been.calledOnce();
@@ -67,7 +65,7 @@ describe('Feedback', () => {
       const data = { Status: { Audio: { Volume: '50' } } };
       const spies = Array(4)
         .fill()
-        .map(() => sandbox.spy());
+        .map(() => sinon.spy());
 
       feedback.on('', spies[0]);
       feedback.on('Status', spies[1]);
@@ -83,8 +81,8 @@ describe('Feedback', () => {
     });
 
     it('does not invoke unrelated handlers', () => {
-      const spy1 = sandbox.spy();
-      const spy2 = sandbox.spy();
+      const spy1 = sinon.spy();
+      const spy2 = sinon.spy();
 
       feedback.on('Status/Audio/Volume', spy1);
       feedback.on('Status/Audio/VolumeMute', spy2);
@@ -96,7 +94,7 @@ describe('Feedback', () => {
     });
 
     it('dispatches original feedback payload as second argument', () => {
-      const spy = sandbox.spy();
+      const spy = sinon.spy();
       const data = { Status: { Call: [{ id: 42, Status: 'Connected' }] } };
 
       feedback.on('Status/Call/Status', spy);
@@ -106,7 +104,7 @@ describe('Feedback', () => {
     });
 
     it('can listen to lower-case events', () => {
-      const spy = sandbox.spy();
+      const spy = sinon.spy();
       const data = { Status: { Call: [{ id: 42, ghost: 'True' }] } };
 
       feedback.on('Status/Call/ghost', spy);
@@ -118,7 +116,7 @@ describe('Feedback', () => {
 
   describe('.on()', () => {
     it('registers handler for events', () => {
-      const spy = sandbox.spy();
+      const spy = sinon.spy();
 
       feedback.on('Status/Audio/Volume', spy);
       feedback.dispatch({ Status: { Audio: { Volume: 50 } } });
@@ -127,7 +125,7 @@ describe('Feedback', () => {
     });
 
     it('returns handler for disabling feedback', () => {
-      const spy = sandbox.spy();
+      const spy = sinon.spy();
 
       const handler = feedback.on('Status/Audio/Volume', spy);
       feedback.dispatch({ Status: { Audio: { Volume: 50 } } });
@@ -152,7 +150,7 @@ describe('Feedback', () => {
     });
 
     it('cancelling double registration leaves one listener', () => {
-      const spy = sandbox.spy();
+      const spy = sinon.spy();
       const path = 'Status/Audio/Volume';
 
       feedback.on(path, spy);
@@ -176,7 +174,7 @@ describe('Feedback', () => {
     });
 
     it('can dispatch to normalized path', () => {
-      const spy = sandbox.spy();
+      const spy = sinon.spy();
 
       feedback.on('status/audio   volume', spy);
       feedback.dispatch({ Status: { Audio: { Volume: 50 } } });
@@ -185,7 +183,7 @@ describe('Feedback', () => {
     });
 
     it('can use crazy casing', () => {
-      const spy = sandbox.spy();
+      const spy = sinon.spy();
 
       feedback.on('fOO Bar BaZ', spy);
       feedback.dispatch({ Foo: { Bar: { Baz: 50 } } });
@@ -194,10 +192,10 @@ describe('Feedback', () => {
     });
 
     it('handles arrays', () => {
-      const spy1 = sandbox.spy();
-      const spy2 = sandbox.spy();
-      const spy3 = sandbox.spy();
-      const spy4 = sandbox.spy();
+      const spy1 = sinon.spy();
+      const spy2 = sinon.spy();
+      const spy3 = sinon.spy();
+      const spy4 = sinon.spy();
 
       feedback.on('Status/Peripherals/ConnectedDevice/Status', spy1);
       feedback.on('Status/Peripherals/ConnectedDevice[]/Status', spy2);
@@ -245,7 +243,7 @@ describe('Feedback', () => {
     });
 
     it('handles ghost events', () => {
-      const spy = sandbox.spy();
+      const spy = sinon.spy();
 
       feedback.on('Status/Peripherals/ConnectedDevice', spy);
       feedback.dispatch({
@@ -271,7 +269,7 @@ describe('Feedback', () => {
       const path = 'Status/Audio/Volume';
       const listener = () => {};
 
-      sandbox.spy(feedback, 'on');
+      sinon.spy(feedback, 'on');
       feedback.once(path, listener);
 
       const [callPath, callListener] = feedback.on.firstCall.args;
@@ -283,7 +281,7 @@ describe('Feedback', () => {
 
   describe('.once()', () => {
     it('deregisters after emit', () => {
-      const spy = sandbox.spy();
+      const spy = sinon.spy();
 
       feedback.once('Status/Audio/Volume', spy);
       feedback.dispatch({ Status: { Audio: { Volume: '50' } } });
@@ -296,7 +294,7 @@ describe('Feedback', () => {
 
   describe('.off()', () => {
     it('is now deprecated/removed and throws Error', () => {
-      const spy = sandbox.spy();
+      const spy = sinon.spy();
       const path = 'Status/Audio/Volume';
 
       feedback.on(path, spy);
@@ -315,7 +313,7 @@ describe('Feedback', () => {
     });
 
     it('can reject feedback', () => {
-      const volumeSpy = sandbox.spy();
+      const volumeSpy = sinon.spy();
       const data = { Status: { Audio: { Volume: '50' } } };
 
       interceptor.onFirstCall().callsFake(() => {});
@@ -332,7 +330,7 @@ describe('Feedback', () => {
     });
 
     it('can change the data', () => {
-      const spy = sandbox.spy();
+      const spy = sinon.spy();
 
       interceptor.callsFake((data, dispatch) => {
         const item = getPath(data, 'Status', 'Audio', 'Volume');
@@ -359,8 +357,8 @@ describe('Feedback', () => {
     let volumeSpy;
 
     beforeEach(() => {
-      muteSpy = sandbox.spy();
-      volumeSpy = sandbox.spy();
+      muteSpy = sinon.spy();
+      volumeSpy = sinon.spy();
       group = feedback.group([
         xapi.status.on('Audio/Volume', volumeSpy),
         xapi.status.on('Audio/VolumeMute', muteSpy),
@@ -382,7 +380,7 @@ describe('Feedback', () => {
     });
 
     it('only deregisters feedback of the group', () => {
-      const rootSpy = sandbox.spy();
+      const rootSpy = sinon.spy();
       xapi.status.on('Audio/Volume', rootSpy);
 
       group.off();
@@ -402,7 +400,7 @@ describe('Feedback', () => {
     });
 
     it('supports .once()', () => {
-      const spy = sandbox.spy();
+      const spy = sinon.spy();
 
       group.off();
       group.add(xapi.status.once('Audio/Volume', spy));
@@ -415,7 +413,7 @@ describe('Feedback', () => {
     });
 
     it('can clean up .once() before emit with .off()', () => {
-      const spy = sandbox.spy();
+      const spy = sinon.spy();
 
       group.add(xapi.status.once('Status/Audio/Volume', spy));
       group.off();

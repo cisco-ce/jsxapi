@@ -4,15 +4,13 @@ import { XAPIError } from '../../src/xapi/exc';
 
 describe('Backend', () => {
   let backend;
-  let sandbox;
 
   beforeEach(() => {
     backend = new Backend();
-    sandbox = sinon.sandbox.create();
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('.defaultHandler()', () => {
@@ -33,7 +31,7 @@ describe('Backend', () => {
         params: { Number: 'user@example.com' },
       };
 
-      sandbox.stub(backend, 'defaultHandler').callsFake((actual) => {
+      sinon.stub(backend, 'defaultHandler').callsFake((actual) => {
         expect(actual).to.deep.equal(request);
         done();
       });
@@ -88,9 +86,11 @@ describe('Backend', () => {
 
     testCases.forEach(({ name, method, params }) => {
       it(`calls .${name}() handler`, () => {
-        const send = sandbox.stub(backend, 'send');
-        const handler = sandbox.spy((r, _send) => _send());
-        const request = { jsonrpc: '2.0', id: 'request-1', method, params };
+        const send = sinon.stub(backend, 'send');
+        const handler = sinon.spy((r, _send) => _send());
+        const request = {
+          jsonrpc: '2.0', id: 'request-1', method, params,
+        };
 
         backend[`${name}()`] = handler;
         backend.execute(request);
@@ -106,8 +106,8 @@ describe('Backend', () => {
     });
 
     it('handles error', (done) => {
-      const send = sandbox.stub(backend, 'send');
-      backend['xCommand()'] = sandbox.spy((r, _send) => _send());
+      const send = sinon.stub(backend, 'send');
+      backend['xCommand()'] = sinon.spy((r, _send) => _send());
       send.throws(new XAPIError(0, 'Some XAPI thing went wrong'));
 
       backend.on('data', (data) => {
