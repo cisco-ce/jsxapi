@@ -83,7 +83,7 @@
 import { JSONParser } from &apos;../json-parser&apos;;
 import * as rpc from &apos;../xapi/rpc&apos;;
 
-import Backend from &apos;./&apos;;
+import Backend from &apos;.&apos;;
 
 
 /**
@@ -243,7 +243,7 @@ export default class TSHBackend extends Backend {
    */
   [&apos;xCommand()&apos;]({ method, params }, send) { // eslint-disable-line class-methods-use-this
     const paramsCopy = Object.assign({}, params);
-    const body = paramsCopy.body;
+    const { body } = paramsCopy;
     delete paramsCopy.body;
 
     const tshParams = paramsCopy
