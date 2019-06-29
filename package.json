@@ -29,7 +29,8 @@
     "prepublishOnly": "npm test",
     "start": "node -r babel-register ./src/cli.js",
     "test": "npm run lint && mocha",
-    "tdd": "mocha --watch --reporter min"
+    "tdd": "mocha --watch --reporter min",
+    "version": "npm run build && git add -u"
   },
   "dependencies": {
     "commander": "^2.13.0",

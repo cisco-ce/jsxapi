@@ -1,6 +1,10 @@
 Changes
 -------
 
+##### v4.3.2 (2019-06-29)
+
+ * Update dependencies
+
 ##### v4.3.1 (2019-05-23)
 
  * Clean up accidental artifacts from 4.3.0
