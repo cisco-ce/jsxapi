@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "esModuleInterop": true,
+    "lib": ["es2015"],
+    "module": "commonjs",
+    "strict": true,
+    "noImplicitThis": false,
+    "removeComments": true,
+    "typeRoots": ["typings", "node_modules/@types"]
+  },
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ]
+}
