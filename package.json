@@ -31,7 +31,8 @@
     "start": "node ./lib/cli.js",
     "test": "npm run lint && npm run mocha",
     "mocha": "mocha test/**/*.spec.ts",
-    "tdd": "TS_NODE_TRANSPILE_ONLY=1 mocha --watch --reporter min test/**/*.spec.ts"
+    "tdd": "TS_NODE_TRANSPILE_ONLY=1 mocha --watch --reporter min test/**/*.spec.ts",
+    "version": "npm run build && git add -u"
   },
   "dependencies": {
     "commander": "^2.13.0",
