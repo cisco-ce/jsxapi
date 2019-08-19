@@ -18,7 +18,7 @@ export class Listenable {
    * @param {function(data: Object): null} listener - Callback handler called on changes.
    * @return {function()} - Handler to deregister the feedback registration.
    */
-  public on(path: Path, listener: Listener) {
+  public on<T = any>(path: Path, listener: Listener<T>) {
     return this.xapi.feedback.on(this.normalizePath(path) as any, listener);
   }
 
@@ -30,7 +30,7 @@ export class Listenable {
    * @param {function(data: Object): null} listener - Callback handler called on changes.
    * @return {Object} - Handler to deregister the feedback registration.
    */
-  public once(path: Path, listener: Listener) {
+  public once<T = any>(path: Path, listener: Listener<T>) {
     return this.xapi.feedback.once(this.normalizePath(path) as any, listener);
   }
 
@@ -68,7 +68,7 @@ export class Gettable {
    * @param {string} path - Path to configuration node.
    * @return {Promise} - Resolved to the configuration value when ready.
    */
-  public get(path: Path) {
+  public get<T = any>(path: Path): Promise<T> {
     return this.xapi.execute('xGet', {
       Path: this.normalizePath(path),
     });

@@ -2,7 +2,14 @@ import * as sinon from 'sinon';
 import { Duplex } from 'stream';
 
 import TSHBackend from '../src/backend/tsh';
-import { Requests, XapiResult } from '../src/xapi/types';
+import { XapiResult } from '../src/xapi/types';
+
+interface Requests {
+  [idx: string]: {
+    resolve(result: any): void;
+    reject(result: any): void;
+  };
+}
 
 export default class MockTransport extends Duplex {
   public writeBuffer: string[];

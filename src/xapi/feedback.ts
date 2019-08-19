@@ -136,7 +136,7 @@ export default class Feedback {
 
     this.eventEmitter.on(eventPath, listener);
 
-    const registration = this.xapi.execute('xFeedback/Subscribe', {
+    const registration = this.xapi.execute<{ Id: string }>('xFeedback/Subscribe', {
       Query: normalizePath(path),
     });
 
@@ -158,13 +158,13 @@ export default class Feedback {
    * @param {Array|string} path - Path to subscribe to
    * @param {function} listener - Listener invoked on feedback
    */
-  public once(path: Path, listener: Listener) {
+  public once<T = any>(path: Path, listener: Listener) {
     let off: () => void | undefined;
-    const wrapped = (...args: any[]) => {
+    const wrapped = (ev: T, root: any) => {
       if (typeof off === 'function') {
         off();
       }
-      listener.call(this, ...args);
+      listener.call(this, ev, root);
     };
     wrapped.listener = listener;
     off = this.on(path, wrapped);

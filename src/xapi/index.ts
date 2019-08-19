@@ -7,7 +7,14 @@ import * as rpc from './rpc';
 import Backend from '../backend';
 import { Config, Event, Status } from './components';
 import Feedback from './feedback';
-import { Path, Requests, XapiOptions, XapiResponse, XapiResult } from './types';
+import { Path, XapiError, XapiOptions, XapiResponse } from './types';
+
+interface Requests {
+  [idx: string]: {
+    resolve(result: any): void;
+    reject(result: XapiError): void;
+  };
+}
 
 /**
  * User-facing API towards the XAPI. Requires a backend for communicating
@@ -153,12 +160,12 @@ export default class XAPI extends EventEmitter {
    * @param {string} [body] - Multi-line body for commands requiring it.
    * @return {Promise} - Resolved with the command response when ready.
    */
-  public command(path: Path, params?: any, body?: string) {
+  public command<T = any>(path: Path, params?: any, body?: string) {
     const apiPath = normalizePath(path).join('/');
     const method = `xCommand/${apiPath}`;
     const executeParams =
       body === undefined ? params : Object.assign({ body }, params);
-    return this.execute(method, executeParams);
+    return this.execute<T>(method, executeParams);
   }
 
   /**
@@ -173,7 +180,7 @@ export default class XAPI extends EventEmitter {
    * @param {Object} [params] - Parameters to add to the request.
    * @return {Promise} - Resolved with the command response.
    */
-  public execute(method: string, params: any): Promise<XapiResult> {
+  public execute<T>(method: string, params: any): Promise<T> {
     return new Promise((resolve, reject) => {
       const id = this.nextRequestId();
       const request = rpc.createRequest(id, method, params);

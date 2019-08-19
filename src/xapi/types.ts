@@ -4,10 +4,11 @@ export interface CloseableStream extends Duplex {
   close(): void;
 }
 
+export type Canceler = () => void;
 export type Handler = () => void;
 export type Path = string | string[];
 export type NormalizedPath = Array<string | number>;
-export type Listener = (...args: any[]) => void;
+export type Listener<T = any> = (ev: T, root: any) => void;
 
 export interface XapiOptions {
   feedbackInterceptor?: (data?: any) => void;
@@ -34,11 +35,4 @@ export interface XapiResult {
 
 export interface XapiError {
   message: string;
-}
-
-export interface Requests {
-  [idx: string]: {
-    resolve(result: XapiResult): void;
-    reject(result: XapiError): void;
-  };
 }

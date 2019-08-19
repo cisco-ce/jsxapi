@@ -54,11 +54,11 @@ export class Config extends mix(Component, Listenable, Gettable, Settable)
   // fake mixins
   public normalizePath!: (path: Path) => Array<string | number>;
 
-  public on!: (path: Path, listener: Listener) => () => void;
-  public once!: (path: Path, listener: Listener) => () => void;
+  public on!: <T = any>(path: Path, listener: Listener<T>) => () => void;
+  public once!: <T = any>(path: Path, listener: Listener<T>) => () => void;
   public off!: () => void;
 
-  public get!: (path: Path) => Promise<any>;
+  public get!: <T = any>(path: Path) => Promise<T>;
   public set!: (path: Path, value: number | string) => Promise<any>;
 
   constructor(public readonly xapi: XAPI) {
@@ -79,8 +79,8 @@ export class Event extends mix(Component, Listenable)
   // fake mixins
   public normalizePath!: (path: Path) => Array<string | number>;
 
-  public on!: (path: Path, listener: Listener) => () => void;
-  public once!: (path: Path, listener: Listener) => () => void;
+  public on!: <T = any>(path: Path, listener: Listener<T>) => () => void;
+  public once!: <T = any>(path: Path, listener: Listener<T>) => () => void;
   public off!: () => void;
 
   constructor(readonly xapi: XAPI) {
@@ -102,11 +102,11 @@ export class Status extends mix(Component, Listenable, Gettable)
   // fake mixins
   public normalizePath!: (path: Path) => Array<string | number>;
 
-  public on!: (path: Path, listener: Listener) => () => void;
-  public once!: (path: Path, listener: Listener) => () => void;
+  public on!: <T = any>(path: Path, listener: Listener<T>) => () => void;
+  public once!: <T = any>(path: Path, listener: Listener<T>) => () => void;
   public off!: () => void;
 
-  public get!: (path: Path) => Promise<any>;
+  public get!: <T = any>(path: Path) => Promise<T>;
 
   constructor(public readonly xapi: XAPI) {
     super();

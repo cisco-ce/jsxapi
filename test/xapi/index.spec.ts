@@ -162,7 +162,7 @@ describe('XAPI', () => {
   });
 
   describe('Components', () => {
-    let execStub: sinon.SinonSpy<[string, any], Promise<XapiResult>>;
+    let execStub: sinon.SinonSpy<[string, any], Promise<any>>;
 
     beforeEach(() => {
       execStub = sinon.spy(XAPI.prototype, 'execute');
