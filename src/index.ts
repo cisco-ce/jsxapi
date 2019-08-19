@@ -8,6 +8,7 @@ import connectSSH from './transport/ssh';
 import spawnTSH from './transport/tsh';
 import XAPI from './xapi';
 
+export type XAPI = XAPI;
 /**
  * Connect to an XAPI endpoint.
  *
