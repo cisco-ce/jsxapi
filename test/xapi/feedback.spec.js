@@ -140,7 +140,7 @@ describe('Feedback', () => {
     });
 
     it('off handler contains registration promise', async () => {
-      const spy = sandbox.spy();
+      const spy = sinon.spy();
 
       const regs = await Promise.all([
         feedback.on('Status/Audio/Volume', spy).registration,
