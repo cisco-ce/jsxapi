@@ -111,12 +111,8 @@ describe('Backend', () => {
       send.throws(new XAPIError(0, 'Some XAPI thing went wrong'));
 
       backend.on('data', (data) => {
-        expect(data).to.have.properties({
-          error: {
-            code: 0,
-            message: 'Some XAPI thing went wrong',
-          },
-        });
+        expect(data.error.code).to.equal(0);
+        expect(data.error.message).to.equal('Some XAPI thing went wrong');
         done();
       });
 

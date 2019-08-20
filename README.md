@@ -78,7 +78,3 @@ Making a release is quite simple:
  * Update "CHANGELOG.md" with version number, date and change summary.
  * Run `npm version` with the appropriate version bump.
  * Run `npm publish` to push the package version to the registry.
- 
-Alternatively, use `yarn publish`<sup>[1](#yarnpublish)</sup>
-
-<a name="yarnpublish">[1]</a> Requires a version supporting `npm` 2fa ([yarn#4904](https://github.com/yarnpkg/yarn/issues/4904))

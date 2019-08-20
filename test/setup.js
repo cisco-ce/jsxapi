@@ -1,7 +1,6 @@
 import chai from 'chai';
 import dirtyChai from 'dirty-chai';
 import chaiAsPromised from 'chai-as-promised';
-import chaiProperties from 'chai-properties';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
@@ -14,7 +13,6 @@ logger.disableAll();
 global.expect = chai.expect;
 chai.use(dirtyChai);
 chai.use(chaiAsPromised);
-chai.use(chaiProperties);
 chai.use(sinonChai);
 
 
