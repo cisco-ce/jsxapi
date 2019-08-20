@@ -1,0 +1,4 @@
+[submodule "docs"]
+	path = docs
+	url = git@github.com:cisco-ce/jsxapi.git
+	branch = origin/gh-pages
