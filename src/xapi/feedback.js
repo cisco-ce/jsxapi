@@ -123,6 +123,8 @@ export default class Feedback {
    *
    * @param {Array|string} path - Path to subscribe to
    * @param {function} listener - Listener invoked on feedback
+   * @return {function()} - Feedback cancellation function
+   * @property {Promise<{ Id: number}>} registration - Promise for successful feedback registration
    */
   on(path, listener) {
     log.info(`new feedback listener on: ${path}`);
@@ -144,6 +146,7 @@ export default class Feedback {
       this.eventEmitter.removeListener(eventPath, listener);
     };
 
+    off.registration = registration;
     return off;
   }
 
@@ -153,6 +156,8 @@ export default class Feedback {
    *
    * @param {Array|string} path - Path to subscribe to
    * @param {function} listener - Listener invoked on feedback
+   * @return {function()} - Feedback cancellation function
+   * @property {Promise<{ Id: number}>} registration - Promise for successful feedback registration
    */
   once(path, listener) {
     let off;
