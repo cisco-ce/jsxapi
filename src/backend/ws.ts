@@ -1,5 +1,4 @@
 import { EventEmitter } from 'events';
-import WebSocket from 'ws';
 
 /**
  * @external {WebSocket} https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
@@ -29,9 +28,9 @@ export default class WSBackend extends EventEmitter {
      * @type {WebSocket}
      */
     this.ws = typeof urlOrWS !== 'string' ? urlOrWS : new WebSocket(urlOrWS);
-    this.ws.onclose = this.handleClose.bind(this);
-    this.ws.onerror = this.handleError.bind(this);
-    this.ws.onmessage = this.handleMessage.bind(this);
+    this.ws.onclose = this.handleClose;
+    this.ws.onerror = this.handleError;
+    this.ws.onmessage = this.handleMessage;
 
     let resolveReady: () => void;
     /**
