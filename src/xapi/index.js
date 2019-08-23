@@ -129,10 +129,14 @@ export default class XAPI extends EventEmitter {
     // Restrict object mutation
     if (options.seal) {
       Object.defineProperties(this, {
+        Command: { writable: false },
         config: { writable: false },
+        Config: { writable: false },
         event: { writable: false },
+        Event: { writable: false },
         feedback: { writable: false },
         status: { writable: false },
+        Status: { writable: false },
       });
       Object.seal(this);
     }
