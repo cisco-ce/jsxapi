@@ -9,6 +9,48 @@ JavaScript.
 
 ## Quick start example, using SSH
 
+### New style API:
+
+``` javascript
+const jsxapi = require('jsxapi');
+
+// Connect over ssh to a codec
+const xapi = jsxapi.connect('ssh://host.example.com', {
+  username: 'admin',
+  password: 'password',
+});
+
+// Handle errors
+xapi.on('error', (err) => {
+  // !! Note of caution: This event might fire more than once !!
+  console.error(`xapi error: ${err}`);
+});
+
+// Set up a call
+xapi.Command.Dial({ Number: 'user@example.com' });
+
+// Fetch volume and print it
+xapi.Status.Audio.Volume
+  .get()
+  .then((volume) => { console.log(volume); });
+
+// Set a configuration
+xapi.Config.SystemUnit.Name.set('My System');
+
+// Listen to feedback
+const off = xapi.Event.Standby.on((event) => {
+  // ...
+});
+
+// De-register feedback
+off();
+```
+
+The aim of the new style API is to improve readability, while also being more
+suited towards automatic type generation and auto-completion.
+
+### Old style API:
+
 ```javascript
 const jsxapi = require('jsxapi');
 
