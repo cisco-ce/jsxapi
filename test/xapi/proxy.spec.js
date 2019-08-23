@@ -32,7 +32,7 @@ describe('Proxy', () => {
     it('can proxy xapi.config..get()', () => {
       xapi.Config.Audio.DefaultVolume.get();
 
-      expect(execute).to.have.been.calledOnce()
+      expect(execute).to.have.been.calledOnce();
       expect(execute).to.have.been.calledWith('xGet', {
         Path: ['Configuration', 'Audio', 'DefaultVolume'],
       });
@@ -41,7 +41,7 @@ describe('Proxy', () => {
     it('can proxy xapi.config..set()', () => {
       xapi.Config.Audio.DefaultVolume.set(50);
 
-      expect(execute).to.have.been.calledOnce()
+      expect(execute).to.have.been.calledOnce();
       expect(execute).to.have.been.calledWith('xSet', {
         Path: ['Configuration', 'Audio', 'DefaultVolume'],
         Value: 50,
@@ -52,7 +52,7 @@ describe('Proxy', () => {
       const spy = sinon.spy();
       xapi.Config.Audio.DefaultVolume.on(spy);
 
-      expect(execute).to.have.been.calledOnce()
+      expect(execute).to.have.been.calledOnce();
       expect(execute).to.have.been.calledWith('xFeedback/Subscribe', {
         Query: ['Configuration', 'Audio', 'DefaultVolume'],
       });
@@ -64,7 +64,7 @@ describe('Proxy', () => {
       const spy = sinon.spy();
       xapi.Event.Foo.Bar.on(spy);
 
-      expect(execute).to.have.been.calledOnce()
+      expect(execute).to.have.been.calledOnce();
       expect(execute).to.have.been.calledWith('xFeedback/Subscribe', {
         Query: ['Event', 'Foo', 'Bar'],
       });
@@ -75,7 +75,7 @@ describe('Proxy', () => {
     it('can proxy xapi.status..get()', () => {
       xapi.Status.Audio.Volume.get();
 
-      expect(execute).to.have.been.calledOnce()
+      expect(execute).to.have.been.calledOnce();
       expect(execute).to.have.been.calledWith('xGet', {
         Path: ['Status', 'Audio', 'Volume'],
       });
@@ -85,7 +85,7 @@ describe('Proxy', () => {
       const spy = sinon.spy();
       xapi.Status.Audio.Volume.on(spy);
 
-      expect(execute).to.have.been.calledOnce()
+      expect(execute).to.have.been.calledOnce();
       expect(execute).to.have.been.calledWith('xFeedback/Subscribe', {
         Query: ['Status', 'Audio', 'Volume'],
       });
