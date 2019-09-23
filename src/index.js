@@ -1,4 +1,4 @@
-import parseUrl from 'url-parse';
+import Url from 'url-parse';
 import WebSocket from 'ws';
 
 import log from './log';
@@ -7,6 +7,29 @@ import XAPI from './xapi';
 import TSHBackend from './backend/tsh';
 import WSBackend from './backend/ws';
 import spawnTSH from './transport/tsh';
+
+
+function generateAuthSubProto(username, password) {
+  const auth_hash = Buffer
+    .from(`${username}:${password}`)
+    .toString('base64')
+    .replace(/[\/+=]/g, (c) => ({'+':'-','/':'_','=':''}[c]));
+  return `auth-${auth_hash}`;
+}
+
+
+function websocketConnect({ host, username, password, protocol }) {
+  const url = new Url();
+  url.set('pathname', '/ws');
+  url.set('host', host);
+  url.set('protocol', protocol);
+
+  const auth = generateAuthSubProto(username, password);
+  return new WebSocket(url.href, auth, {
+    followRedirects: true,
+    rejectUnauthorized: false,
+  });
+}
 
 
 /**
@@ -35,7 +58,7 @@ export function connect(url, options) { // eslint-disable-line import/prefer-def
     /* eslint-enable */
   }
 
-  const parsedUrl = parseUrl(url.match(/^\w+:\/\//) ? url : `ssh://${url}`);
+  const parsedUrl = new Url(url.match(/^\w+:\/\//) ? url : `ssh://${url}`);
 
   const opts = Object.assign({
     host: '',
@@ -67,7 +90,7 @@ export function connect(url, options) { // eslint-disable-line import/prefer-def
     }
     case 'ws:':
     case 'wss:': {
-      const transport = new WebSocket(url);
+      const transport = websocketConnect(opts);
       backend = new WSBackend(transport);
       break;
     }
