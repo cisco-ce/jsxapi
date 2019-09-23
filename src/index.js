@@ -32,6 +32,29 @@ function websocketConnect({ host, username, password, protocol }) {
 }
 
 
+function initBackend(opts) {
+  const { host, port, protocol } = opts;
+  switch (protocol) {
+    case '':
+    case 'ssh:': {
+      const transport = connectSSH(opts);
+      return new TSHBackend(transport);
+    }
+    case 'tsh:': {
+      const transport = spawnTSH(host, port);
+      return new TSHBackend(transport);
+    }
+    case 'ws:':
+    case 'wss:': {
+      const transport = websocketConnect(opts);
+      return new WSBackend(transport);
+    }
+    default:
+      throw new Error(`Invalid protocol: ${protocol}`);
+  }
+}
+
+
 /**
  * Connect to an XAPI endpoint.
  *
@@ -68,35 +91,12 @@ export function connect(url, options) { // eslint-disable-line import/prefer-def
     loglevel: 'warn',
   }, parsedUrl, options);
 
-  const { hostname: host, port } = opts;
+  opts.host = opts.hostname;
   delete opts.hostname;
-  opts.host = host;
 
   log.setLevel(opts.loglevel);
   log.info('connecting to', url);
 
-  let backend;
-  switch (opts.protocol) {
-    case '':
-    case 'ssh:': {
-      const transport = connectSSH(opts);
-      backend = new TSHBackend(transport);
-      break;
-    }
-    case 'tsh:': {
-      const transport = spawnTSH(host, port);
-      backend = new TSHBackend(transport);
-      break;
-    }
-    case 'ws:':
-    case 'wss:': {
-      const transport = websocketConnect(opts);
-      backend = new WSBackend(transport);
-      break;
-    }
-    default:
-      throw new Error(`Invalid protocol: ${opts.protocol}`);
-  }
-
+  const backend = initBackend(opts);
   return new XAPI(backend);
 }
