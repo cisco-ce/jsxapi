@@ -10,11 +10,11 @@ import spawnTSH from './transport/tsh';
 
 
 function generateAuthSubProto(username, password) {
-  const auth_hash = Buffer
+  const authHash = Buffer
     .from(`${username}:${password}`)
     .toString('base64')
-    .replace(/[\/+=]/g, (c) => ({'+':'-','/':'_','=':''}[c]));
-  return `auth-${auth_hash}`;
+    .replace(/[/+=]/g, c => ({ '+': '-', '/': '_', '=': '' }[c]));
+  return `auth-${authHash}`;
 }
 
 

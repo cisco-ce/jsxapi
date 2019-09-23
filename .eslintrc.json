@@ -3,5 +3,11 @@
     "node": true
   },
   "extends": "airbnb-base",
-  "parser": "babel-eslint"
+  "parser": "babel-eslint",
+  "rules": {
+    "object-curly-newline": ["error", {
+      "consistent": true,
+      "multiline": true
+    }]
+  }
 }
