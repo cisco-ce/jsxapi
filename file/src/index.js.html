@@ -79,7 +79,7 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/index.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import parseUrl from &apos;url-parse&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Url from &apos;url-parse&apos;;
 import WebSocket from &apos;ws&apos;;
 
 import log from &apos;./log&apos;;
@@ -88,6 +88,52 @@ import XAPI from &apos;./xapi&apos;;
 import TSHBackend from &apos;./backend/tsh&apos;;
 import WSBackend from &apos;./backend/ws&apos;;
 import spawnTSH from &apos;./transport/tsh&apos;;
+
+
+function generateAuthSubProto(username, password) {
+  const authHash = Buffer
+    .from(`${username}:${password}`)
+    .toString(&apos;base64&apos;)
+    .replace(/[/+=]/g, c =&gt; ({ &apos;+&apos;: &apos;-&apos;, &apos;/&apos;: &apos;_&apos;, &apos;=&apos;: &apos;&apos; }[c]));
+  return `auth-${authHash}`;
+}
+
+
+function websocketConnect({ host, username, password, protocol }) {
+  const url = new Url();
+  url.set(&apos;pathname&apos;, &apos;/ws&apos;);
+  url.set(&apos;host&apos;, host);
+  url.set(&apos;protocol&apos;, protocol);
+
+  const auth = generateAuthSubProto(username, password);
+  return new WebSocket(url.href, auth, {
+    followRedirects: true,
+    rejectUnauthorized: false,
+  });
+}
+
+
+function initBackend(opts) {
+  const { host, port, protocol } = opts;
+  switch (protocol) {
+    case &apos;&apos;:
+    case &apos;ssh:&apos;: {
+      const transport = connectSSH(opts);
+      return new TSHBackend(transport);
+    }
+    case &apos;tsh:&apos;: {
+      const transport = spawnTSH(host, port);
+      return new TSHBackend(transport);
+    }
+    case &apos;ws:&apos;:
+    case &apos;wss:&apos;: {
+      const transport = websocketConnect(opts);
+      return new WSBackend(transport);
+    }
+    default:
+      throw new Error(`Invalid protocol: ${protocol}`);
+  }
+}
 
 
 /**
@@ -116,7 +162,7 @@ export function connect(url, options) { // eslint-disable-line import/prefer-def
     /* eslint-enable */
   }
 
-  const parsedUrl = parseUrl(url.match(/^\w+:\/\//) ? url : `ssh://${url}`);
+  const parsedUrl = new Url(url.match(/^\w+:\/\//) ? url : `ssh://${url}`);
 
   const opts = Object.assign({
     host: &apos;&apos;,
@@ -126,36 +172,13 @@ export function connect(url, options) { // eslint-disable-line import/prefer-def
     loglevel: &apos;warn&apos;,
   }, parsedUrl, options);
 
-  const { hostname: host, port } = opts;
+  opts.host = opts.hostname;
   delete opts.hostname;
-  opts.host = host;
 
   log.setLevel(opts.loglevel);
   log.info(&apos;connecting to&apos;, url);
 
-  let backend;
-  switch (opts.protocol) {
-    case &apos;&apos;:
-    case &apos;ssh:&apos;: {
-      const transport = connectSSH(opts);
-      backend = new TSHBackend(transport);
-      break;
-    }
-    case &apos;tsh:&apos;: {
-      const transport = spawnTSH(host, port);
-      backend = new TSHBackend(transport);
-      break;
-    }
-    case &apos;ws:&apos;:
-    case &apos;wss:&apos;: {
-      const transport = new WebSocket(url);
-      backend = new WSBackend(transport);
-      break;
-    }
-    default:
-      throw new Error(`Invalid protocol: ${opts.protocol}`);
-  }
-
+  const backend = initBackend(opts);
   return new XAPI(backend);
 }
 </code></pre>

@@ -135,8 +135,8 @@ export default class WSBackend extends EventEmitter {
     }
   }
 
-  handleError() {
-    this.emit(&apos;error&apos;, &apos;WebSocket error&apos;);
+  handleError(error) {
+    this.emit(&apos;error&apos;, error.error);
   }
 
   handleMessage(message) {

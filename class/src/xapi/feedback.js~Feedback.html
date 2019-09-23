@@ -299,7 +299,7 @@ listeners being added to it.</p>
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/xapi/feedback.js~Feedback.html#instance-method-on">on</a></span></span><span class="code" data-ice="signature">(path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, listener: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span>): <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/xapi/feedback.js~Feedback.html#instance-method-on">on</a></span></span><span class="code" data-ice="signature">(path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, listener: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span>): <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span><span>()</span></span></span>
         </p>
       </div>
       <div>
@@ -329,7 +329,7 @@ when there is feedback matching the subscription query.</p>
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/xapi/feedback.js~Feedback.html#instance-method-once">once</a></span></span><span class="code" data-ice="signature">(path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, listener: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span>): <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/xapi/feedback.js~Feedback.html#instance-method-once">once</a></span></span><span class="code" data-ice="signature">(path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, listener: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span>): <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span><span>()</span></span></span>
         </p>
       </div>
       <div>
@@ -438,7 +438,7 @@ is removed after the first invocation of the listener.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/xapi/feedback.js.html#lineNumber186">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/xapi/feedback.js.html#lineNumber191">source</a></span></span>
     </span>
   </h3>
 
@@ -512,7 +512,7 @@ is removed after the first invocation of the listener.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/xapi/feedback.js.html#lineNumber220">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/xapi/feedback.js.html#lineNumber225">source</a></span></span>
     </span>
   </h3>
 
@@ -612,7 +612,7 @@ group.off();</code></pre>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/xapi/feedback.js.html#lineNumber174">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/xapi/feedback.js.html#lineNumber179">source</a></span></span>
     </span>
   </h3>
 
@@ -652,11 +652,11 @@ group.off();</code></pre>
     
     
     
-    <span class="code" data-ice="name">on</span><span class="code" data-ice="signature">(path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, listener: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span>): <span>*</span></span>
+    <span class="code" data-ice="name">on</span><span class="code" data-ice="signature">(path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, listener: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span>): <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span><span>()</span></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/xapi/feedback.js.html#lineNumber127">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/xapi/feedback.js.html#lineNumber129">source</a></span></span>
     </span>
   </h3>
 
@@ -701,12 +701,30 @@ when there is feedback matching the subscription query.</p>
     <table>
       <tbody>
         <tr>
-          <td class="return-type code" data-ice="returnType"><span>*</span></td>
-          
+          <td class="return-type code" data-ice="returnType"><span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span><span>()</span></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>Feedback cancellation function</p>
+</td>
         </tr>
       </tbody>
     </table>
-    <div data-ice="returnProperties">
+    <div data-ice="returnProperties"><div data-ice="properties">
+  <h4 data-ice="title">Return Properties:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">registration</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span><{id: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>}&gt;</{id:></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Promise for successful feedback registration</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
 </div>
   </div>
 
@@ -733,11 +751,11 @@ when there is feedback matching the subscription query.</p>
     
     
     
-    <span class="code" data-ice="name">once</span><span class="code" data-ice="signature">(path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, listener: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span>): <span>*</span></span>
+    <span class="code" data-ice="name">once</span><span class="code" data-ice="signature">(path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, listener: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span>): <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span><span>()</span></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/xapi/feedback.js.html#lineNumber157">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/xapi/feedback.js.html#lineNumber162">source</a></span></span>
     </span>
   </h3>
 
@@ -782,12 +800,30 @@ is removed after the first invocation of the listener.</p>
     <table>
       <tbody>
         <tr>
-          <td class="return-type code" data-ice="returnType"><span>*</span></td>
-          
+          <td class="return-type code" data-ice="returnType"><span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span><span>()</span></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>Feedback cancellation function</p>
+</td>
         </tr>
       </tbody>
     </table>
-    <div data-ice="returnProperties">
+    <div data-ice="returnProperties"><div data-ice="properties">
+  <h4 data-ice="title">Return Properties:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">registration</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span><{id: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>}&gt;</{id:></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Promise for successful feedback registration</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
 </div>
   </div>
 

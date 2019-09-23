@@ -1,6 +1,6 @@
 {
-  "coverage": "49%",
-  "expectCount": 151,
+  "coverage": "48.05%",
+  "expectCount": 154,
   "actualCount": 74,
   "files": {
     "src/backend/index.js": {
@@ -51,9 +51,13 @@
       ]
     },
     "src/index.js": {
-      "expectCount": 1,
+      "expectCount": 4,
       "actualCount": 1,
-      "undocumentLines": []
+      "undocumentLines": [
+        12,
+        21,
+        35
+      ]
     },
     "src/json-parser.js": {
       "expectCount": 10,

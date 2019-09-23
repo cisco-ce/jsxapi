@@ -82,21 +82,35 @@
 <p><a href="https://cisco-ce.github.io/jsxapi/">API Documentation</a></p>
 <p>A set of tools to integrate with the Cisco Telepresence Endpoint APIs in
 JavaScript.</p>
-<h2 id="quick-start-example--using-ssh">Quick start example, using SSH</h2><pre><code class="lang-javascript"><code class="source-code prettyprint">const jsxapi = require(&apos;jsxapi&apos;);
+<h2 id="quick-start-examples">Quick start examples</h2><h3 id="connecting-using-websockets">Connecting using WebSockets</h3><pre><code class="lang-javascript"><code class="source-code prettyprint">const jsxapi = require(&apos;jsxapi&apos;);
 
-// Connect over ssh to a codec
-const xapi = jsxapi.connect(&apos;ssh://host.example.com&apos;, {
-  username: &apos;admin&apos;,
-  password: &apos;password&apos;,
-});
+jsxapi
+  .connect(&apos;wss://host.example.com&apos;, {
+    username: &apos;admin&apos;,
+    password: &apos;password&apos;,
+  })
+  .on(&apos;error&apos;, console.error)
+  .on(&apos;ready&apos;, async (xapi) =&gt; {
+    const volume = await xapi.status.get(&apos;Audio Volume&apos;);
+    console.log(`volume is: ${volume}`);
+    xapi.close();
+  });</code>
+</code></pre>
+<h3 id="connecting-using-ssh">Connecting using SSH</h3><pre><code class="lang-javascript"><code class="source-code prettyprint">const jsxapi = require(&apos;jsxapi&apos;);
 
-// Handle errors
-xapi.on(&apos;error&apos;, (err) =&gt; {
-  // !! Note of caution: This event might fire more than once !!
-  console.error(`xapi error: ${err}`);
-});
-
-// Set up a call
+jsxapi
+  .connect(&apos;ssh://host.example.com&apos;, {
+    username: &apos;admin&apos;,
+    password: &apos;password&apos;,
+  })
+  .on(&apos;error&apos;, console.error)
+  .on(&apos;ready&apos;, async (xapi) =&gt; {
+    const volume = await xapi.status.get(&apos;Audio Volume&apos;);
+    console.log(`volume is: ${volume}`);
+    xapi.close();
+  });</code>
+</code></pre>
+<h3 id="useful-commands">Useful commands</h3><pre><code class="lang-javascript"><code class="source-code prettyprint">// Set up a call
 xapi.command(&apos;Dial&apos;, { Number: &apos;user@example.com&apos; });
 
 // Fetch volume and print it
@@ -135,8 +149,6 @@ Spark Space community for realtime support <a href="https://eurl.io/#rkp76XDrG">
 <li>Run <code>npm version</code> with the appropriate version bump.</li>
 <li>Run <code>npm publish</code> to push the package version to the registry.</li>
 </ul>
-<p>Alternatively, use <code>yarn publish</code>&lt;sup&gt;<a href="#yarnpublish">1</a>&lt;/sup&gt;</p>
-<p><a name="yarnpublish">[1]</a> Requires a version supporting <code>npm</code> 2fa (<a href="https://github.com/yarnpkg/yarn/issues/4904">yarn#4904</a>)</p>
 </div>
 </div>
 
