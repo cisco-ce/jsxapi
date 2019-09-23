@@ -7,23 +7,47 @@
 A set of tools to integrate with the Cisco Telepresence Endpoint APIs in
 JavaScript.
 
-## Quick start example, using SSH
+## Quick start examples
 
-```javascript
+### Connecting using WebSockets
+
+``` javascript
 const jsxapi = require('jsxapi');
 
-// Connect over ssh to a codec
-const xapi = jsxapi.connect('ssh://host.example.com', {
-  username: 'admin',
-  password: 'password',
-});
+jsxapi
+  .connect('wss://host.example.com', {
+    username: 'admin',
+    password: 'password',
+  })
+  .on('error', console.error)
+  .on('ready', async (xapi) => {
+    const volume = await xapi.status.get('Audio Volume');
+    console.log(`volume is: ${volume}`);
+    xapi.close();
+  });
+```
 
-// Handle errors
-xapi.on('error', (err) => {
-  // !! Note of caution: This event might fire more than once !!
-  console.error(`xapi error: ${err}`);
-});
+### Connecting using SSH
 
+``` javascript
+const jsxapi = require('jsxapi');
+
+jsxapi
+  .connect('ssh://host.example.com', {
+    username: 'admin',
+    password: 'password',
+  })
+  .on('error', console.error)
+  .on('ready', async (xapi) => {
+    const volume = await xapi.status.get('Audio Volume');
+    console.log(`volume is: ${volume}`);
+    xapi.close();
+  });
+```
+
+### Useful commands
+
+```javascript
 // Set up a call
 xapi.command('Dial', { Number: 'user@example.com' });
 
