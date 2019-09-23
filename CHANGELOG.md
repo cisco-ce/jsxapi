@@ -1,6 +1,11 @@
 Changes
 -------
 
+##### v4.4.0 (2019-09-23)
+
+ * Fix connecting using WebSocket
+ * Expose feedback registration promise (#33)
+
 ##### v4.3.2 (2019-06-29)
 
  * Update dependencies
