@@ -7,29 +7,7 @@ import XAPI from './xapi';
 import TSHBackend from './backend/tsh';
 import WSBackend from './backend/ws';
 import spawnTSH from './transport/tsh';
-
-
-function generateAuthSubProto(username, password) {
-  const authHash = Buffer
-    .from(`${username}:${password}`)
-    .toString('base64')
-    .replace(/[/+=]/g, c => ({ '+': '-', '/': '_', '=': '' }[c]));
-  return `auth-${authHash}`;
-}
-
-
-function websocketConnect({ host, username, password, protocol }) {
-  const url = new Url();
-  url.set('pathname', '/ws');
-  url.set('host', host);
-  url.set('protocol', protocol);
-
-  const auth = generateAuthSubProto(username, password);
-  return new WebSocket(url.href, auth, {
-    followRedirects: true,
-    rejectUnauthorized: false,
-  });
-}
+import websocketConnect from './transport/ws';
 
 
 function initBackend(opts) {
@@ -46,7 +24,7 @@ function initBackend(opts) {
     }
     case 'ws:':
     case 'wss:': {
-      const transport = websocketConnect(opts);
+      const transport = websocketConnect(WebSocket, opts);
       return new WSBackend(transport);
     }
     default:
