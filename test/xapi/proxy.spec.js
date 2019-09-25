@@ -48,6 +48,16 @@ describe('Proxy', () => {
       });
     });
 
+    it('can proxy xapi.config..set() with array index', () => {
+      xapi.Config.FacilityService.Service[3].Number.set('user@example.com');
+
+      expect(execute).to.have.been.calledOnce();
+      expect(execute).to.have.been.calledWith('xSet', {
+        Path: ['Configuration', 'FacilityService', 'Service', 3, 'Number'],
+        Value: 'user@example.com',
+      });
+    });
+
     it('can proxy feedback registration xapi.config..on()', () => {
       const spy = sinon.spy();
       xapi.Config.Audio.DefaultVolume.on(spy);
@@ -78,6 +88,15 @@ describe('Proxy', () => {
       expect(execute).to.have.been.calledOnce();
       expect(execute).to.have.been.calledWith('xGet', {
         Path: ['Status', 'Audio', 'Volume'],
+      });
+    });
+
+    it('can proxy xapi.status..get() with array index', () => {
+      xapi.Status.Video.Input.Connector[2].Type.get();
+
+      expect(execute).to.have.been.calledOnce();
+      expect(execute).to.have.been.calledWith('xGet', {
+        Path: ['Status', 'Video', 'Input', 'Connector', 2, 'Type'],
       });
     });
 
