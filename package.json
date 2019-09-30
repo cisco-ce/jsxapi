@@ -75,7 +75,12 @@
         "@babel/env",
         {
           "targets": {
-            "node": 8
+            "chrome": 74,
+            "edge": 17,
+            "firefox": 60,
+            "ie": 11,
+            "node": 8,
+            "safari": 12
           }
         }
       ]
