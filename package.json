@@ -27,13 +27,14 @@
     "lint": "eslint .",
     "prepare": "npm run build",
     "prepublishOnly": "npm test",
-    "start": "node -r babel-register ./src/cli.js",
+    "start": "node -r @babel/register ./src/cli.js",
     "test": "npm run lint && mocha",
     "tdd": "mocha --watch --reporter min",
     "version": "npm run build && git add -u"
   },
   "dependencies": {
     "commander": "^2.13.0",
+    "core-js": "^2.6.9",
     "duplex-passthrough": "^1.0.2",
     "duplexer": "^0.1.1",
     "jsonparse": "^1.3.1",
@@ -44,12 +45,12 @@
     "xml-escape": "^1.1.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.23.0",
-    "babel-eslint": "^10.0.1",
-    "babel-plugin-transform-builtin-extend": "^1.1.2",
-    "babel-plugin-transform-class-properties": "^6.23.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-register": "^6.23.0",
+    "@babel/cli": "^7.6.2",
+    "@babel/core": "^7.6.2",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/register": "^7.6.2",
+    "babel-eslint": "^10.0.3",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "dirty-chai": "^2.0.1",
@@ -68,21 +69,22 @@
   },
   "babel": {
     "plugins": [
-      "transform-class-properties",
-      [
-        "transform-builtin-extend",
-        {
-          "globals": [
-            "Error"
-          ]
-        }
-      ]
+      "@babel/plugin-proposal-class-properties"
     ],
     "presets": [
       [
-        "env",
+        "@babel/env",
         {
-          "node": 8
+          "targets": {
+            "chrome": 74,
+            "edge": 17,
+            "firefox": 60,
+            "ie": 11,
+            "node": 8,
+            "safari": 12
+          },
+          "corejs": 2,
+          "useBuiltIns": "usage"
         }
       ]
     ]
