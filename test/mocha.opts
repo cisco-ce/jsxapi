@@ -1,5 +1,4 @@
 --recursive
 --reporter dot
---require babel-register
---require babel-polyfill
+--require @babel/register
 --require ./test/setup.js
