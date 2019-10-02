@@ -21,7 +21,7 @@ import XAPI from './xapi';
  *     Set the internal log level.
  * @return {XAPI} - XAPI interface connected to the given URI.
  */
-export default function connect(url, options, initBackend) { // eslint-disable-line import/prefer-default-export
+export default function connect(url, options, initBackend) {
   if (arguments.length === 1 && typeof url === 'object') {
     /* eslint-disable no-param-reassign */
     options = url;

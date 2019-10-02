@@ -18,7 +18,7 @@ function initBackend(opts) {
   }
 }
 
-export function connect(url, options) {
+export function connect(url, options) { // eslint-disable-line import/prefer-default-export
   const opts = Object.assign({
     host: '',
     password: '',
