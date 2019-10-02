@@ -20,7 +20,7 @@
     "url": "git@github.com:cisco-ce/jsxapi.git"
   },
   "scripts": {
-    "build": "npm run build:js && npm run build:docs",
+    "build": "npm run build:js",
     "build:docs": "esdoc",
     "build:js": "babel -d lib/ src/",
     "clean": "rimraf docs lib",
