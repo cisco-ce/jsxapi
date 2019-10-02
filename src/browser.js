@@ -1,25 +1,13 @@
-import WebSocket from 'ws';
+/* eslint-env browser */
 
 import connectImpl from './connect';
-import connectSSH from './transport/ssh';
-import TSHBackend from './backend/tsh';
 import WSBackend from './backend/ws';
-import spawnTSH from './transport/tsh';
 import websocketConnect from './transport/ws';
 
-
 function initBackend(opts) {
-  const { host, port, protocol } = opts;
+  const { protocol } = opts;
   switch (protocol) {
     case '':
-    case 'ssh:': {
-      const transport = connectSSH(opts);
-      return new TSHBackend(transport);
-    }
-    case 'tsh:': {
-      const transport = spawnTSH(host, port);
-      return new TSHBackend(transport);
-    }
     case 'ws:':
     case 'wss:': {
       const transport = websocketConnect(WebSocket, opts);
@@ -34,7 +22,7 @@ export function connect(url, options) { // eslint-disable-line import/prefer-def
   const opts = Object.assign({
     host: '',
     password: '',
-    protocol: 'ssh:',
+    protocol: 'wss:',
     username: 'admin',
     loglevel: 'warn',
   }, options);
