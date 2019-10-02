@@ -1,9 +1,6 @@
 /* eslint-env browser */
 
-import Url from 'url-parse';
-
-import log from './log';
-import XAPI from './xapi';
+import connectImpl from './connect';
 import WSBackend from './backend/ws';
 import websocketConnect from './transport/ws';
 
@@ -21,28 +18,13 @@ function initBackend(opts) {
   }
 }
 
-export function connect(url, options) { // eslint-disable-line import/prefer-default-export
-  if (arguments.length === 1 && typeof url === 'object') {
-    /* eslint-disable no-param-reassign */
-    options = url;
-    url = '';
-    /* eslint-enable */
-  }
-
+export function connect(url, options) {
   const opts = Object.assign({
     host: '',
     password: '',
     protocol: 'wss:',
     username: 'admin',
     loglevel: 'warn',
-  }, new Url(url), options);
-
-  opts.host = opts.hostname;
-  delete opts.hostname;
-
-  log.setLevel(opts.loglevel);
-  log.info('connecting to', url);
-
-  const backend = initBackend(opts);
-  return new XAPI(backend);
+  }, options);
+  return connectImpl(url, opts, initBackend);
 }
