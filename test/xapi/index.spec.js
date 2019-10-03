@@ -5,16 +5,38 @@ describe('XAPI', () => {
   let backend;
   let xapi;
 
+  beforeEach(() => {
+    backend = new Backend();
+    xapi = new XAPI(backend);
+  });
+
   afterEach(() => {
     sinon.restore();
   });
 
-  describe('events', () => {
-    beforeEach(() => {
-      backend = new Backend();
-      xapi = new XAPI(backend);
+  describe('property is not writable', () => {
+    const props = [
+      'command',
+      'Command',
+      'config',
+      'Config',
+      'event',
+      'Event',
+      'feedback',
+      'status',
+      'Status',
+    ];
+    props.forEach((prop) => {
+      it(prop, () => {
+        const fn = () => {
+          xapi[prop] = {};
+        };
+        expect(fn).to.throw(TypeError);
+      });
     });
+  });
 
+  describe('events', () => {
     it('emits "ready" when backend is ready', () => {
       const readySpy = sinon.spy();
 
@@ -50,21 +72,9 @@ describe('XAPI', () => {
   });
 
   describe('.feedback', () => {
-    beforeEach(() => {
-      backend = new Backend();
-      xapi = new XAPI(backend);
-    });
-
     it('property is enumerable', () => {
       const index = Object.keys(xapi).indexOf('feedback');
       expect(index).to.not.equal(-1);
-    });
-
-    it('property is not writable', () => {
-      const fn = () => {
-        xapi.feedback = {};
-      };
-      expect(fn).to.throw(TypeError);
     });
 
     it('is dispatched to feedback handler', () => {
@@ -82,11 +92,6 @@ describe('XAPI', () => {
   });
 
   describe('.execute()', () => {
-    beforeEach(() => {
-      backend = new Backend();
-      xapi = new XAPI(backend);
-    });
-
     const asyncResponse = (backend_, response) => (request) => {
       setTimeout(() => {
         backend_.emit(
@@ -153,10 +158,6 @@ describe('XAPI', () => {
 
     beforeEach(() => {
       execStub = sinon.spy(XAPI.prototype, 'execute');
-
-      backend = new Backend();
-      xapi = new XAPI(backend);
-
       sinon.stub(backend, 'execute');
     });
 
