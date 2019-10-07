@@ -141,6 +141,20 @@ describe('Feedback', () => {
       expect(spy).to.not.have.been.called();
     });
 
+    it('off handler contains registration promise', async () => {
+      const spy = sinon.spy();
+
+      const regs = await Promise.all([
+        feedback.on('Status/Audio/Volume', spy).registration,
+        feedback.on('Status/Audio/Volume', spy).registration,
+      ]);
+
+      expect(regs).to.deep.equal([
+        { Id: 0 },
+        { Id: 1 },
+      ]);
+    });
+
     it('registers feedback with the backend', () => {
       const path = 'Status/Audio/Volume';
 

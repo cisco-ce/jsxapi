@@ -1,4 +1,5 @@
 import XAPI from '.';
+import { Registration } from './feedback';
 import { Gettable, Listenable, mix, Settable } from './mixins';
 import normalizePath from './normalizePath';
 import { Listener, Path } from './types';
@@ -54,8 +55,8 @@ export class Config extends mix(Component, Listenable, Gettable, Settable)
   // fake mixins
   public normalizePath!: (path: Path) => Array<string | number>;
 
-  public on!: <T = any>(path: Path, listener: Listener<T>) => () => void;
-  public once!: <T = any>(path: Path, listener: Listener<T>) => () => void;
+  public on!: <T = any>(path: Path, listener: Listener<T>) => Registration;
+  public once!: <T = any>(path: Path, listener: Listener<T>) => Registration;
   public off!: () => void;
 
   public get!: <T = any>(path: Path) => Promise<T>;
@@ -79,8 +80,8 @@ export class Event extends mix(Component, Listenable)
   // fake mixins
   public normalizePath!: (path: Path) => Array<string | number>;
 
-  public on!: <T = any>(path: Path, listener: Listener<T>) => () => void;
-  public once!: <T = any>(path: Path, listener: Listener<T>) => () => void;
+  public on!: <T = any>(path: Path, listener: Listener<T>) => Registration;
+  public once!: <T = any>(path: Path, listener: Listener<T>) => Registration;
   public off!: () => void;
 
   constructor(readonly xapi: XAPI) {
@@ -102,8 +103,8 @@ export class Status extends mix(Component, Listenable, Gettable)
   // fake mixins
   public normalizePath!: (path: Path) => Array<string | number>;
 
-  public on!: <T = any>(path: Path, listener: Listener<T>) => () => void;
-  public once!: <T = any>(path: Path, listener: Listener<T>) => () => void;
+  public on!: <T = any>(path: Path, listener: Listener<T>) => Registration;
+  public once!: <T = any>(path: Path, listener: Listener<T>) => Registration;
   public off!: () => void;
 
   public get!: <T = any>(path: Path) => Promise<T>;

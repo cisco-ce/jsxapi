@@ -4,6 +4,11 @@ import log from '../log';
 import * as rpc from '../xapi/rpc';
 import { XapiRequest, XapiResult } from '../xapi/types';
 
+export interface Backend extends EventEmitter {
+  close(): void;
+  execute(request: XapiRequest): Promise<void>;
+}
+
 /**
  * @external {EventEmitter} https://nodejs.org/api/events.html#events_class_eventemitter
  */
@@ -41,7 +46,7 @@ import { XapiRequest, XapiResult } from '../xapi/types';
  *   }
  * }
  */
-export default class Backend extends EventEmitter {
+export default class BackendImpl extends EventEmitter implements Backend {
 
   /**
    * Promise that is resolved once the backend is ready to receive commands.
@@ -77,7 +82,7 @@ export default class Backend extends EventEmitter {
    * @param {Object} request - JSON-RPC request to execute agains the backend service.
    * @return {Promise} - Promise resolved when response is received.
    */
-  public execute(request: XapiRequest) {
+  public execute(request: XapiRequest): Promise<void> {
     const id = request.id!; // TODO
     const type = this.getRequestType(request);
     const handlerName = `${type}()`;

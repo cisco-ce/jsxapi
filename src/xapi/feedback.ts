@@ -6,6 +6,11 @@ import XAPI from '.';
 import normalizePath from './normalizePath';
 import { Handler, Listener, Path } from './types';
 
+export interface Registration {
+  (): void;
+  registration: Promise<{ Id: string }>;
+}
+
 /**
  * Group feedback deregister handlers for bookkeeping.
  */
@@ -127,8 +132,10 @@ export default class Feedback {
    *
    * @param {Array|string} path - Path to subscribe to
    * @param {function} listener - Listener invoked on feedback
+   * @return {function()} - Feedback cancellation function
+   * @property {Promise<{ Id: number}>} registration - Promise for successful feedback registration
    */
-  public on(path: Path, listener: Listener) {
+  public on(path: Path, listener: Listener): Registration {
     log.info(`new feedback listener on: ${path}`);
     const eventPath = normalizePath(path)
       .join('/')
@@ -148,6 +155,7 @@ export default class Feedback {
       this.eventEmitter.removeListener(eventPath, listener);
     };
 
+    off.registration = registration;
     return off;
   }
 
@@ -157,9 +165,11 @@ export default class Feedback {
    *
    * @param {Array|string} path - Path to subscribe to
    * @param {function} listener - Listener invoked on feedback
+   * @return {function()} - Feedback cancellation function
+   * @property {Promise<{ Id: number}>} registration - Promise for successful feedback registration
    */
-  public once<T = any>(path: Path, listener: Listener) {
-    let off: () => void | undefined;
+  public once<T = any>(path: Path, listener: Listener): Registration {
+    let off: Registration;
     const wrapped = (ev: T, root: any) => {
       if (typeof off === 'function') {
         off();

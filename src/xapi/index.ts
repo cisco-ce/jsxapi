@@ -4,7 +4,7 @@ import log from '../log';
 import normalizePath from './normalizePath';
 import * as rpc from './rpc';
 
-import Backend from '../backend';
+import { Backend } from '../backend';
 import { Config, Event, Status } from './components';
 import Feedback from './feedback';
 import { Path, XapiError, XapiOptions, XapiResponse } from './types';

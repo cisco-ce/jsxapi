@@ -1,4 +1,8 @@
 import { EventEmitter } from 'events';
+import WS from 'ws';
+
+import { XapiRequest } from '../xapi/types';
+import { Backend } from './';
 
 /**
  * @external {WebSocket} https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
@@ -15,14 +19,14 @@ import { EventEmitter } from 'events';
  *
  * @implements {Backend}
  */
-export default class WSBackend extends EventEmitter {
-  private ws: WebSocket;
+export default class WSBackend extends EventEmitter implements Backend {
+  private ws: WS | WebSocket;
   private isReady: Promise<boolean>;
 
   /**
    * @param {Object|string} urlOrWS - WebSocket object or URL of the server.
    */
-  constructor(urlOrWS: WebSocket | string) {
+  constructor(urlOrWS: WS | WebSocket | string) {
     super();
     /**
      * @type {WebSocket}
@@ -49,8 +53,8 @@ export default class WSBackend extends EventEmitter {
     this.ws.close();
   }
 
-  public execute(command: any) {
-    this.isReady.then(() => {
+  public execute(command: XapiRequest): Promise<void> {
+    return this.isReady.then(() => {
       this.ws.send(JSON.stringify(command));
     });
   }
@@ -63,8 +67,8 @@ export default class WSBackend extends EventEmitter {
     }
   }
 
-  private handleError: WebSocket['onerror'] = () => {
-    this.emit('error', 'WebSocket error');
+  private handleError: WebSocket['onerror'] = (error) => {
+    this.emit('error', (error as ErrorEvent).error);
   }
 
   private handleMessage: WebSocket['onmessage'] = (message) => {
