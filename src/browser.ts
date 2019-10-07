@@ -1,35 +1,19 @@
-import WS from 'ws';
+/* eslint-env browser */
 
-import TSHBackend from './backend/tsh';
 import WSBackend from './backend/ws';
 import connectImpl from './connect';
-import connectSSH from './transport/ssh';
-import spawnTSH from './transport/tsh';
 import websocketConnect from './transport/ws';
 import { Options } from './types';
 import XAPI from './xapi';
 
-
 function initBackend(opts: Options) {
-  const { host, port, protocol } = opts;
+  const { protocol } = opts;
   switch (protocol) {
     case '':
-    case 'ssh:': {
-      const transport = connectSSH(opts);
-      return new TSHBackend(transport);
-    }
-    case 'tsh:': {
-      const transport = spawnTSH(host, port);
-      return new TSHBackend(transport);
-    }
     case 'ws:':
     case 'wss:': {
       const createWebSocket = (url: string, auth: string) => {
-        const ws = new WS(url, auth, {
-          followRedirects: true,
-          rejectUnauthorized: false,
-        } as any);
-        return ws as any;
+        return new WebSocket(url, auth);
       };
       const transport = websocketConnect(createWebSocket, opts);
       return new WSBackend(transport);
@@ -44,7 +28,7 @@ export function connect(url: string, options: Options): XAPI {
     host: '',
     loglevel: 'warn',
     password: '',
-    protocol: 'ssh:',
+    protocol: 'wss:',
     username: 'admin',
   }, options);
   return connectImpl(url, opts, initBackend);

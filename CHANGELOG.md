@@ -1,6 +1,10 @@
 Changes
 -------
 
+##### v4.5.0 (2019-10-02)
+
+ * Fix browser support (using WebSockets)
+
 ##### v4.4.0 (2019-09-23)
 
  * Fix connecting using WebSocket
