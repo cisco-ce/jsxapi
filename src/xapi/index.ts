@@ -7,6 +7,7 @@ import * as rpc from './rpc';
 import { Backend } from '../backend';
 import { Config, Event, Status } from './components';
 import Feedback from './feedback';
+import createXapiProxy from './proxy';
 import { Path, XapiError, XapiOptions, XapiResponse } from './types';
 
 interface Requests {
@@ -24,23 +25,50 @@ interface Requests {
  * @example <caption>Initialization</caption>
  * const xapi = new XAPI(backend);
  *
- * @example <caption>Invoke commands</caption>
+ * @example <caption>Invoke command</caption>
  * xapi
  *   .command('Dial', { Number: 'johndoe@example.com' })
  *   .then(onSuccess, onFailure);
  *
+ * // Alternate notation
+ * xapi
+ *   .Command.Dial({ Number: 'johndoe@example.com' })
+ *   .then(onSuccess, onFailure);
+ *
+ * @example <caption>Fetch a configuration</caption>
+ * xapi
+ *   .config.get('Audio DefaultVolume')
+ *   .then((volume) => console.log(`default volume is: ${volume}`));
+ *
+ * // Alternate notation
+ * xapi.Audio.DefaultVolume
+ *   .get()
+ *   .then((volume) => console.log(`default volume is: ${volume}`));
+ *
+ * @example <caption>Set a configuration</caption>
+ * xapi.config.set('Audio DefaultVolume', 100);
+ *
+ * // Alternate notation
+ * xapi.Audio.DefaultVolume.set(100);
+ *
  * @example <caption>Fetch a status</caption>
  * xapi
  *   .status.get('Audio Volume')
- *   .then((value) => { console.log(value); });
+ *   .then((volume) => { console.log(`volume is: ${volume}`); });
  *
- * @example <caption>Set a configuration</caption>
- * xapi
- *   .config.set('Audio DefaultVolume', 100);
+ * // Alternate notation
+ * xapi.Status.Audio.Volume
+ *   .get()
+ *   .then((volume) => { console.log(`volume is: ${volume}`); });
  *
  * @example <caption>Listen to an event</caption>
- * xapi.event.on('Some Event Name', (data) => {
- *   console.log(`Received feedback data: ${data}`);
+ * xapi.event.on('Message Send Text', (text) => {
+ *   console.log(`Received message text: ${text}`);
+ * });
+ *
+ * // Alternate notation
+ * xapi.Event.Message.Send.Text.on((text) => {
+ *   console.log(`Received message text: ${text}`);
  * });
  */
 export default class XAPI extends EventEmitter {
@@ -48,10 +76,17 @@ export default class XAPI extends EventEmitter {
   public config: Config;
   public status: Status;
   public event: Event;
+
+  public Command: any;
+  public Config: any;
+  public Status: any;
+  public Event: any;
+
   /**
    * @param {Backend} backend - Backend connected to an XAPI instance.
    * @param {object} options - XAPI object options.
    * @param {function} options.feedbackInterceptor - Feedback interceptor.
+   * @param {function} options.seal - Seal the object from further changes.
    */
 
   private requestId = 1;
@@ -59,7 +94,7 @@ export default class XAPI extends EventEmitter {
 
   constructor(
     private readonly backend: Backend,
-    options: XapiOptions = {}) {
+    options: XapiOptions = { seal: true }) {
     super();
 
     /**
@@ -86,14 +121,40 @@ export default class XAPI extends EventEmitter {
      */
     this.status = new Status(this);
 
+    /**
+     * Proxy for XAPI Command.
+     */
+    this.Command = createXapiProxy(this, this.command);
+
+    /**
+     * Proxy for XAPI Configuration.
+     */
+    this.Config = createXapiProxy(this, this.config);
+
+    /**
+     * Proxy for XAPI Event.
+     */
+    this.Event = createXapiProxy(this, this.event);
+
+    /**
+     * Proxy for XAPI Status.
+     */
+    this.Status = createXapiProxy(this, this.status);
+
     // Restrict object mutation
-    Object.defineProperties(this, {
-      config: { writable: false },
-      event: { writable: false },
-      feedback: { writable: false },
-      status: { writable: false },
-    });
-    Object.seal(this);
+    if (options.seal) {
+      Object.defineProperties(this, {
+        Command: { writable: false },
+        Config: { writable: false },
+        Event: { writable: false },
+        Status: { writable: false },
+        config: { writable: false },
+        event: { writable: false },
+        feedback: { writable: false },
+        status: { writable: false },
+      });
+      Object.seal(this);
+    }
 
     backend
       .on('close', () => {

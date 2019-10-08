@@ -45,7 +45,33 @@ jsxapi
   });
 ```
 
-### Useful commands
+### New style API
+
+The aim of the new style API is to improve readability, while also being more
+suited towards automatic type generation and auto-completion.
+
+```javascript
+// Set up a call
+xapi.Command.Dial({ Number: 'user@example.com' });
+
+// Fetch volume and print it
+xapi.Status.Audio.Volume
+  .get()
+  .then((volume) => { console.log(volume); });
+
+// Set a configuration
+xapi.Config.SystemUnit.Name.set('My System');
+
+// Listen to feedback
+const off = xapi.Event.Standby.on((event) => {
+  // ...
+});
+
+// De-register feedback
+off();
+```
+
+### Old style API
 
 ```javascript
 // Set up a call

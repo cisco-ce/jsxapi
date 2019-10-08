@@ -27,6 +27,7 @@ describe('Feedback', () => {
     interceptor.callsArg(1);
     xapi = new XAPI(new Backend(), {
       feedbackInterceptor: interceptor,
+      seal: true,
     });
     ({ feedback } = xapi);
 
