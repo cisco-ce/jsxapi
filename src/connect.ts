@@ -4,6 +4,39 @@ import log from './log';
 import { InitBackend, Options } from './types';
 import XAPI from './xapi';
 
+export interface Connect {
+  (options: Options): XAPI;
+  (url: string, options: Options): XAPI;
+}
+
+function resolveOptions(targetDefaults: Partial<Options>, url: string, options: Options): Options {
+  const realOpts: Options = {
+    command: '',
+    host: '',
+    loglevel: 'warn',
+    password: '',
+    port: 0,
+    protocol: '',
+    username: 'admin',
+    ...targetDefaults,
+  };
+
+  const urlWithProto = url.match(/^\w+:\/\//) ? url : `${realOpts.protocol}//${url}`;
+  const parsedUrl = new Url(urlWithProto);
+
+  Object.keys(realOpts).forEach((key) => {
+    const value = [
+      (options as any)[key],
+      key === 'host' ? parsedUrl.hostname : (parsedUrl as any)[key],
+    ].filter((v) => !!v)[0];
+    if (value) {
+      (realOpts as any)[key] = value;
+    }
+  });
+
+  return realOpts;
+}
+
 /**
  * Connect to an XAPI endpoint.
  *
@@ -22,21 +55,33 @@ import XAPI from './xapi';
  *     Set the internal log level.
  * @return {XAPI} - XAPI interface connected to the given URI.
  */
-export default function connect(url: string, options: Options, initBackend: InitBackend) {
-  if (arguments.length === 1 && typeof url === 'object') {
-    /* eslint-disable no-param-reassign */
-    options = url;
-    url = '';
-    /* eslint-enable */
-  }
+export default function connectOverload(
+  initBackend: InitBackend,
+  defaults: Partial<Options>,
+): Connect {
+  return (...args: any[]) => {
+    let url: string;
+    let options: Options;
 
-  const parsedUrl = new Url(url);
-  const opts: Options = Object.assign({}, parsedUrl, options);
-  opts.host = parsedUrl.hostname;
+    if (args.length === 1 && typeof args[0] === 'object') {
+        /* eslint-disable no-param-reassign */
+        options = args[0];
+        url = '';
+        /* eslint-enable */
+    } else if (args.length === 2) {
+        url = args[0];
+        options = args[1];
+    } else {
+        throw new Error(`Invalid arguments to connect`);
+    }
 
-  log.setLevel(opts.loglevel);
-  log.info('connecting to', url);
+    const opts = resolveOptions(defaults, url, options);
 
-  const backend = initBackend(opts);
-  return new XAPI(backend);
+    log.setLevel(opts.loglevel);
+    log.debug('using options:', opts);
+    log.info('connecting to', url);
+
+    const backend = initBackend(opts);
+    return new XAPI(backend);
+  };
 }

@@ -2,7 +2,7 @@ import WS from 'ws';
 
 import TSHBackend from './backend/tsh';
 import WSBackend from './backend/ws';
-import connectImpl from './connect';
+import connectOverload from './connect';
 import connectSSH from './transport/ssh';
 import spawnTSH from './transport/tsh';
 import websocketConnect from './transport/ws';
@@ -39,13 +39,4 @@ function initBackend(opts: Options) {
   }
 }
 
-export function connect(url: string, options: Options): XAPI {
-  const opts = Object.assign({
-    host: '',
-    loglevel: 'warn',
-    password: '',
-    protocol: 'ssh:',
-    username: 'admin',
-  }, options);
-  return connectImpl(url, opts, initBackend);
-}
+export const connect = connectOverload(initBackend, { protocol: 'ssh:' });
