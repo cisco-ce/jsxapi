@@ -157,7 +157,6 @@ export default class TSHBackend extends Backend {
    * @ignore
    */
   private ['xCommand()']({ method, params }: any, send: any) {
-    // eslint-disable-line class-methods-use-this
     const paramsCopy = Object.assign({}, params);
     const { body } = paramsCopy;
     delete paramsCopy.body;
@@ -213,7 +212,6 @@ export default class TSHBackend extends Backend {
    * @ignore
    */
   private ['xGet()'](request: any, send: any) {
-    // eslint-disable-line class-methods-use-this
     const path = request.params.Path.join(' ');
     return send(`x${path}`).then((response: any) =>
       rpc.createGetResponse(request, response),
@@ -224,7 +222,6 @@ export default class TSHBackend extends Backend {
    * @ignore
    */
   private ['xSet()'](request: any, send: any) {
-    // eslint-disable-line class-methods-use-this
     const { params } = request;
     const path = params.Path.join(' ');
     const value = formatValue(params.Value);

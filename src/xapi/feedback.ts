@@ -186,7 +186,6 @@ export default class Feedback {
    *
    * @deprecated use deactivation handler from `.on()` and `.once()` instead.
    */
-  // eslint-disable-next-line class-methods-use-this
   public off() {
     throw new Error(
       '.off() is deprecated. Use return value deactivate handler from .on() instead.',
@@ -232,7 +231,6 @@ export default class Feedback {
    * // Unregister from all feedback handlers
    * group.off();
    */
-  // eslint-disable-next-line class-methods-use-this
   public group(handlers: Handler[]) {
     return new FeedbackGroup(handlers);
   }

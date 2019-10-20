@@ -64,10 +64,8 @@ export default function connectOverload(
     let options: Options;
 
     if (args.length === 1 && typeof args[0] === 'object') {
-        /* eslint-disable no-param-reassign */
         options = args[0];
         url = '';
-        /* eslint-enable */
     } else if (args.length === 2) {
         url = args[0];
         options = args[1];

@@ -352,7 +352,6 @@ describe('Feedback', () => {
       interceptor.callsFake((data: any, dispatch: (d: any) => void) => {
         const item = getPath(data, 'Status', 'Audio', 'Volume');
         if (item) {
-          // eslint-disable-next-line no-param-reassign
           data.Status.Audio.Volume = '100';
           dispatch(data);
         }

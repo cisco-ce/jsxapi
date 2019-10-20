@@ -1,5 +1,3 @@
-/* eslint-env browser */
-
 import WSBackend from './backend/ws';
 import connectOverload from './connect';
 import websocketConnect from './transport/ws';

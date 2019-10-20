@@ -6,7 +6,7 @@ export type CreateWebSocket = (url: string, auth: string) => WebSocket;
 
 function base64Enc(input: string) {
   return (typeof btoa === 'function')
-    ? btoa(input) // eslint-disable-line no-undef
+    ? btoa(input)
     : Buffer.from(input).toString('base64');
 }
 

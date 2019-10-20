@@ -17,7 +17,7 @@ function readPkg() {
 }
 
 function evalFile(source: any, xapi: XAPI) {
-  const context = new Function('xapi', source); // eslint-disable-line no-new-func
+  const context = new Function('xapi', source);
   context(xapi);
 }
 
