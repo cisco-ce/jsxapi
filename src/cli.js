@@ -27,7 +27,7 @@ commander
   .version(pkg.version)
   .arguments('<host> [file]')
   .description('connect to a codec and launch a repl')
-  .option('-p, --port <port>', 'port to connect to', 22)
+  .option('-p, --port <port>', 'port to connect to')
   .option('-U, --username <user>', 'username to authenticate with', 'admin')
   .option('-P, --password <password>', 'password to authenticate with', '')
   .option('-C, --command <command>', 'command to execute on remote host', '')
@@ -43,8 +43,16 @@ commander
       commander.help();
     }
 
+    const opts = {
+      command: options.command,
+      host: options.host,
+      loglevel: options.loglevel,
+      password: options.password,
+      username: options.username,
+    };
+
     const source = file && fs.readFileSync(file);
-    const xapi = connect(host, options)
+    const xapi = connect(host, opts)
       .on('error', (error) => { log.error('xapi error:', error); })
       .on('ready', () => {
         if (source) {
