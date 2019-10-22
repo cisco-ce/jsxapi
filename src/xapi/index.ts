@@ -17,6 +17,12 @@ interface Requests {
   };
 }
 
+export declare interface XAPI {
+  on(event: 'error', listener: (error: Error) => void): this;
+  on(event: 'ready', listener: (xapi: XAPI) => void): this;
+  on(event: string, listener: () => {}): this;
+}
+
 /**
  * User-facing API towards the XAPI. Requires a backend for communicating
  * with an XAPI instance. It should be possible to write backends for all kinds
@@ -71,7 +77,7 @@ interface Requests {
  *   console.log(`Received message text: ${text}`);
  * });
  */
-export default class XAPI extends EventEmitter {
+export class XAPI extends EventEmitter {
   public feedback: Feedback;
   public config: Config;
   public status: Status;
@@ -277,3 +283,5 @@ export default class XAPI extends EventEmitter {
     return requestId.toString();
   }
 }
+
+export default XAPI;
