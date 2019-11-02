@@ -1,6 +1,10 @@
 Changes
 -------
 
+##### v4.5.1 (2019-11-02)
+
+ * Fix options parsing/handling (#45)
+
 ##### v4.5.0 (2019-10-02)
 
  * Fix browser support (using WebSockets)
