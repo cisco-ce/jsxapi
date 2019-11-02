@@ -3,15 +3,19 @@ import Url from 'url-parse';
 import log from './log';
 import XAPI from './xapi';
 
+export const globalDefaults = {
+  command: '',
+  host: '',
+  loglevel: 'warn',
+  password: '',
+  port: 0,
+  protocol: '',
+  username: 'admin',
+};
+
 function resolveOptions(targetDefaults, url, options) {
   const realOpts = {
-    command: '',
-    host: '',
-    loglevel: 'warn',
-    password: '',
-    port: 0,
-    protocol: '',
-    username: 'admin',
+    ...globalDefaults,
     ...targetDefaults,
   };
 
@@ -57,6 +61,9 @@ export default function connect(initBackend, defaults) {
     if (args.length === 1 && typeof args[0] === 'object') {
       [options] = args;
       url = '';
+    } else if (args.length === 1 && typeof args[0] === 'string') {
+      options = {};
+      [url] = args;
     } else if (args.length === 2) {
       [url, options] = args;
     } else {
