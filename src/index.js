@@ -30,13 +30,9 @@ function initBackend(opts) {
   }
 }
 
-export function connect(url, options) { // eslint-disable-line import/prefer-default-export
-  const opts = Object.assign({
-    host: '',
-    password: '',
+export function connect(...args) { // eslint-disable-line import/prefer-default-export
+  return connectImpl(initBackend, {
     protocol: 'ssh:',
     username: 'admin',
-    loglevel: 'warn',
-  }, options);
-  return connectImpl(url, opts, initBackend);
+  })(...args);
 }
