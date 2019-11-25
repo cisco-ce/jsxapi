@@ -4,6 +4,16 @@ import log from './log';
 import { InitBackend, Options } from './types';
 import XAPI from './xapi';
 
+export const globalDefaults = {
+  command: '',
+  host: '',
+  loglevel: 'warn',
+  password: '',
+  port: 0,
+  protocol: '',
+  username: 'admin',
+};
+
 export interface Connect {
   (options: Partial<Options>): XAPI;
   (url: string, options?: Partial<Options>): XAPI;
@@ -11,13 +21,7 @@ export interface Connect {
 
 function resolveOptions(targetDefaults: Partial<Options>, url: string, options: Options): Options {
   const realOpts: Options = {
-    command: '',
-    host: '',
-    loglevel: 'warn',
-    password: '',
-    port: 0,
-    protocol: '',
-    username: 'admin',
+    ...globalDefaults,
     ...targetDefaults,
   };
 
