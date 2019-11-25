@@ -5,8 +5,8 @@ import { InitBackend, Options } from './types';
 import XAPI from './xapi';
 
 export interface Connect {
-  (options: Options): XAPI;
-  (url: string, options: Options): XAPI;
+  (options: Partial<Options>): XAPI;
+  (url: string, options?: Partial<Options>): XAPI;
 }
 
 function resolveOptions(targetDefaults: Partial<Options>, url: string, options: Options): Options {
