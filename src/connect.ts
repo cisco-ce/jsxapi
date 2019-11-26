@@ -4,7 +4,7 @@ import log from './log';
 import { InitBackend, Options } from './types';
 import XAPI from './xapi';
 
-export const globalDefaults = {
+export const globalDefaults: Options = {
   command: '',
   host: '',
   loglevel: 'warn',
