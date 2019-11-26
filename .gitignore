@@ -1,4 +1,6 @@
+.cache/
 cache/
 lib/
 node_modules
 yarn-error.log
+dist/
