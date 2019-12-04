@@ -7,8 +7,8 @@ import connectSSH from './transport/ssh';
 import spawnTSH from './transport/tsh';
 import websocketConnect from './transport/ws';
 import { Options } from './types';
-import XAPI from './xapi';
 
+export { default as XAPI } from './xapi';
 
 function initBackend(opts: Options) {
   const { host, port, protocol } = opts;
