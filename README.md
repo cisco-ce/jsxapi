@@ -114,8 +114,15 @@ Then open `./docs/index.html`.
 
 ## Questions and support?
 
-Questions about the xAPI, integrations and customizations? Join the xAPI Devs
-Spark Space community for realtime support [here](https://eurl.io/#rkp76XDrG).
+Find more information regarding Cisco's Room Devices over at
+[developer.cisco.com](https://developer.cisco.com/site/roomdevices/) or the
+[TelePresence and Video](https://supportforums.cisco.com/t5/telepresence/bd-p/5886-discussions-telepresence)
+support forums.
+
+Questions about the xAPI, integrations and customizations? Using
+[Webex Teams](https://www.webex.com/team-collaboration.html) join the xAPI Devs
+Spark Space community for realtime support by [clicking this link](https://eurl.io/#rkp76XDrG)
+and entering your Webex Teams-registered e-mail address at the prompt.
 
 ## Development & Contribution
 
