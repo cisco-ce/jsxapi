@@ -121,7 +121,7 @@ support forums.
 
 Questions about the xAPI, integrations and customizations? Using
 [Webex Teams](https://www.webex.com/team-collaboration.html) join the xAPI Devs
-Spark Space community for realtime support by [clicking this link](https://eurl.io/#rkp76XDrG)
+space community for realtime support by [clicking this link](https://eurl.io/#rkp76XDrG)
 and entering your Webex Teams-registered e-mail address at the prompt.
 
 ## Development & Contribution
