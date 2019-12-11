@@ -80,13 +80,13 @@
 					<a href="#invoke-command" id="invoke-command" style="color: inherit; text-decoration: none;">
 						<h3>Invoke command</h3>
 					</a>
-					<pre><code class="language-typescritp">xapi
-  .command(&#39;Dial&#39;, { Number: &#39;johndoe@example.com&#39; })
+					<pre><code class="language-typescript">xapi
+  .command(<span class="hljs-string">'Dial'</span>, { <span class="hljs-built_in">Number</span>: <span class="hljs-string">'johndoe@example.com'</span> })
   .then(onSuccess, onFailure);
 
-// Alternate notation
+<span class="hljs-comment">// Alternate notation</span>
 xapi
-  .Command.Dial({ Number: &#39;johndoe@example.com&#39; })
+  .Command.Dial({ <span class="hljs-built_in">Number</span>: <span class="hljs-string">'johndoe@example.com'</span> })
   .then(onSuccess, onFailure);</code></pre>
 					<a href="#fetch-a-configuration" id="fetch-a-configuration" style="color: inherit; text-decoration: none;">
 						<h3>Fetch a configuration</h3>
@@ -211,7 +211,7 @@ xapi.Event.Message.Send.Text.on(<span class="hljs-function">(<span class="hljs-p
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L115">src/xapi/index.ts:115</a></li>
+									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L115">src/xapi/index.ts:115</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -236,7 +236,7 @@ xapi.Event.Message.Send.Text.on(<span class="hljs-function">(<span class="hljs-p
 					<div class="tsd-signature tsd-kind-icon">Command<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L104">src/xapi/index.ts:104</a></li>
+							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L104">src/xapi/index.ts:104</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -246,7 +246,7 @@ xapi.Event.Message.Send.Text.on(<span class="hljs-function">(<span class="hljs-p
 					<div class="tsd-signature tsd-kind-icon">Config<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L105">src/xapi/index.ts:105</a></li>
+							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L105">src/xapi/index.ts:105</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -256,7 +256,7 @@ xapi.Event.Message.Send.Text.on(<span class="hljs-function">(<span class="hljs-p
 					<div class="tsd-signature tsd-kind-icon">Event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L107">src/xapi/index.ts:107</a></li>
+							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L107">src/xapi/index.ts:107</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -266,7 +266,7 @@ xapi.Event.Message.Send.Text.on(<span class="hljs-function">(<span class="hljs-p
 					<div class="tsd-signature tsd-kind-icon">Status<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L106">src/xapi/index.ts:106</a></li>
+							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L106">src/xapi/index.ts:106</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -276,7 +276,7 @@ xapi.Event.Message.Send.Text.on(<span class="hljs-function">(<span class="hljs-p
 					<div class="tsd-signature tsd-kind-icon">backend<span class="tsd-signature-symbol">:</span> <a href="../interfaces/backend.html" class="tsd-signature-type">Backend</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L118">src/xapi/index.ts:118</a></li>
+							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L118">src/xapi/index.ts:118</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -286,7 +286,7 @@ xapi.Event.Message.Send.Text.on(<span class="hljs-function">(<span class="hljs-p
 					<div class="tsd-signature tsd-kind-icon">config<span class="tsd-signature-symbol">:</span> <a href="config.html" class="tsd-signature-type">Config</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L100">src/xapi/index.ts:100</a></li>
+							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L100">src/xapi/index.ts:100</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -296,7 +296,7 @@ xapi.Event.Message.Send.Text.on(<span class="hljs-function">(<span class="hljs-p
 					<div class="tsd-signature tsd-kind-icon">event<span class="tsd-signature-symbol">:</span> <a href="event.html" class="tsd-signature-type">Event</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L102">src/xapi/index.ts:102</a></li>
+							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L102">src/xapi/index.ts:102</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -306,7 +306,7 @@ xapi.Event.Message.Send.Text.on(<span class="hljs-function">(<span class="hljs-p
 					<div class="tsd-signature tsd-kind-icon">feedback<span class="tsd-signature-symbol">:</span> <a href="feedback.html" class="tsd-signature-type">Feedback</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L99">src/xapi/index.ts:99</a></li>
+							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L99">src/xapi/index.ts:99</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -316,7 +316,7 @@ xapi.Event.Message.Send.Text.on(<span class="hljs-function">(<span class="hljs-p
 					<div class="tsd-signature tsd-kind-icon">request<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L114">src/xapi/index.ts:114</a></li>
+							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L114">src/xapi/index.ts:114</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -336,7 +336,7 @@ xapi.Event.Message.Send.Text.on(<span class="hljs-function">(<span class="hljs-p
 					<div class="tsd-signature tsd-kind-icon">requests<span class="tsd-signature-symbol">:</span> <a href="../interfaces/requests.html" class="tsd-signature-type">Requests</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L115">src/xapi/index.ts:115</a></li>
+							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L115">src/xapi/index.ts:115</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -346,7 +346,7 @@ xapi.Event.Message.Send.Text.on(<span class="hljs-function">(<span class="hljs-p
 					<div class="tsd-signature tsd-kind-icon">status<span class="tsd-signature-symbol">:</span> <a href="status.html" class="tsd-signature-type">Status</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L101">src/xapi/index.ts:101</a></li>
+							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L101">src/xapi/index.ts:101</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -420,7 +420,7 @@ xapi.Event.Message.Send.Text.on(<span class="hljs-function">(<span class="hljs-p
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L193">src/xapi/index.ts:193</a></li>
+									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L193">src/xapi/index.ts:193</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -442,7 +442,7 @@ xapi.Event.Message.Send.Text.on(<span class="hljs-function">(<span class="hljs-p
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L241">src/xapi/index.ts:241</a></li>
+									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L241">src/xapi/index.ts:241</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -571,7 +571,7 @@ xapi.command(<span class="hljs-string">'UserInterface Extensions Set'</span>, { 
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L263">src/xapi/index.ts:263</a></li>
+									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L263">src/xapi/index.ts:263</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -640,7 +640,7 @@ xapi.command(<span class="hljs-string">'UserInterface Extensions Set'</span>, { 
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L272">src/xapi/index.ts:272</a></li>
+									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L272">src/xapi/index.ts:272</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -713,7 +713,7 @@ xapi.command(<span class="hljs-string">'UserInterface Extensions Set'</span>, { 
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L291">src/xapi/index.ts:291</a></li>
+									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L291">src/xapi/index.ts:291</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -779,7 +779,7 @@ xapi.command(<span class="hljs-string">'UserInterface Extensions Set'</span>, { 
 							<aside class="tsd-sources">
 								<p>Overrides EventEmitter.on</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L21">src/xapi/index.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L21">src/xapi/index.ts:21</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -815,7 +815,7 @@ xapi.command(<span class="hljs-string">'UserInterface Extensions Set'</span>, { 
 							<aside class="tsd-sources">
 								<p>Overrides EventEmitter.on</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L22">src/xapi/index.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L22">src/xapi/index.ts:22</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -851,7 +851,7 @@ xapi.command(<span class="hljs-string">'UserInterface Extensions Set'</span>, { 
 							<aside class="tsd-sources">
 								<p>Overrides EventEmitter.on</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/f93befb/src/xapi/index.ts#L23">src/xapi/index.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/067f186/src/xapi/index.ts#L23">src/xapi/index.ts:23</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
