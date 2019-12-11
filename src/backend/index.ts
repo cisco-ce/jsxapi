@@ -16,10 +16,9 @@ export interface Backend extends EventEmitter {
 /**
  * Backend abstract class.
  *
- * @extends {EventEmitter}
- * @interface
+ * ### Custom backend implementation
  *
- * @example <caption>Custom backend implementation</caption>
+ * ```typescript
  * class MyBackend extends Backend {
  *   constructor(transport) {
  *     this._transport = transport.on('data', this._recvMsg.bind(this));
@@ -45,6 +44,7 @@ export interface Backend extends EventEmitter {
  *     });
  *   }
  * }
+ * ```
  */
 export default class BackendImpl extends EventEmitter implements Backend {
 

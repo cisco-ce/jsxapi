@@ -22,4 +22,8 @@ function initBackend(opts: Options) {
   }
 }
 
+
+/**
+ * Function for connecting to the XAPI.
+ */
 export const connect = connectOverload(initBackend, { protocol: 'wss:' });

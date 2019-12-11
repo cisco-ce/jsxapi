@@ -1,4 +1,5 @@
 import { Duplex } from 'stream';
+import { FeedbackInterceptor } from './feedback';
 
 export interface CloseableStream extends Duplex {
   close(): void;
@@ -6,12 +7,18 @@ export interface CloseableStream extends Duplex {
 
 export type Canceler = () => void;
 export type Handler = () => void;
+
 export type Path = string | string[];
+
+/**
+ * A normalized path is an array of path elements.
+ */
 export type NormalizedPath = Array<string | number>;
+
 export type Listener<T = any> = (ev: T, root: any) => void;
 
 export interface XapiOptions {
-  feedbackInterceptor?: (data?: any) => void;
+  feedbackInterceptor?: FeedbackInterceptor;
   seal: boolean;
 }
 

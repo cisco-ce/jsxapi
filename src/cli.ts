@@ -27,6 +27,11 @@ function startRepl(xapi: XAPI) {
   repl.context.xapi = xapi;
 }
 
+/**
+ * Main entrypoint for the CLI application.
+ *
+ * See [[Options]] for options.
+ */
 function main() {
   const { version } = readPkg();
   commander

@@ -28,10 +28,15 @@ export declare interface XAPI {
  * with an XAPI instance. It should be possible to write backends for all kinds
  * of transports (TSH over SSH, Websockets, HTTP, plain sockets, etc.)
  *
- * @example <caption>Initialization</caption>
- * const xapi = new XAPI(backend);
+ * ### Initialization
  *
- * @example <caption>Invoke command</caption>
+ * ```typescript
+ * const xapi = new XAPI(backend);
+ * ```
+ *
+ * ### Invoke command
+ *
+ * ```typescritp
  * xapi
  *   .command('Dial', { Number: 'johndoe@example.com' })
  *   .then(onSuccess, onFailure);
@@ -40,8 +45,11 @@ export declare interface XAPI {
  * xapi
  *   .Command.Dial({ Number: 'johndoe@example.com' })
  *   .then(onSuccess, onFailure);
+ * ```
  *
- * @example <caption>Fetch a configuration</caption>
+ * ### Fetch a configuration
+ *
+ * ```typescript
  * xapi
  *   .config.get('Audio DefaultVolume')
  *   .then((volume) => console.log(`default volume is: ${volume}`));
@@ -50,14 +58,20 @@ export declare interface XAPI {
  * xapi.Audio.DefaultVolume
  *   .get()
  *   .then((volume) => console.log(`default volume is: ${volume}`));
+ * ```
  *
- * @example <caption>Set a configuration</caption>
+ * ### Set a configuration
+ *
+ * ```typescript
  * xapi.config.set('Audio DefaultVolume', 100);
  *
  * // Alternate notation
  * xapi.Audio.DefaultVolume.set(100);
+ * ```
  *
- * @example <caption>Fetch a status</caption>
+ * ### Fetch a status
+ *
+ * ```typescript
  * xapi
  *   .status.get('Audio Volume')
  *   .then((volume) => { console.log(`volume is: ${volume}`); });
@@ -66,8 +80,11 @@ export declare interface XAPI {
  * xapi.Status.Audio.Volume
  *   .get()
  *   .then((volume) => { console.log(`volume is: ${volume}`); });
+ * ```
  *
- * @example <caption>Listen to an event</caption>
+ * ### Listen to an event
+ *
+ * ```typescript
  * xapi.event.on('Message Send Text', (text) => {
  *   console.log(`Received message text: ${text}`);
  * });
@@ -76,6 +93,7 @@ export declare interface XAPI {
  * xapi.Event.Message.Send.Text.on((text) => {
  *   console.log(`Received message text: ${text}`);
  * });
+ * ```
  */
 export class XAPI extends EventEmitter {
   public feedback: Feedback;
@@ -89,10 +107,8 @@ export class XAPI extends EventEmitter {
   public Event: any;
 
   /**
-   * @param {Backend} backend - Backend connected to an XAPI instance.
-   * @param {object} options - XAPI object options.
-   * @param {function} options.feedbackInterceptor - Feedback interceptor.
-   * @param {function} options.seal - Seal the object from further changes.
+   * @param backend Backend connected to an XAPI instance.
+   * @param options XAPI object options.
    */
 
   private requestId = 1;
@@ -105,25 +121,21 @@ export class XAPI extends EventEmitter {
 
     /**
      * Interface to XAPI feedback registration.
-     * @type {Feedback}
      */
     this.feedback = new Feedback(this, options.feedbackInterceptor);
 
     /**
      * Interface to XAPI configurations.
-     * @type {Config}
      */
     this.config = new Config(this);
 
     /**
      * Interface to XAPI events.
-     * @type {Event}
      */
     this.event = new Event(this);
 
     /**
      * Interface to XAPI statuses.
-     * @type {Status}
      */
     this.status = new Status(this);
 
@@ -177,10 +189,8 @@ export class XAPI extends EventEmitter {
 
   /**
    * Close the XAPI connection.
-   *
-   * @return {XAPI} - XAPI instance..
    */
-  public close() {
+  public close(): XAPI {
     this.backend.close();
     return this;
   }
@@ -188,7 +198,7 @@ export class XAPI extends EventEmitter {
   /**
    * Executes the command specified by the given path.
    *
-   * @example
+   * ```typescript
    * // Space delimited
    * xapi.command('Presentation Start');
    *
@@ -221,11 +231,12 @@ export class XAPI extends EventEmitter {
    *    </Panel>
    *  </Extensions>
    * `);
+   * ```
    *
-   * @param {Array|string} path - Path to command node.
-   * @param {Object} [params] - Object containing named command arguments.
-   * @param {string} [body] - Multi-line body for commands requiring it.
-   * @return {Promise} - Resolved with the command response when ready.
+   * @param path Path to command node.
+   * @param params Object containing named command arguments.
+   * @param body Multi-line body for commands requiring it.
+   * @return Resolved with the command response when ready.
    */
   public command<T = any>(path: Path, params?: any, body?: string) {
     const apiPath = normalizePath(path).join('/');
@@ -238,14 +249,16 @@ export class XAPI extends EventEmitter {
   /**
    * Execute the given JSON-RPC request on the backend.
    *
-   * @example
+   * ```typescript
    * xapi.execute('xFeedback/Subscribe', {
    *   Query: ['Status', 'Audio'],
    * });
+   * ```
    *
-   * @param {String} method - Name of RPC method to invoke.
-   * @param {Object} [params] - Parameters to add to the request.
-   * @return {Promise} - Resolved with the command response.
+   * @param method Name of RPC method to invoke.
+   * @param params Parameters to add to the request.
+   * @typeparam T Return type.
+   * @return Resolved with the command response.
    */
   public execute<T>(method: string, params: any): Promise<T> {
     return new Promise((resolve, reject) => {
@@ -256,7 +269,6 @@ export class XAPI extends EventEmitter {
     });
   }
 
-  /** @private */
   private handleResponse(response: XapiResponse) {
     const { id, method } = response;
     if (method === 'xFeedback/Event') {
@@ -276,7 +288,6 @@ export class XAPI extends EventEmitter {
     }
   }
 
-  /** @private */
   private nextRequestId() {
     const requestId = this.requestId;
     this.requestId += 1;

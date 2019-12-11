@@ -4,8 +4,6 @@ import { Listener, Path } from './types';
 
 /**
  * Mixin for XAPI sections that can trigger feedback.
- *
- * @interface
  */
 export class Listenable {
   public xapi!: XAPI;
@@ -14,9 +12,10 @@ export class Listenable {
   /**
    * Register a new listener on the given path.
    *
-   * @param {string} path - Path to XAPI entry.
-   * @param {function(data: Object): null} listener - Callback handler called on changes.
-   * @return {function()} - Handler to deregister the feedback registration.
+   * @param path Path to XAPI entry.
+   * @param listener Callback handler called on changes.
+   * @typeparam T Event type.
+   * @return Handler to deregister the feedback registration.
    */
   public on<T = any>(path: Path, listener: Listener<T>) {
     return this.xapi.feedback.on(this.normalizePath(path) as any, listener);
@@ -26,9 +25,10 @@ export class Listenable {
    * Register a new listener on the given path, de-register
    * after the first change happened.
    *
-   * @param {string} path - Path to XAPI entry.
-   * @param {function(data: Object): null} listener - Callback handler called on changes.
-   * @return {Object} - Handler to deregister the feedback registration.
+   * @param path Path to XAPI entry.
+   * @param listener Callback handler called on changes.
+   * @typeparam T Event type.
+   * @return Handler to deregister the feedback registration.
    */
   public once<T = any>(path: Path, listener: Listener<T>) {
     return this.xapi.feedback.once(this.normalizePath(path) as any, listener);
@@ -37,7 +37,7 @@ export class Listenable {
   /**
    * De-register the given listener on the given path.
    *
-   * @deprecated use deactivation handler from `.on()` and `.once()` instead.
+   * @deprecated Use deactivation handler from `.on()` and `.once()` instead.
    */
   public off() {
     this.xapi.feedback.off();
@@ -46,8 +46,6 @@ export class Listenable {
 
 /**
  * Mixin for XAPI sections that can hold a value that may be fetched.
- *
- * @interface
  */
 export class Gettable {
   public xapi!: XAPI;
@@ -55,18 +53,21 @@ export class Gettable {
   /**
    * Gets the value of the given path.
    *
-   * @example
+   * ```typescript
    * xapi.status
    *   .get('Audio Volume')
    *   .then((volume) => { console.log(volume); });
+   * ```
    *
-   * @example
+   * ```typescript
    * xapi.config
    *   .get('Audio DefaultVolume')
    *   .then((volume) => { console.log(volume); });
+   * ```
    *
-   * @param {string} path - Path to configuration node.
-   * @return {Promise} - Resolved to the configuration value when ready.
+   * @param path Path to configuration node.
+   * @typeparam T The return type of the get request.
+   * @return Resolved to the configuration value when ready.
    */
   public get<T = any>(path: Path): Promise<T> {
     return this.xapi.execute('xGet', {
@@ -77,8 +78,6 @@ export class Gettable {
 
 /**
  * Mixin for XAPI sections that can hold a value that may be fetched.
- *
- * @interface
  */
 export class Settable {
   public xapi!: XAPI;
@@ -86,13 +85,14 @@ export class Settable {
   /**
    * Sets the path to the given value.
    *
-   * @example
+   * ```typescript
    * xapi
    *   .config.set('SystemUnit Name', 'My System');
+   * ```
    *
-   * @param {string} path - Path to status node.
-   * @param {number|string} value - Configuration value.
-   * @return {Promise} - Resolved to the status value when ready.
+   * @param path Path to status node.
+   * @param value Configuration value.
+   * @return Resolved to the status value when ready.
    */
   public set(path: Path, value: number | string) {
     return this.xapi.execute('xSet', {
@@ -105,9 +105,9 @@ export class Settable {
 /**
  * Extend {Base} class and apply {Mixins}.
  *
- * @param {Object} Base - Base class to extend.
- * @param {Array} Mixins - Mixins to apply.
- * @return Object - New ad-hoc base class with mixins applied.
+ * @param Base Base class to extend.
+ * @param Mixins Mixins to apply.
+ * @return New ad-hoc base class with mixins applied.
  */
 export function mix(Base: any, ...Mixins: any[]) {
   class Class extends Base {}
