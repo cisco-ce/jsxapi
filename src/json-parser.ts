@@ -4,10 +4,6 @@ import { Transform } from 'stream';
 import Parser from 'jsonparse';
 
 /**
- * @external {Transform} https://nodejs.org/api/stream.html#stream_class_stream_transform
- */
-
-/**
  * Streaming JSON parser. Implements the Node.js {@link Duplex} stream API.
  */
 export class JSONParser extends Transform {
@@ -60,8 +56,8 @@ export class JSONParser extends Transform {
 /**
  * Synchronous frontend to {@link JSONparser}.
  *
- * @param {string} json - JSON string input.
- * @return {Object} - Parsed JSON object.
+ * @param json JSON string input.
+ * @return Parsed JSON object.
  */
 export function parseJSON(json: string) {
   let obj;

@@ -6,30 +6,17 @@ import { Listener, Path } from './types';
 
 /**
  * Common base class for XAPI section types (commands, configs, events, statuses).
- *
- * @interface
  */
 class Component {
   /**
    * Prefix to add to all paths for the component.
-   *
-   * @type {string}
    */
   public prefix = '';
 
-  /**
-   * @param {XAPI} xapi - XAPI instance.
-   */
   constructor(public readonly xapi: XAPI) {}
-  /**
-   * @type {XAPI}
-   */
 
   /**
    * Normalizes a path including the component prefix.
-   *
-   * @param {Array|string} path - Normalize an XAPI path.
-   * @return {Array} - Normalized path.
    */
   public normalizePath(path: Path) {
     const normalized = normalizePath(path);
@@ -42,11 +29,6 @@ class Component {
 
 /**
  * Interface to XAPI configurations.
- *
- * @extends {Component}
- * @extends {Listenable}
- * @extends {Gettable}
- * @extends {Settable}
  */
 export class Config extends mix(Component, Listenable, Gettable, Settable)
   implements Component, Listenable, Gettable, Settable {
@@ -69,9 +51,6 @@ export class Config extends mix(Component, Listenable, Gettable, Settable)
 
 /**
  * Interface to XAPI events.
- *
- * @extends {Component}
- * @extends {Listenable}
  */
 export class Event extends mix(Component, Listenable)
   implements Component, Listenable {
@@ -91,10 +70,6 @@ export class Event extends mix(Component, Listenable)
 
 /**
  * Interface to XAPI statuses.
- *
- * @extends {Component}
- * @extends {Listenable}
- * @extends {Gettable}
  */
 export class Status extends mix(Component, Listenable, Gettable)
   implements Component, Listenable, Gettable {

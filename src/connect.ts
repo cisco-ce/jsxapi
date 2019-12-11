@@ -44,20 +44,13 @@ function resolveOptions(targetDefaults: Partial<Options>, url: string, options: 
 /**
  * Connect to an XAPI endpoint.
  *
- * @example
+ * ```typescript
  * const xapi = connect('ssh://host.example.com:22');
+ * ```
  *
- * @param {string} url - Connection specification.
- * @param {Object} [options] - Connect options.
- * @param {string} [options.host] -
- *     Hostname to connect to.
- * @param {string} [options.username] -
- *     Username to authenticate with if protocol requires authentication.
- * @param {string} [options.password] -
- *     Password to authenticate with if protocol requires authentication.
- * @param {string} [options.loglevel] -
- *     Set the internal log level.
- * @return {XAPI} - XAPI interface connected to the given URI.
+ * @param url Connection specification.
+ * @param options Connect options.
+ * @return XAPI interface connected to the given URI.
  */
 export default function connectOverload(
   initBackend: InitBackend,

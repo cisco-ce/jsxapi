@@ -6,9 +6,39 @@ import XAPI from '.';
 import normalizePath from './normalizePath';
 import { Handler, Listener, Path } from './types';
 
+/**
+ * A function used to inspect and emit feedback data.
+ *
+ * The interceptor is free to change feedback payloads or discard them
+ * entirely.
+ */
+export type FeedbackInterceptor =
+  /**
+   * @param payload The feedback payload.
+   * @param emit Function to dispatch a payload.
+   */
+  (payload: any, emit: (payload: any) => void) => void;
+
+/**
+ * Type representing a feedback id.
+ */
+interface FeedbackId {
+  Id: string;
+}
+
+/**
+ * Type for a feedback registration request.
+ */
 export interface Registration {
+  /**
+   * De-register the feedback registration.
+   */
   (): void;
-  registration: Promise<{ Id: string }>;
+
+  /**
+   * Promise resolved with a feedback id on successful registration.
+   */
+  registration: Promise<FeedbackId>;
 }
 
 /**
@@ -88,23 +118,34 @@ function dispatch(
 /**
  * Feedback handler for the XAPI.
  *
- * @example <caption>Register a feedback listener</caption>
+ * ### Register a feedback listener
+ *
+ * ```typescript
  * xapi.feedback.on('Status/Audio/Volume', data => {
  *   console.log(`Received feedback data: ${data}`);
  * });
+ * ```
  *
- * @example <caption>Get the feedback root payload</caption>
+ * ### Get the feedback root payload
+ *
+ * ```typescript
  * xapi.feedback.on('Status/Audio/Volume', (data, payload) => {
  *   console.log(`System volume changed to: ${data}`);
  *   JSON.stringify(payload) // => { Status: { Audio: { Volume: data } } }
  * });
+ * ```
  *
- * @example <caption>Listen to array elements</caption>
+ * ### Listen to array elements
+ *
+ * ```typescript
  * xapi.feedback.on('Status/Call[42]/Status', callStatus => {
  *   console.log(`Call status for call number 42 is: ${callStatus}`);
  * });
+ * ```
  *
- * @example <caption>Bundle feedback listeners for easy unsubscription</caption>
+ * ### Bundle feedback listeners for easy unsubscription
+ *
+ * ```typescript
  * const feedbackGroup = xapi.feedback.group([
  *   xapi.status.on('Audio/Volume', volumeListener),
  *   xapi.status.on('Call', callListener),
@@ -112,28 +153,31 @@ function dispatch(
  *
  * // Disable feedback listening for all listeners of the group.
  * feedbackGroup.off();
+ * ```
  *
- * @example <caption>Register listener with Array path</caption>
+ * ### Register listener with Array path
+ *
+ * ```typescript
  * const off = xapi.feedback.on('Status/Audio/Volume', listener);
  * off(); // De-register feedback
+ * ```
  */
 export default class Feedback {
   /**
-   * @param {XAPI} xapi - XAPI instance.
-   * @param {function} interceptor - Feedback interceptor.
+   * @param xapi XAPI instance.
+   * @param interceptor Feedback interceptor.
    */
   public readonly eventEmitter = new EventEmitter();
   private subscriptions = [];
-  constructor(readonly xapi: XAPI, readonly interceptor = defaultInterceptor) {}
+  constructor(readonly xapi: XAPI, readonly interceptor: FeedbackInterceptor = defaultInterceptor) {}
 
   /**
    * Registers a feedback listener with the backend service which is invoked
    * when there is feedback matching the subscription query.
    *
-   * @param {Array|string} path - Path to subscribe to
-   * @param {function} listener - Listener invoked on feedback
-   * @return {function()} - Feedback cancellation function
-   * @property {Promise<{ Id: number}>} registration - Promise for successful feedback registration
+   * @param path Path to subscribe to.
+   * @param listener Listener invoked on feedback.
+   * @return Feedback cancellation function.
    */
   public on(path: Path, listener: Listener): Registration {
     log.info(`new feedback listener on: ${path}`);
@@ -143,7 +187,7 @@ export default class Feedback {
 
     this.eventEmitter.on(eventPath, listener);
 
-    const registration = this.xapi.execute<{ Id: string }>('xFeedback/Subscribe', {
+    const registration = this.xapi.execute<FeedbackId>('xFeedback/Subscribe', {
       Query: normalizePath(path),
     });
 
@@ -163,10 +207,9 @@ export default class Feedback {
    * Registers a feedback listener similar to {@link on}, but the subscription
    * is removed after the first invocation of the listener.
    *
-   * @param {Array|string} path - Path to subscribe to
-   * @param {function} listener - Listener invoked on feedback
-   * @return {function()} - Feedback cancellation function
-   * @property {Promise<{ Id: number}>} registration - Promise for successful feedback registration
+   * @param path Path to subscribe to.
+   * @param listener Listener invoked on feedback.
+   * @return Feedback cancellation function.
    */
   public once<T = any>(path: Path, listener: Listener): Registration {
     let off: Registration;
@@ -195,8 +238,8 @@ export default class Feedback {
   /**
    * Dispatches feedback data to the registered handlers.
    *
-   * @param {Object} data - JSON data structure of feedback data.
-   * @return {FeedbackHandler} - Returns self for chaining.
+   * @param data JSON data structure of feedback data.
+   * @return Returns self for chaining.
    */
   public dispatch(data: any) {
     this.interceptor(data, (d = data) => dispatch(this, d));
@@ -207,9 +250,9 @@ export default class Feedback {
    * Creates a grouper object which tracks which tracks the feedback paths and
    * listeners being added to it.
    *
-   * @return {FeedbackGroup} - Proxy object for xapi.feedback
+   * ### Bundle feedback listeners for easy unsubscription
    *
-   * @example <caption>Bundle feedback listeners for easy unsubscription</caption>
+   * ```typescript
    * // Create a group
    * const group = xapi.feedback.group([
    *   xapi.status.on('Audio Volume', (volume) => {
@@ -230,6 +273,9 @@ export default class Feedback {
    *
    * // Unregister from all feedback handlers
    * group.off();
+   * ```
+   *
+   * @return Proxy object for xapi.feedback.
    */
   public group(handlers: Handler[]) {
     return new FeedbackGroup(handlers);
