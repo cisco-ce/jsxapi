@@ -36,7 +36,7 @@ export declare interface XAPI {
  *
  * ### Invoke command
  *
- * ```typescritp
+ * ```typescript
  * xapi
  *   .command('Dial', { Number: 'johndoe@example.com' })
  *   .then(onSuccess, onFailure);

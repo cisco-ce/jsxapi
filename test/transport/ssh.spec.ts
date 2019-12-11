@@ -10,10 +10,10 @@ describe('connectSSH', () => {
   let dataSpy: sinon.SinonSpy;
   let errorSpy: sinon.SinonSpy;
   let closeSpy: sinon.SinonSpy;
-  let clientConnectStub: sinon.SinonStub;
-  let clientShellStub: sinon.SinonStub;
-  let clientExecStub: sinon.SinonStub;
-  let clientEndStub: sinon.SinonStub;
+  let clientConnectStub: sinon.SinonStubbedMember<Client["connect"]>;
+  let clientShellStub: sinon.SinonStubbedMember<Client["shell"]>;
+  let clientExecStub: sinon.SinonStubbedMember<Client["exec"]>;
+  let clientEndStub: sinon.SinonStubbedMember<Client["end"]>;
 
   beforeEach(() => {
     client = new Client();
