@@ -1,6 +1,12 @@
 Changes
 -------
 
+##### v5.0.0 (2019-12-11)
+
+ * New proxy-based API
+ * Codebase migrated to TypeScript
+ * Bundled browser-bundle for static pages using WebSockets.
+
 ##### v4.5.0 (2019-10-02)
 
  * Fix browser support (using WebSockets)
