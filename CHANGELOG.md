@@ -1,7 +1,7 @@
 Changes
 -------
 
-##### v5.0.0 (2019-12-11)
+##### v5.0.0 (2019-12-18)
 
  * New proxy-based API
  * Codebase migrated to TypeScript
