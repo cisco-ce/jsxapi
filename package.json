@@ -12,7 +12,7 @@
     "npm": ">=5.x"
   },
   "main": "lib/index.js",
-  "browser": "lib/browser.ts",
+  "browser": "lib/browser.js",
   "types": "lib/index.d.ts",
   "bin": {
     "jsxapi": "./lib/cli.js"
