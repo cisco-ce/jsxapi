@@ -1,6 +1,10 @@
 Changes
 -------
 
+##### v5.0.1 (2019-12-19)
+
+ * Fix browser field in package.json
+
 ##### v5.0.0 (2019-12-18)
 
  * New proxy-based API
