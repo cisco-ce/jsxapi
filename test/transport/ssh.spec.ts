@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { Client } from 'ssh2';
 import { Duplex } from 'stream';
 
+import logger from '../../src/log';
 import connectSSH from '../../src/transport/ssh';
 
 describe('connectSSH', () => {
@@ -16,6 +17,8 @@ describe('connectSSH', () => {
   let clientEndStub: sinon.SinonStubbedMember<Client["end"]>;
 
   beforeEach(() => {
+    logger.disableAll();
+
     client = new Client();
     clientConnectStub = sinon.stub(client, 'connect');
     clientShellStub = sinon.stub(client, 'shell');

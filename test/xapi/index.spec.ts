@@ -146,7 +146,7 @@ describe('XAPI', () => {
       expect(result).to.be.an.instanceof(Promise);
     });
 
-    it('resolves promise when backend emits success response', () => {
+    it('resolves promise when backend emits success response', async () => {
       sinon.stub(backend, 'execute').callsFake(
         asyncResponse(backend, {
           result: {
@@ -156,11 +156,11 @@ describe('XAPI', () => {
         }),
       );
 
-      const result = xapi.execute('xCommand/Dial', {
+      const result = await xapi.execute('xCommand/Dial', {
         Number: 'user@example.com',
       });
 
-      return expect(result).to.eventually.deep.equal({
+      expect(result).to.deep.equal({
         CallId: 3,
         ConferenceId: 2,
       });
