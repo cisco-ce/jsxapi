@@ -33,8 +33,8 @@
     "prepublishOnly": "npm test",
     "start": "node ./lib/cli.js",
     "test": "npm run lint && npm run jest",
-    "jest": "jest test/**/*.spec.ts",
-    "tdd": "jest --watch test/**/*.spec.ts",
+    "jest": "jest",
+    "tdd": "jest --watch",
     "version": "npm run build && git add -u"
   },
   "dependencies": {
