@@ -1,15 +1,13 @@
-import { expect } from 'chai';
 import { EventEmitter } from 'events';
-import * as sinon from 'sinon';
 import connect, { globalDefaults } from '../src/connect';
 import log from '../src/log';
 
 describe('connect()', () => {
-  let initBackend: sinon.SinonStub;
+  let initBackend: jest.Mock;
 
   beforeEach(() => {
-    initBackend = sinon.stub();
-    initBackend.returns(new EventEmitter());
+    initBackend = jest.fn();
+    initBackend.mockReturnValue(new EventEmitter());
   });
 
   afterEach(() => {
@@ -19,7 +17,7 @@ describe('connect()', () => {
   describe('args', () => {
     it('throws with no arguments', () => {
       const doConnect = connect(initBackend, {}) as any;
-      expect(() => doConnect()).to.throw(/invalid arguments/i);
+      expect(() => doConnect()).toThrow(/invalid arguments/i);
     });
 
     it('allows invoking with a single string URL', () => {
@@ -27,7 +25,7 @@ describe('connect()', () => {
 
       doConnect('ssh://host.example.com');
 
-      expect(initBackend).to.have.been.calledWith({
+      expect(initBackend).toHaveBeenCalledWith({
         ...globalDefaults,
         host: 'host.example.com',
         protocol: 'ssh:',
@@ -43,7 +41,7 @@ describe('connect()', () => {
         host: 'host.example.com',
       });
 
-      expect(initBackend).to.have.been.calledWith({
+      expect(initBackend).toHaveBeenCalledWith({
         ...globalDefaults,
         host: 'host.example.com',
         protocol: 'ssh:',
@@ -59,7 +57,7 @@ describe('connect()', () => {
 
       doConnect('');
 
-      expect(initBackend).to.have.been.calledWith({
+      expect(initBackend).toHaveBeenCalledWith({
         ...globalDefaults,
         protocol: 'ssh:',
       });
@@ -76,7 +74,7 @@ describe('connect()', () => {
         protocol: 'ws:',
       });
 
-      expect(initBackend).to.have.been.calledWith({
+      expect(initBackend).toHaveBeenCalledWith({
         ...globalDefaults,
         port: 80,
         protocol: 'ws:',
