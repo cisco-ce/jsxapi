@@ -1,6 +1,3 @@
-import * as sinon from 'sinon';
-import { expect } from 'chai';
-
 import Backend from '../../src/backend';
 import { XAPIError } from '../../src/xapi/exc';
 
@@ -18,7 +15,7 @@ describe('Backend', () => {
         params: { Number: 'user@example.com' },
       });
 
-      return expect(result).to.eventually.be.rejectedWith(
+      return expect(result).rejects.toThrow(
         'Invalid request method',
       );
     });
@@ -32,8 +29,8 @@ describe('Backend', () => {
         jsonrpc: '2.0',
       };
 
-      sinon.stub(backend, 'defaultHandler').callsFake((actual) => {
-        expect(actual).to.deep.equal(request);
+      jest.spyOn(backend, 'defaultHandler').mockImplementation((actual) => {
+        expect(actual).toEqual(request);
         done();
         return Promise.resolve();
       });
@@ -45,7 +42,7 @@ describe('Backend', () => {
       (backend as any)['xCommand()'] = () => 42;
 
       backend.on('data', (result) => {
-        expect(result).to.deep.equal({
+        expect(result).toEqual({
           jsonrpc: '2.0',
           id: 'request-1',
           result: 42,
@@ -94,30 +91,31 @@ describe('Backend', () => {
 
     testCases.forEach(({ name, method, params }) => {
       it(`calls .${name}() handler`, () => {
-        const send = sinon.stub(backend, 'send');
-        const handler = sinon.spy((_r, _send) => _send());
+        const send = jest.spyOn(backend, 'send');
+        const handler = jest.fn().mockImplementation((_r, _send) => _send());
         const request = { jsonrpc: '2.0', id: 'request-1', method, params };
 
         (backend as any)[`${name}()`] = handler;
         backend.execute(request);
 
-        expect(handler).to.not.have.been.called();
-        expect(send).to.not.have.been.called();
+        expect(handler).not.toHaveBeenCalled();
+        expect(send).not.toHaveBeenCalled();
 
         return backend.isReady.then(() => {
-          expect(handler.firstCall).to.have.been.calledWith(request);
-          expect(send.firstCall).to.have.been.calledWith('request-1');
+          expect(handler.mock.calls[0]).toContain(request);
+          expect(send.mock.calls[0]).toContain('request-1');
         });
       });
     });
 
     it('handles error', (done) => {
-      const send = sinon.stub(backend, 'send');
-      (backend as any)['xCommand()'] = sinon.spy((_r, _send) => _send());
-      send.throws(new XAPIError(0, 'Some XAPI thing went wrong'));
+      const send = jest.spyOn(backend, 'send').mockImplementation(() => {
+        throw new XAPIError(0, 'Some XAPI thing went wrong')
+      });
+      (backend as any)['xCommand()'] = jest.fn().mockImplementation((_r, _send) => _send());
 
       backend.on('data', (data) => {
-        expect(data.error).to.contain({
+        expect(data.error).toMatchObject({
           code: 0,
           message: 'Some XAPI thing went wrong',
         });
