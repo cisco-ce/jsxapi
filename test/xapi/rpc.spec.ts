@@ -1,5 +1,3 @@
-import { expect } from 'chai';
-
 import {
   collapse,
   createCommandResponse,
@@ -18,7 +16,7 @@ describe('xapi/rpc', () => {
           Text: 'foo \n bar \n',
         });
 
-      expect(fn).to.throw('may not contain newline');
+      expect(fn).toThrow('may not contain newline');
     });
   });
 
@@ -40,7 +38,7 @@ describe('xapi/rpc', () => {
         }
       `);
 
-      expect(createCommandResponse(data)).to.deep.equal({
+      expect(createCommandResponse(data)).toEqual({
         status: 'OK',
         OptionKey: [
           {
@@ -67,7 +65,7 @@ describe('xapi/rpc', () => {
         }
       `);
 
-      expect(() => createCommandResponse(data)).to.throw(ParameterError);
+      expect(() => createCommandResponse(data)).toThrow(ParameterError);
     });
 
     it('handles Reason error', () => {
@@ -87,10 +85,7 @@ describe('xapi/rpc', () => {
         }
       `);
 
-      expect(() => createCommandResponse(data)).to.throw(
-        XAPIError,
-        'Unknown command',
-      );
+      expect(() => createCommandResponse(data)).toThrow('Unknown command');
     });
 
     it('handles Error error', () => {
@@ -107,8 +102,7 @@ describe('xapi/rpc', () => {
         }
       `);
 
-      expect(() => createCommandResponse(data)).to.throw(
-        XAPIError,
+      expect(() => createCommandResponse(data)).toThrow(
         'No Encryption optionkey is installed',
       );
     });
@@ -127,10 +121,7 @@ describe('xapi/rpc', () => {
         }
       `);
 
-      expect(() => createCommandResponse(data)).to.throw(
-        XAPIError,
-        'FooBarResult',
-      );
+      expect(() => createCommandResponse(data)).toThrow('FooBarResult');
     });
 
     it('propagates Error body', () => {
@@ -158,14 +149,14 @@ describe('xapi/rpc', () => {
       try {
         createCommandResponse(data);
       } catch (error) {
-        expect(error).to.be.an.instanceof(XAPIError);
-        expect(error.data).to.deep.equal(
+        expect(error).toBeInstanceOf(XAPIError);
+        expect(error.data).toEqual(
           collapse(data.CommandResponse.OptionKeyRemoveResult),
         );
         return;
       }
 
-      expect.fail();
+      throw new Error('Should not get here');
     });
 
     describe('handles invalid structure', () => {
@@ -176,8 +167,7 @@ describe('xapi/rpc', () => {
           }
         `);
 
-        expect(() => createCommandResponse(data)).to.throw(
-          XAPIError,
+        expect(() => createCommandResponse(data)).toThrow(
           /Missing "CommandResponse" attribute/,
         );
       });
@@ -191,8 +181,7 @@ describe('xapi/rpc', () => {
           }
         `);
 
-        expect(() => createCommandResponse(data)).to.throw(
-          XAPIError,
+        expect(() => createCommandResponse(data)).toThrow(
           /Wrong number of keys/,
         );
       });
@@ -217,7 +206,7 @@ describe('xapi/rpc', () => {
         },
       };
 
-      expect(createGetResponse(request, response)).to.equal('30');
+      expect(createGetResponse(request, response)).toEqual('30');
     });
 
     it('returns undefined for empty responses', () => {
@@ -231,7 +220,7 @@ describe('xapi/rpc', () => {
       const response = {};
 
       const result = createGetResponse(request, response);
-      expect(result).to.not.exist(result);
+      expect(result).toBeUndefined();
     });
   });
 
@@ -270,8 +259,7 @@ describe('xapi/rpc', () => {
         }
       `);
 
-      expect(() => createSetResponse(request, response)).to.throw(
-        XAPIError,
+      expect(() => createSetResponse(request, response)).toThrow(
         'No match on address expression',
       );
     });
@@ -310,8 +298,7 @@ describe('xapi/rpc', () => {
         }
       `);
 
-      expect(() => createSetResponse(request, response)).to.throw(
-        XAPIError,
+      expect(() => createSetResponse(request, response)).toThrow(
         'No match on address expression',
       );
     });
@@ -350,8 +337,7 @@ describe('xapi/rpc', () => {
         }
       `);
 
-      expect(() => createSetResponse(request, response)).to.throw(
-        XAPIError,
+      expect(() => createSetResponse(request, response)).toThrow(
         'Configuration',
       );
     });
