@@ -1,6 +1,3 @@
-import { expect } from 'chai';
-import sinon from 'sinon';
-
 import TSHBackend from '../../src/backend/tsh';
 import {
   ILLEGAL_VALUE,
@@ -27,12 +24,12 @@ describe('TSH Backend', () => {
   describe('constructor', () => {
     it('disables echo', () =>
       transport.sendWelcomeText().then(() => {
-        expect(transport.writeBuffer).to.deep.equal(['echo off']);
+        expect(transport.writeBuffer).toEqual(['echo off']);
       }));
 
     it('sets xpreferences', () =>
       transport.init().then(() => {
-        expect(transport.writeBuffer).to.deep.equal([
+        expect(transport.writeBuffer).toEqual([
           'xpreferences outputmode json',
           'echo off',
         ]);
@@ -41,7 +38,7 @@ describe('TSH Backend', () => {
     it('resolves `.isReady` when ready', () => {
       transport.init();
       return tsh.isReady.then((result) => {
-        expect(result).to.equal(true);
+        expect(result).toEqual(true);
       });
     });
 
@@ -89,42 +86,42 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
 
   describe('events', () => {
     it('emits "close" on transport close', () => {
-      const closeSpy = sinon.spy();
+      const closeSpy = jest.fn();
 
       tsh.on('close', closeSpy);
 
       transport.emit('close');
 
-      expect(closeSpy).to.have.been.calledOnce();
+      expect(closeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('emits "error" on transport error', () => {
       const error = new Error('some error');
-      const errorSpy = sinon.spy();
+      const errorSpy = jest.fn();
 
       tsh.on('error', errorSpy);
 
       transport.emit('error', error);
 
-      expect(errorSpy).to.have.been.calledOnce();
-      expect(errorSpy.firstCall).to.have.been.calledWith(error);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy.mock.calls[0]).toContain(error);
     });
 
     it('emits "error" on parser error', () => {
       const error = new Error('some error');
-      const errorSpy = sinon.spy();
+      const errorSpy = jest.fn();
 
       tsh.on('error', errorSpy);
 
       parser.emit('error', error);
 
-      expect(errorSpy).to.have.been.calledOnce();
-      expect(errorSpy.firstCall).to.have.been.calledWith(error);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy.mock.calls[0]).toContain(error);
     });
   });
 
   describe('when parser emits "data" response from', () => {
-    let spy: sinon.SinonSpy;
+    let spy: jest.Mock;
     interface TestCase {
       id?: string;
       method?: string;
@@ -132,24 +129,26 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
       result?: string | boolean;
     }
 
-    type Omit<T, K> = Pick<T, Exclude<keyof T,K>>;
+    type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
     const createMessage = (message: TestCase) => {
-      const request: Omit<XapiRequest, 'method'>  = Object.assign({ jsonrpc: '2.0', id: 'request-1' }, message);
+      const request: Omit<XapiRequest, 'method'> = Object.assign(
+        { jsonrpc: '2.0', id: 'request-1' },
+        message,
+      );
       return request as XapiRequest;
     };
 
     beforeEach(() => {
-      spy = sinon.spy();
+      spy = jest.fn();
       tsh.on('data', spy);
       return transport.init();
     });
 
-
     const testCases: {
-      request: TestCase,
-      name: string,
-      response: string,
-      expected: any,
+      request: TestCase;
+      name: string;
+      response: string;
+      expected: any;
     }[] = [
       // xCommand
       {
@@ -452,19 +451,19 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
 
     testCases.forEach((test) => {
       it(test.name, () => {
-        sinon.stub(tsh, 'send').callsFake(() => {
+        jest.spyOn(tsh, 'send').mockImplementation(() => {
           parser.emit('data', JSON.parse(test.response));
         });
 
         return tsh.execute(createMessage(test.request)).then(() => {
           const expected = createMessage(test.expected);
-          expect(spy).to.have.been.calledWith(expected);
+          expect(spy).toHaveBeenCalledWith(expected);
         });
       });
     });
 
     it('xFeedback/Subscribe wraps indexes in [<n>]', () => {
-      const send = sinon.stub(tsh, 'send').callsFake(() => {
+      const send = jest.spyOn(tsh, 'send').mockImplementation(() => {
         parser.emit('data', { ResultId: 'request-1' });
       });
 
@@ -478,10 +477,11 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
           jsonrpc: '2.0',
         })
         .then(() => {
-          expect(send.firstCall).to.have.been.calledWith(
+          expect(send.mock.calls[0]).toEqual([
             'request-1',
             'xfeedback register /Status/Video/Layout/Prediction/Site[1]',
-          );
+            undefined
+          ]);
         });
     });
 
@@ -491,7 +491,7 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
         '{"ResultId": "request-2"}',
       ];
 
-      sinon.stub(tsh, 'send').callsFake(() => {
+      jest.spyOn(tsh, 'send').mockImplementation(() => {
         parser.emit('data', JSON.parse(responses.shift()!));
       });
 
@@ -514,7 +514,7 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
         )
         .then(() => {
           const expected = createMessage({ id: 'request-2', result: true });
-          expect(spy.secondCall).to.have.been.calledWith(expected);
+          expect(spy.mock.calls[1]).toContainEqual(expected);
         });
     });
 
@@ -535,7 +535,7 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
       `),
       );
 
-      expect(spy).to.have.been.calledWith({
+      expect(spy).toHaveBeenCalledWith({
         jsonrpc: '2.0',
         method: 'xFeedback/Event',
         params: { Status: { Audio: { id: '', Volume: '75' } } },
@@ -549,13 +549,14 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
       id: 'request-1',
     };
 
-    const extensionsXML = '<Extensions>\n'
-      + '  <Version>1.1</Version>\n'
-      + '  <Panel>\n'
-      + '    <Icon>Lightbulb</Icon>\n'
-      + '    <Type>Statusbar</Type>\n'
-      + '  </Panel>\n'
-      + '</Extensions>';
+    const extensionsXML =
+      '<Extensions>\n' +
+      '  <Version>1.1</Version>\n' +
+      '  <Panel>\n' +
+      '    <Icon>Lightbulb</Icon>\n' +
+      '    <Type>Statusbar</Type>\n' +
+      '  </Panel>\n' +
+      '</Extensions>';
 
     const testCases = [
       // xCommand
@@ -659,9 +660,10 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
         expected: [
           '{76} ', // <-- NB: Space before newline
           'xCommand HttpClient Post Url: "https://example.com" | resultId="request-1"',
-        ].join('\n')
+        ].join('\n'),
       },
-      { name: '"xCommand" with non-ascii body`',
+      {
+        name: '"xCommand" with non-ascii body`',
         request: {
           method: 'xCommand/HttpClient/Post',
           params: {
@@ -673,7 +675,7 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
           '{104} ', // <-- NB: Space before newline
           'xCommand HttpClient Post Url: "https://example.com" | resultId="request-1"',
           '(╯°□°)╯︵ ┻━┻',
-        ].join('\n')
+        ].join('\n'),
       },
       // xGet
       {
@@ -727,7 +729,7 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
             tsh.execute(Object.assign(defaultProps, request));
           })
           .then(() => {
-            expect(transport.writeBuffer[0]).to.deep.equal(expected);
+            expect(transport.writeBuffer[0]).toEqual(expected);
           }),
       );
     });
@@ -747,7 +749,9 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
       return new Promise((resolve) => {
         tsh.on('data', resolve);
       }).then((error: any) => {
-        expect((error as XapiResponse).error.message).to.match(/invalid value.*foo.*bar/i);
+        expect((error as XapiResponse).error.message).toMatch(
+          /invalid value.*foo.*bar/i,
+        );
       });
     });
 
@@ -767,7 +771,9 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
       return new Promise((resolve) => {
         tsh.on('data', resolve);
       }).then((error: any) => {
-        expect((error as any).error.message).to.match(/invalid value.*foo.*bar/i);
+        expect((error as any).error.message).toMatch(
+          /invalid value.*foo.*bar/i,
+        );
       });
     });
 
@@ -801,7 +807,7 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
           );
         })
         .then(() => {
-          expect(transport.writeBuffer[0]).to.deep.equal(expected);
+          expect(transport.writeBuffer[0]).toEqual(expected);
         });
     });
   });
