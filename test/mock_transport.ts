@@ -1,4 +1,3 @@
-import * as sinon from 'sinon';
 import { Duplex } from 'stream';
 
 import TSHBackend from '../src/backend/tsh';
@@ -34,7 +33,7 @@ export default class MockTransport extends Duplex {
   // consumed. Map this to the promises from .send() and resolve them.
   public stubBackend(backend: TSHBackend) {
     const origMethod = backend.onTransportData;
-    sinon.stub(backend, 'onTransportData').callsFake((data) => {
+    jest.spyOn(backend, 'onTransportData').mockImplementation((data) => {
       const returnValue = origMethod.call(backend, data);
       if ({}.hasOwnProperty.call(this.dataToPromiseMap, data)) {
         const { resolve } = this.dataToPromiseMap[data];
