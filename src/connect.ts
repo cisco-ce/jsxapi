@@ -19,13 +19,19 @@ export interface Connect {
   (url: string, options?: Partial<Options>): XAPI;
 }
 
-function resolveOptions(targetDefaults: Partial<Options>, url: string, options: Options): Options {
+function resolveOptions(
+  targetDefaults: Partial<Options>,
+  url: string,
+  options: Options,
+): Options {
   const realOpts: Options = {
     ...globalDefaults,
     ...targetDefaults,
   };
 
-  const urlWithProto = url.match(/^\w+:\/\//) ? url : `${realOpts.protocol}//${url}`;
+  const urlWithProto = url.match(/^\w+:\/\//)
+    ? url
+    : `${realOpts.protocol}//${url}`;
   const parsedUrl = new Url(urlWithProto);
 
   Object.keys(realOpts).forEach((key) => {
@@ -61,13 +67,16 @@ export default function connectOverload(
     let options: Options;
 
     if (args.length === 1 && typeof args[0] === 'object') {
-        options = args[0];
-        url = '';
+      options = args[0];
+      url = '';
+    } else if (args.length === 1 && typeof args[0] === 'string') {
+      options = globalDefaults;
+      url = args[0];
     } else if (args.length === 2) {
-        url = args[0];
-        options = args[1];
+      url = args[0];
+      options = args[1];
     } else {
-        throw new Error(`Invalid arguments to connect`);
+      throw new Error(`Invalid arguments to connect`);
     }
 
     const opts = resolveOptions(defaults, url, options);

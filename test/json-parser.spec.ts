@@ -1,16 +1,14 @@
-import { expect } from 'chai';
-import * as sinon from 'sinon';
 import { JSONParser, parseJSON } from '../src/json-parser';
 
 describe('parseJSON', () => {
   it('can parse top-level status', () => {
-    expect(parseJSON('{"StatusSchema":null}')).to.deep.equal({
+    expect(parseJSON('{"StatusSchema":null}')).toEqual({
       StatusSchema: null,
     });
   });
 
   it('can parse text', () => {
-    expect(parseJSON('{ "StatusSchema": "text" }')).to.deep.equal({
+    expect(parseJSON('{ "StatusSchema": "text" }')).toEqual({
       StatusSchema: 'text',
     });
   });
@@ -24,7 +22,7 @@ describe('parseJSON', () => {
         }
       }
     }`),
-    ).to.deep.equal({
+    ).toEqual({
       StatusSchema: {
         Audio: {
           Input: null,
@@ -41,7 +39,7 @@ describe('parseJSON', () => {
         "Call": null
       }
     }`),
-    ).to.deep.equal({
+    ).toEqual({
       StatusSchema: {
         Audio: null,
         Call: null,
@@ -67,7 +65,7 @@ describe('parseJSON', () => {
         }
       }
     }`),
-    ).to.deep.equal({
+    ).toEqual({
       StatusSchema: {
         Audio: {
           public: 'True',
@@ -89,7 +87,7 @@ describe('parseJSON', () => {
 describe('Parser', () => {
   it('can parse incremental chunks', () => {
     const parser = new JSONParser();
-    const spy = sinon.spy();
+    const spy = jest.fn();
 
     parser.on('data', spy);
 
@@ -97,40 +95,40 @@ describe('Parser', () => {
     parser.write('Schema":');
     parser.write('{"Audio"');
     parser.write(': null\n');
-    expect(spy).to.not.have.been.called();
+    expect(spy).not.toHaveBeenCalled();
 
     parser.write('}}\n\n  {"Configuration":{');
-    expect(spy).to.have.been.calledWithMatch({
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining({
       StatusSchema: {
         Audio: null,
       },
-    });
+    }));
 
-    spy.resetHistory();
+    spy.mockReset();
 
     parser.write('"Audio');
     parser.write('": null }}');
 
-    expect(spy).to.have.been.calledWithMatch({
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining({
       Configuration: {
         Audio: null,
       },
-    });
+    }));
   });
 
   it('emits error on premature end', () => {
-    const spy = sinon.spy();
+    const spy = jest.fn();
     const parser = new JSONParser();
 
     parser.on('error', spy);
     parser.write('{"StatusSchema');
     parser.end();
 
-    expect(spy).to.have.been.called();
+    expect(spy).toHaveBeenCalled();
   });
 
   it('can parse consecutive schemas with valuespace', () => {
-    const spy = sinon.spy();
+    const spy = jest.fn();
     const parser = new JSONParser();
 
     parser.on('data', spy);
@@ -172,11 +170,11 @@ describe('Parser', () => {
       }
     }`);
 
-    expect(spy).to.have.been.calledTwice();
+    expect(spy).toHaveBeenCalledTimes(2);
   });
 
   it('can parse consecutive documents in same write', () => {
-    const spy = sinon.spy();
+    const spy = jest.fn();
     const parser = new JSONParser();
 
     parser.on('data', spy);
@@ -199,12 +197,12 @@ describe('Parser', () => {
       }
     }`);
 
-    expect(spy).to.have.been.calledTwice();
+    expect(spy).toHaveBeenCalledTimes(2);
   });
 
   it('can handle invalid input in between objects/results', () => {
-    const dataSpy = sinon.spy();
-    const errorSpy = sinon.spy();
+    const dataSpy = jest.fn();
+    const errorSpy = jest.fn();
     const parser = new JSONParser();
 
     parser.on('data', dataSpy);
@@ -230,7 +228,7 @@ describe('Parser', () => {
       }
     }`);
 
-    expect(dataSpy).to.have.been.calledTwice();
-    expect(errorSpy).to.have.been.calledOnce();
+    expect(dataSpy).toHaveBeenCalledTimes(2);
+    expect(errorSpy).toHaveBeenCalledTimes(1);
   });
 });

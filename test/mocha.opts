@@ -1,5 +1,0 @@
---recursive
---reporter dot
---require ts-node/register
---require ./test/setup.ts
---watch-extensions ts

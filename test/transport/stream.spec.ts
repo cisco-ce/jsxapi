@@ -1,5 +1,3 @@
-import { expect } from 'chai';
-import * as sinon from 'sinon';
 import StreamTransport from '../../src/transport/stream';
 
 describe('StreamTransport', () => {
@@ -9,7 +7,7 @@ describe('StreamTransport', () => {
     stream.push('foo bar baz');
 
     stream.on('data', (data) => {
-      expect(data.toString()).to.equal('foo bar baz');
+      expect(data.toString()).toEqual('foo bar baz');
       done();
     });
   });
@@ -18,7 +16,7 @@ describe('StreamTransport', () => {
     const stream = new StreamTransport(null);
 
     stream.on('data', (data) => {
-      expect(data.toString()).to.equal('foo bar baz');
+      expect(data.toString()).toEqual('foo bar baz');
       done();
     });
 

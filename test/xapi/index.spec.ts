@@ -1,6 +1,3 @@
-import { expect } from 'chai';
-import * as sinon from 'sinon';
-
 import Backend from '../../src/backend';
 import XAPI from '../../src/xapi';
 import { XapiRequest, XapiResult } from '../../src/xapi/types';
@@ -13,10 +10,6 @@ describe('XAPI', () => {
   beforeEach(() => {
     backend = new Backend();
     xapi = new XAPI(backend);
-  });
-
-  afterEach(() => {
-    sinon.restore();
   });
 
   describe('property is not writable', () => {
@@ -36,61 +29,60 @@ describe('XAPI', () => {
         const fn = () => {
           (xapi as any)[prop] = {};
         };
-        expect(fn).to.throw(TypeError);
+        expect(fn).toThrow(TypeError);
       });
     });
   });
 
   describe('events', () => {
     it('emits "ready" when backend is ready', () => {
-      const readySpy = sinon.spy();
+      const readySpy = jest.fn();
 
       xapi.on('ready', readySpy);
 
       backend.emit('ready');
 
-      expect(readySpy).to.have.been.calledOnce();
-      expect(readySpy).to.have.been.calledWith(xapi);
+      expect(readySpy).toHaveBeenCalledTimes(1);
+      expect(readySpy).toHaveBeenCalledWith(xapi);
     });
 
     it('emits "error" on backend error', () => {
       const error = new Error('some error');
-      const errorSpy = sinon.spy();
+      const errorSpy = jest.fn();
 
       xapi.on('error', errorSpy);
 
       backend.emit('error', error);
 
-      expect(errorSpy).to.have.been.calledOnce();
-      expect(errorSpy.firstCall).to.have.been.calledWith(error);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy).toHaveBeenCalledWith(error);
     });
 
     it('emits "close" on backend close', () => {
-      const closeSpy = sinon.spy();
+      const closeSpy = jest.fn();
 
       xapi.on('close', closeSpy);
 
       backend.emit('close');
 
-      expect(closeSpy).to.have.been.calledOnce();
+      expect(closeSpy).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('.feedback', () => {
     it('property is enumerable', () => {
-      const index = Object.keys(xapi).indexOf('feedback');
-      expect(index).to.not.equal(-1);
+      expect(Object.keys(xapi)).toContain('feedback');
     });
 
     it('property is not writable', () => {
       const fn = () => {
         xapi.feedback = {} as any;
       };
-      expect(fn).to.throw(TypeError);
+      expect(fn).toThrow(TypeError);
     });
 
     it('is dispatched to feedback handler', () => {
-      const stub = sinon.stub(xapi.feedback, 'dispatch');
+      const stub = jest.spyOn(xapi.feedback, 'dispatch').mockImplementation(function () { return this; });
       const params = { Status: { Audio: { Volume: 50 } } };
 
       backend.emit('data', {
@@ -99,7 +91,7 @@ describe('XAPI', () => {
         params,
       });
 
-      expect(stub).to.have.been.calledWith(params);
+      expect(stub).toHaveBeenCalledWith(params);
     });
   });
 
@@ -137,17 +129,17 @@ describe('XAPI', () => {
     };
 
     it('returns a Promise object', () => {
-      sinon.stub(backend, 'execute');
+      jest.spyOn(backend, 'execute').mockResolvedValue(undefined);
 
       const result = xapi.execute('xCommand/Dial', {
         Number: 'user@example.com',
       });
 
-      expect(result).to.be.an.instanceof(Promise);
+      expect(result).toBeInstanceOf(Promise);
     });
 
-    it('resolves promise when backend emits success response', () => {
-      sinon.stub(backend, 'execute').callsFake(
+    it('resolves promise when backend emits success response', async () => {
+      jest.spyOn(backend, 'execute').mockImplementation(
         asyncResponse(backend, {
           result: {
             CallId: 3,
@@ -156,18 +148,18 @@ describe('XAPI', () => {
         }),
       );
 
-      const result = xapi.execute('xCommand/Dial', {
+      const result = await xapi.execute('xCommand/Dial', {
         Number: 'user@example.com',
       });
 
-      return expect(result).to.eventually.deep.equal({
+      expect(result).toEqual({
         CallId: 3,
         ConferenceId: 2,
       });
     });
 
     it('rejects promise when backend emits error response', () => {
-      sinon.stub(backend, 'execute').callsFake(
+      jest.spyOn(backend, 'execute').mockImplementation(
         asyncResponse(backend, {
           error: {
             code: METHOD_NOT_FOUND,
@@ -178,38 +170,38 @@ describe('XAPI', () => {
 
       const result = xapi.execute('xCommand/Foo/Bar', { Baz: 'quux' });
 
-      return expect(result).to.eventually.be.rejectedWith('Unknown command');
+      return expect(result).rejects.toMatchObject({ message: 'Unknown command' });
     });
   });
 
   describe('Components', () => {
-    let execStub: sinon.SinonSpy<[string, any], Promise<any>>;
+    let execStub: jest.SpyInstance;
 
     beforeEach(() => {
-      execStub = sinon.spy(XAPI.prototype, 'execute');
-      sinon.stub(backend, 'execute');
+      execStub = jest.spyOn(XAPI.prototype, 'execute');
+      jest.spyOn(backend, 'execute').mockResolvedValue(undefined);
     });
 
     afterEach(() => {
-      execStub.restore();
+      execStub.mockRestore();
     })
 
     describe('.command()', () => {
       it('invokes and returns .execute()', () => {
         const result = xapi.command('Dial', { Number: 'user@example.com' });
-        const call = execStub.firstCall;
 
-        expect(call).to.have.been.calledWith('xCommand/Dial', {
+        expect(execStub).toHaveBeenCalledTimes(1);
+        expect(execStub).toHaveBeenCalledWith('xCommand/Dial', {
           Number: 'user@example.com',
         });
 
-        expect(call.returnValue).to.equal(result);
+        expect(execStub).toHaveNthReturnedWith(1, result);
       });
 
       it('converts Array path to json-rpc method string', () => {
         xapi.command(['Presentation', 'Start'], { PresentationSource: 1 });
 
-        expect(execStub).to.have.been.calledWith(
+        expect(execStub).toHaveBeenCalledWith(
           'xCommand/Presentation/Start',
           {
             PresentationSource: 1,
@@ -220,7 +212,7 @@ describe('XAPI', () => {
       it('accepts whitespace delimited command paths', () => {
         xapi.command('Foo Bar\n  Baz \t');
 
-        expect(execStub).to.have.been.calledWith(
+        expect(execStub).toHaveBeenCalledWith(
           'xCommand/Foo/Bar/Baz',
           undefined,
         );
@@ -231,7 +223,7 @@ describe('XAPI', () => {
           Text: 'foo \n bar \n',
         });
 
-        return expect(result).to.eventually.be.rejectedWith(
+        return expect(result).rejects.toThrow(
           /may not contain newline/,
         );
       });
@@ -266,7 +258,7 @@ describe('XAPI', () => {
           body,
         );
 
-        expect(execStub).to.have.been.calledWith(
+        expect(execStub).toHaveBeenCalledWith(
           'xCommand/UserInterface/Extensions/Set',
           {
             ConfigId: 'example',
@@ -280,27 +272,27 @@ describe('XAPI', () => {
       describe('.get()', () => {
         it('invokes and returns xapi.execute', () => {
           const result = xapi.config.get('Audio DefaultVolume');
-          const call = execStub.firstCall;
 
-          expect(call).to.have.been.calledWith('xGet', {
+          expect(execStub).toHaveBeenCalledTimes(1);
+          expect(execStub).toHaveBeenCalledWith('xGet', {
             Path: ['Configuration', 'Audio', 'DefaultVolume'],
           });
 
-          expect(call.returnValue).to.equal(result);
+          expect(execStub).toHaveNthReturnedWith(1, result);
         });
       });
 
       describe('.set()', () => {
         it('invokes and returns xapi.execute', () => {
           const result = xapi.config.set('Audio DefaultVolume', 100);
-          const call = execStub.firstCall;
 
-          expect(call).to.have.been.calledWith('xSet', {
+          expect(execStub).toHaveBeenCalledTimes(1);
+          expect(execStub).toHaveBeenCalledWith('xSet', {
             Path: ['Configuration', 'Audio', 'DefaultVolume'],
             Value: 100,
           });
 
-          expect(call.returnValue).to.equal(result);
+          expect(execStub).toHaveNthReturnedWith(1, result);
         });
       });
     });
@@ -308,27 +300,27 @@ describe('XAPI', () => {
     describe('.event', () => {
       describe('.on()', () => {
         it('registers feedback with feedback handler', () => {
-          const handler = sinon.spy();
+          const handler = jest.fn();
           xapi.event.on('Standby', handler);
 
           xapi.feedback.dispatch({ Event: { Standby: 'Active' } });
 
-          expect(handler).to.have.been.calledOnce();
-          expect(handler.firstCall).to.have.been.calledWith('Active');
+          expect(handler).toHaveBeenCalledTimes(1);
+          expect(handler).toHaveBeenCalledWith('Active', expect.anything());
         });
       });
 
       describe('.off()', () => {
         it('can de-register feedback', () => {
-          const handler = sinon.spy();
+          const handler = jest.fn();
           const off = xapi.event.on('Standby', handler);
 
           xapi.feedback.dispatch({ Event: { Standby: 'Active' } });
           off();
           xapi.feedback.dispatch({ Event: { Standby: 'Deactive' } });
 
-          expect(handler).to.have.been.calledOnce();
-          expect(handler).to.have.been.calledWith('Active');
+          expect(handler).toHaveBeenCalledTimes(1);
+          expect(handler).toHaveBeenCalledWith('Active', expect.anything());
         });
       });
     });
@@ -337,13 +329,13 @@ describe('XAPI', () => {
       describe('.get()', () => {
         it('invokes and returns xapi.execute', () => {
           const result = xapi.status.get('Audio Volume');
-          const call = execStub.firstCall;
 
-          expect(call).to.have.been.calledWith('xGet', {
+          expect(execStub).toHaveBeenCalledTimes(1);
+          expect(execStub).toHaveBeenCalledWith('xGet', {
             Path: ['Status', 'Audio', 'Volume'],
           });
 
-          expect(call.returnValue).to.equal(result);
+          expect(execStub).toHaveNthReturnedWith(1, result);
         });
       });
     });

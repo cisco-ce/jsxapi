@@ -1,30 +1,31 @@
-import * as sinon from 'sinon';
-import { expect } from 'chai';
 import { Client } from 'ssh2';
 import { Duplex } from 'stream';
 
+import logger from '../../src/log';
 import connectSSH from '../../src/transport/ssh';
 
 describe('connectSSH', () => {
   let client: Client;
-  let dataSpy: sinon.SinonSpy;
-  let errorSpy: sinon.SinonSpy;
-  let closeSpy: sinon.SinonSpy;
-  let clientConnectStub: sinon.SinonStubbedMember<Client["connect"]>;
-  let clientShellStub: sinon.SinonStubbedMember<Client["shell"]>;
-  let clientExecStub: sinon.SinonStubbedMember<Client["exec"]>;
-  let clientEndStub: sinon.SinonStubbedMember<Client["end"]>;
+  let dataSpy: jest.Mock;
+  let errorSpy: jest.Mock;
+  let closeSpy: jest.Mock;
+  let clientConnectStub: jest.SpyInstance;
+  let clientShellStub: jest.SpyInstance;
+  let clientExecStub: jest.SpyInstance;
+  let clientEndStub: jest.SpyInstance;
 
   beforeEach(() => {
-    client = new Client();
-    clientConnectStub = sinon.stub(client, 'connect');
-    clientShellStub = sinon.stub(client, 'shell');
-    clientExecStub = sinon.stub(client, 'exec');
-    clientEndStub = sinon.stub(client, 'end');
+    logger.disableAll();
 
-    dataSpy = sinon.spy();
-    errorSpy = sinon.spy();
-    closeSpy = sinon.spy();
+    client = new Client();
+    clientConnectStub = jest.spyOn(client, 'connect').mockImplementation(() => {});
+    clientShellStub = jest.spyOn(client, 'shell').mockImplementation(() => { return true; });
+    clientExecStub = jest.spyOn(client, 'exec').mockImplementation(() => { return true; });
+    clientEndStub = jest.spyOn(client, 'end').mockImplementation(() => {});
+
+    dataSpy = jest.fn();
+    errorSpy = jest.fn();
+    closeSpy = jest.fn();
   });
 
   describe('emits "error" on transport stream', () => {
@@ -40,30 +41,30 @@ describe('connectSSH', () => {
       error.level = 'client-error';
       client.emit('error', error);
 
-      expect(errorSpy).to.have.been.calledOnce();
-      expect(errorSpy.firstCall).to.have.been.calledWith('client-error');
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy.mock.calls[0]).toContain('client-error');
     });
 
     it('on shell error', () => {
       const error = new Error('some error');
-      clientShellStub.callsArgWith(1, error);
+      clientShellStub.mockImplementation((_, fn) => { fn(error); });
 
       client.emit('ready');
 
-      expect(errorSpy).to.have.been.calledOnce();
-      expect(errorSpy.firstCall).to.have.been.calledWith(error);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy.mock.calls[0]).toContain(error);
     });
 
     it('on ssh stream error', () => {
       const error = new Error('some error');
       const sshStream = new Duplex({ read: () => {} });
-      clientShellStub.callsArgWith(1, null, sshStream);
+      clientShellStub.mockImplementation((_, fn) => { fn(null, sshStream); });
 
       client.emit('ready');
       sshStream.emit('error', error);
 
-      expect(errorSpy).to.have.been.calledOnce();
-      expect(errorSpy.firstCall).to.have.been.calledWith(error);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy.mock.calls[0]).toContain(error);
     });
   });
 
@@ -78,17 +79,17 @@ describe('connectSSH', () => {
     it('on client close', () => {
       client.emit('close');
 
-      expect(closeSpy).to.have.been.calledOnce();
+      expect(closeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('on ssh stream close', () => {
       const sshStream = new Duplex({ read: () => {} });
-      clientShellStub.callsArgWith(1, null, sshStream);
+      clientShellStub.mockImplementation((_, fn) => { fn(null, sshStream); });
 
       client.emit('ready');
       sshStream.emit('close');
 
-      expect(closeSpy).to.have.been.calledOnce();
+      expect(closeSpy).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -102,23 +103,23 @@ describe('connectSSH', () => {
 
     it('passes through ssh stream data', () => {
       const sshStream = new Duplex({ read: () => {} });
-      clientShellStub.callsArgWith(1, null, sshStream);
+      clientShellStub.mockImplementation((_, fn) => { fn(null, sshStream); });
 
       client.emit('ready');
       sshStream.push('foo bar baz');
 
-      expect(dataSpy).to.have.been.calledOnce();
-      expect(dataSpy.firstCall.args[0].toString()).to.equal('foo bar baz');
+      expect(dataSpy).toHaveBeenCalledTimes(1);
+      expect(dataSpy.mock.calls[0][0].toString()).toEqual('foo bar baz');
     });
 
     it('"close" is emitted on stream end', () => {
       const sshStream = new Duplex({ read: () => {} });
-      clientShellStub.callsArgWith(1, null, sshStream);
+      clientShellStub.mockImplementation((_, fn) => { fn(null, sshStream); });
 
       client.emit('ready');
       sshStream.emit('close');
 
-      expect(closeSpy).to.have.been.calledOnce();
+      expect(closeSpy).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -133,25 +134,25 @@ describe('connectSSH', () => {
     it('passes through ssh binary stream data', () => {
       const sshStream = new Duplex({ read: () => {} });
       const binaryStream = new Duplex({ read: () => {} });
-      clientShellStub.callsArgWith(1, null, sshStream);
-      clientExecStub.callsArgWith(1, null, binaryStream);
+      clientShellStub.mockImplementation((_, fn) => { fn(null, sshStream); });
+      clientExecStub.mockImplementation((_, fn) => { fn(null, binaryStream); });
 
       client.emit('ready');
       sshStream.push('boing boing');
       binaryStream.push('foo bar baz');
 
-      expect(dataSpy).to.have.been.calledOnce();
-      expect(dataSpy.firstCall.args[0].toString()).to.equal('foo bar baz');
+      expect(dataSpy).toHaveBeenCalledTimes(1);
+      expect(dataSpy.mock.calls[0][0].toString()).toEqual('foo bar baz');
     });
 
     it('correct command is sent', () => {
       const sshStream = new Duplex({ read: () => {} });
-      clientShellStub.callsArgWith(1, null, sshStream);
+      clientShellStub.mockImplementation((_, fn) => { fn(null, sshStream); });
 
       client.emit('ready');
 
-      expect(clientExecStub).to.have.been.calledOnce();
-      expect(clientExecStub.firstCall.args[0].toString()).to.equal('/bin/foo');
+      expect(clientExecStub).toHaveBeenCalledTimes(1);
+      expect(clientExecStub.mock.calls[0][0].toString()).toEqual('/bin/foo');
     });
   });
 
@@ -162,9 +163,9 @@ describe('connectSSH', () => {
       password: 'password',
     });
 
-    const options = clientConnectStub.firstCall.args[0];
-    expect(options).to.have.property('username', 'admin');
-    expect(options).to.not.have.property('password');
+    const options = clientConnectStub.mock.calls[0][0];
+    expect(options).toHaveProperty('username', 'admin');
+    expect(options).not.toHaveProperty('password');
   });
 
   it('closing with ".close()" does not emit error', () => {
@@ -173,8 +174,8 @@ describe('connectSSH', () => {
     });
 
     const sshStream = new Duplex({ read: () => {} });
-    clientShellStub.callsArgWith(1, null, sshStream);
-    clientEndStub.callsFake(() => {
+    clientShellStub.mockImplementation((_, fn) => { fn(null, sshStream); });
+    clientEndStub.mockImplementation(() => {
       sshStream.emit('end');
     });
     transport.on('error', errorSpy);
@@ -182,7 +183,7 @@ describe('connectSSH', () => {
     client.emit('ready');
     transport.close();
 
-    expect(errorSpy).to.have.not.been.calledOnce();
+    expect(errorSpy).not.toHaveBeenCalled();
   });
 
   it('remotely ended ssh stream emits errors', () => {
@@ -191,14 +192,14 @@ describe('connectSSH', () => {
     });
 
     const sshStream = new Duplex({ read: () => {} });
-    clientShellStub.callsArgWith(1, null, sshStream);
+    clientShellStub.mockImplementation((_, fn) => { fn(null, sshStream); });
     transport.on('error', errorSpy);
     client.emit('ready');
 
     sshStream.emit('end');
 
-    expect(errorSpy).to.have.been.calledOnce();
-    expect(errorSpy.firstCall).to.have.been.calledWith(
+    expect(errorSpy).toHaveBeenCalledTimes(1);
+    expect(errorSpy.mock.calls[0]).toContain(
       'Connection terminated remotely',
     );
   });
