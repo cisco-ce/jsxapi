@@ -6,6 +6,8 @@ import {
   MainClass,
   Interface,
   Command,
+  Tree,
+  Member,
 } from '../../src/schema/nodes';
 
 describe('schema nodes', () => {
@@ -19,6 +21,29 @@ describe('schema nodes', () => {
       const root = new Root();
       root.addChild(new Interface('DialArgs'));
       expect(root.serialize()).toMatch('export interface DialArgs {}');
+    });
+
+    it('can build entire module', () => {
+      // .ts module
+      const root = new Root();
+
+      // import ... from ...
+      root.addChild(new ImportStatement());
+
+      // Main XAPI class
+      const main = root.addChild(new MainClass());
+
+      // XAPI command APIs
+      const commandTree = root.addChild(new Interface('CommandTree'));
+      main.addChild(new Member('Command', commandTree));
+      commandTree
+        .addChild(new Tree('Audio'))
+        .addChild(new Tree('Microphones'))
+        .addChild(new Command('Mute'));
+      commandTree.addChild(new Command('Dial'));
+
+      // It dumps the shit
+      expect(root.serialize()).toMatchSnapshot();
     });
   });
 
@@ -61,7 +86,7 @@ describe('schema nodes', () => {
   });
 
   describe('Interface', () => {
-    it('can add property', () => {
+    it('can add command (function)', () => {
       const iface = new Interface('CommandTree');
       iface.addChild(new Command('Dial'));
       expect(iface.serialize()).toMatch(redent(`
@@ -70,7 +95,25 @@ describe('schema nodes', () => {
         }
       `).trim());
     });
+
+    it('can add tree', () => {
+      const iface = new Interface('CommandTree');
+      iface
+        .addChild(new Tree('Audio'))
+        .addChild(new Tree('Microphones'))
+        .addChild(new Command('Mute'));
+      expect(iface.serialize()).toMatch(redent(`
+        export interface CommandTree {
+          Audio: {
+            Microphones: {
+              Mute(): Promise<void>,
+            },
+          };
+        }
+      `).trim());
+    });
   });
 
-  describe('Tree', () => {})
+  describe('Tree', () => {
+  });
 });

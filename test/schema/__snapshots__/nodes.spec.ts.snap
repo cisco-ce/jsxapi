@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`schema nodes Root can build entire module 1`] = `
+"import XAPI from \\"jsxapi\\";
+
+
+export class TypedXAPI extends XAPI {}
+
+export default TypedXAPI;
+
+export interface TypedXAPI {
+  Command: CommandTree;
+}
+
+
+export interface CommandTree {
+  Audio: {
+    Microphones: {
+      Mute(): Promise<void>,
+    },
+  };
+  Dial(): Promise<void>;
+}"
+`;
