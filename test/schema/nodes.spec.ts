@@ -48,12 +48,12 @@ describe('schema nodes', () => {
 
       // XAPI command APIs
       const audio = commandTree.addChild(new Tree('Audio'));
-      audio
-        .addChild(new Tree('Microphones'))
-        .addChild(new Command('Mute'));
+      audio.addChild(new Tree('Microphones')).addChild(new Command('Mute'));
       const audioPlayArgs = root.addChild(new Interface('AudioPlayArgs'));
       const onOffLiteral = new Literal(new Plain('On'), new Plain('Off'));
-      audioPlayArgs.addChild(new Member('Loop', onOffLiteral, { required: false }));
+      audioPlayArgs.addChild(
+        new Member('Loop', onOffLiteral, { required: false }),
+      );
       audio
         .addChild(new Tree('Sound'))
         .addChild(new Command('Play', audioPlayArgs));
@@ -116,11 +116,13 @@ describe('schema nodes', () => {
     it('can add command (function)', () => {
       const iface = new Interface('CommandTree');
       iface.addChild(new Command('Dial'));
-      expect(iface.serialize()).toMatch(redent(`
+      expect(iface.serialize()).toMatch(
+        redent(`
         export interface CommandTree {
           Dial(): Promise<any>;
         }
-      `).trim());
+      `).trim(),
+      );
     });
 
     it('can add tree', () => {
@@ -129,7 +131,8 @@ describe('schema nodes', () => {
         .addChild(new Tree('Audio'))
         .addChild(new Tree('Microphones'))
         .addChild(new Command('Mute'));
-      expect(iface.serialize()).toMatch(redent(`
+      expect(iface.serialize()).toMatch(
+        redent(`
         export interface CommandTree {
           Audio: {
             Microphones: {
@@ -137,12 +140,12 @@ describe('schema nodes', () => {
             },
           };
         }
-      `).trim());
+      `).trim(),
+      );
     });
   });
 
-  describe('Tree', () => {
-  });
+  describe('Tree', () => {});
 
   describe('Command', () => {
     it('serializes empty args and response', () => {
@@ -160,7 +163,9 @@ describe('schema nodes', () => {
       const callHistoryArgs = new Interface('CallHistoryGetArgs');
       const callHistoryResponse = new Interface('CallHistoryGetResult');
       const command = new Command('Get', callHistoryArgs, callHistoryResponse);
-      expect(command.serialize()).toMatch('Get(args: CallHistoryGetArgs): Promise<CallHistoryGetResult>');
+      expect(command.serialize()).toMatch(
+        'Get(args: CallHistoryGetArgs): Promise<CallHistoryGetResult>',
+      );
     });
   });
 });

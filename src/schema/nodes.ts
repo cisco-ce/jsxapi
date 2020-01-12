@@ -48,8 +48,7 @@ interface Type {
 }
 
 export class Plain implements Type {
-  constructor(readonly text: string) {
-  }
+  constructor(readonly text: string) {}
 
   getType() {
     return this.text;
@@ -64,7 +63,7 @@ export class Literal implements Type {
   }
 
   getType() {
-    const members = this.members.map(m => m.getType()).join(' | ');
+    const members = this.members.map((m) => m.getType()).join(' | ');
     return `${members}`;
   }
 }
@@ -85,21 +84,17 @@ export class Interface extends Node implements Type {
 }
 
 export class MainClass extends Interface {
-  constructor(
-    name: string = 'TypedXAPI',
-    readonly base: string = 'XAPI',
-  ) {
+  constructor(name: string = 'TypedXAPI', readonly base: string = 'XAPI') {
     super(name);
   }
 
   serialize(): string {
-    return `
+    return `\
 export class ${this.name} extends ${this.base} {}
 
 export default ${this.name};
 
-${super.serialize()}
-`;
+${super.serialize()} `;
   }
 }
 
@@ -130,7 +125,11 @@ export class Tree extends Node {
 }
 
 export class Command extends Node {
-  constructor(readonly name: string, readonly params?: Type, readonly retval?: Type) {
+  constructor(
+    readonly name: string,
+    readonly params?: Type,
+    readonly retval?: Type,
+  ) {
     super();
   }
 

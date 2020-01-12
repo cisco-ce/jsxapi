@@ -3,7 +3,6 @@
 exports[`schema nodes Root can build entire module 1`] = `
 "import XAPI from \\"jsxapi\\";
 
-
 export class TypedXAPI extends XAPI {}
 
 export default TypedXAPI;
@@ -12,8 +11,7 @@ export interface TypedXAPI {
   Command: CommandTree;
   Config: ConfigTree;
   Status: StatusTree;
-}
-
+} 
 
 export interface CommandTree {
   Audio: {
