@@ -91,7 +91,7 @@ describe('schema nodes', () => {
       iface.addChild(new Command('Dial'));
       expect(iface.serialize()).toMatch(redent(`
         export interface CommandTree {
-          Dial(): Promise<void>;
+          Dial(): Promise<any>;
         }
       `).trim());
     });
@@ -106,7 +106,7 @@ describe('schema nodes', () => {
         export interface CommandTree {
           Audio: {
             Microphones: {
-              Mute(): Promise<void>,
+              Mute(): Promise<any>,
             },
           };
         }
@@ -115,5 +115,25 @@ describe('schema nodes', () => {
   });
 
   describe('Tree', () => {
+  });
+
+  describe('Command', () => {
+    it('serializes empty args and response', () => {
+      const command = new Command('Mute');
+      expect(command.serialize()).toMatch('Mute(): Promise<any>');
+    });
+
+    it('supports parameter list', () => {
+      const dialArgs = new Interface('DialArgs');
+      const command = new Command('Dial', dialArgs);
+      expect(command.serialize()).toMatch('Dial(args: DialArgs): Promise<any>');
+    });
+
+    it('supports return type', () => {
+      const callHistoryArgs = new Interface('CallHistoryGetArgs');
+      const callHistoryResponse = new Interface('CallHistoryGetResult');
+      const command = new Command('Get', callHistoryArgs, callHistoryResponse);
+      expect(command.serialize()).toMatch('Get(args: CallHistoryGetArgs): Promise<CallHistoryGetResult>');
+    });
   });
 });

@@ -95,11 +95,13 @@ export class Tree extends Node {
 }
 
 export class Command extends Node {
-  constructor(readonly name: string) {
+  constructor(readonly name: string, readonly params?: Interface, readonly retval?: Interface) {
     super();
   }
 
   serialize(): string {
-    return `${this.name}(): Promise<void>`;
+    const args = this.params ? `args: ${this.params.name}` : '';
+    const retval = this.retval ? this.retval.name : 'any';
+    return `${this.name}(${args}): Promise<${retval}>`;
   }
 }

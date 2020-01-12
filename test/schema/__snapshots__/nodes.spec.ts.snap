@@ -16,9 +16,9 @@ export interface TypedXAPI {
 export interface CommandTree {
   Audio: {
     Microphones: {
-      Mute(): Promise<void>,
+      Mute(): Promise<any>,
     },
   };
-  Dial(): Promise<void>;
+  Dial(): Promise<any>;
 }"
 `;
