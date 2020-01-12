@@ -10,6 +10,7 @@ import {
   Member,
   Config,
   Plain,
+  Status,
 } from '../../src/schema/nodes';
 
 describe('schema nodes', () => {
@@ -50,6 +51,13 @@ describe('schema nodes', () => {
       configTree
         .addChild(new Tree('SystemUnit'))
         .addChild(new Config('Name', new Plain('string')));
+
+      // XAPI status APIs
+      const statusTree = root.addChild(new Interface('StatusTree'));
+      main.addChild(new Member('Status', statusTree));
+      statusTree
+        .addChild(new Tree('Audio'))
+        .addChild(new Status('Volume', new Plain('number')));
 
       // It dumps the shit
       expect(root.serialize()).toMatchSnapshot();

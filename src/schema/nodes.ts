@@ -135,3 +135,15 @@ export class Config extends Node {
     return `${this.name}: {${tree}}`;
   }
 }
+
+export class Status extends Node {
+  constructor(readonly name: string, readonly valuespace: Type) {
+    super();
+    this.addChild(new Command('get', undefined, valuespace));
+  }
+
+  serialize(): string {
+    const tree = renderTree(this.children, ',');
+    return `${this.name}: {${tree}}`;
+  }
+}
