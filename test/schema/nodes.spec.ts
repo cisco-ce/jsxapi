@@ -8,6 +8,8 @@ import {
   Command,
   Tree,
   Member,
+  Config,
+  Plain,
 } from '../../src/schema/nodes';
 
 describe('schema nodes', () => {
@@ -41,6 +43,13 @@ describe('schema nodes', () => {
         .addChild(new Tree('Microphones'))
         .addChild(new Command('Mute'));
       commandTree.addChild(new Command('Dial'));
+
+      // XAPI config APIs
+      const configTree = root.addChild(new Interface('ConfigTree'));
+      main.addChild(new Member('Config', configTree));
+      configTree
+        .addChild(new Tree('SystemUnit'))
+        .addChild(new Config('Name', new Plain('string')));
 
       // It dumps the shit
       expect(root.serialize()).toMatchSnapshot();

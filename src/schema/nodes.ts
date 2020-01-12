@@ -43,9 +43,26 @@ function renderTree(nodes: Node[], terminator: string) {
   return redent(serialized.join('\n'), 2);
 }
 
-export class Interface extends Node {
+interface Type {
+  getType(): string;
+}
+
+export class Plain implements Type {
+  constructor(readonly text: string) {
+  }
+
+  getType() {
+    return this.text;
+  }
+}
+
+export class Interface extends Node implements Type {
   constructor(readonly name: string) {
     super();
+  }
+
+  getType(): string {
+    return this.name;
   }
 
   serialize(): string {
@@ -95,13 +112,26 @@ export class Tree extends Node {
 }
 
 export class Command extends Node {
-  constructor(readonly name: string, readonly params?: Interface, readonly retval?: Interface) {
+  constructor(readonly name: string, readonly params?: Type, readonly retval?: Type) {
     super();
   }
 
   serialize(): string {
-    const args = this.params ? `args: ${this.params.name}` : '';
-    const retval = this.retval ? this.retval.name : 'any';
+    const args = this.params ? `args: ${this.params.getType()}` : '';
+    const retval = this.retval ? this.retval.getType() : 'any';
     return `${this.name}(${args}): Promise<${retval}>`;
+  }
+}
+
+export class Config extends Node {
+  constructor(readonly name: string, readonly valuespace: Type) {
+    super();
+    this.addChild(new Command('get', undefined, valuespace));
+    this.addChild(new Command('set', valuespace));
+  }
+
+  serialize(): string {
+    const tree = renderTree(this.children, ',');
+    return `${this.name}: {${tree}}`;
   }
 }

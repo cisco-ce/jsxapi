@@ -10,6 +10,7 @@ export default TypedXAPI;
 
 export interface TypedXAPI {
   Command: CommandTree;
+  Config: ConfigTree;
 }
 
 
@@ -20,5 +21,14 @@ export interface CommandTree {
     },
   };
   Dial(): Promise<any>;
+}
+
+export interface ConfigTree {
+  SystemUnit: {
+    Name: {
+      get(): Promise<string>,
+      set(args: string): Promise<any>,
+    },
+  };
 }"
 `;
