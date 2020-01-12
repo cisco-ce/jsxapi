@@ -20,6 +20,9 @@ export interface CommandTree {
     Microphones: {
       Mute(): Promise<any>,
     },
+    Sound: {
+      Play(args: AudioPlayArgs): Promise<any>,
+    },
   };
   Dial(): Promise<any>;
 }
@@ -39,5 +42,9 @@ export interface StatusTree {
       get(): Promise<number>,
     },
   };
+}
+
+export interface AudioPlayArgs {
+  Loop?: On | Off;
 }"
 `;

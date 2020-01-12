@@ -56,6 +56,19 @@ export class Plain implements Type {
   }
 }
 
+export class Literal implements Type {
+  private members: Type[];
+
+  constructor(...members: Type[]) {
+    this.members = members;
+  }
+
+  getType() {
+    const members = this.members.map(m => m.getType()).join(' | ');
+    return `${members}`;
+  }
+}
+
 export class Interface extends Node implements Type {
   constructor(readonly name: string) {
     super();
@@ -91,12 +104,17 @@ ${super.serialize()}
 }
 
 export class Member extends Node {
-  constructor(readonly name: string, readonly iface: Interface) {
+  constructor(
+    readonly name: string,
+    readonly type: Type,
+    readonly options?: { required: boolean },
+  ) {
     super();
   }
 
   serialize(): string {
-    return `${this.name}: ${this.iface.name}`;
+    const optional = !this.options || this.options.required ? '' : '?';
+    return `${this.name}${optional}: ${this.type.getType()}`;
   }
 }
 

@@ -11,6 +11,7 @@ import {
   Config,
   Plain,
   Status,
+  Literal,
 } from '../../src/schema/nodes';
 
 describe('schema nodes', () => {
@@ -36,25 +37,34 @@ describe('schema nodes', () => {
       // Main XAPI class
       const main = root.addChild(new MainClass());
 
-      // XAPI command APIs
       const commandTree = root.addChild(new Interface('CommandTree'));
       main.addChild(new Member('Command', commandTree));
-      commandTree
-        .addChild(new Tree('Audio'))
+
+      const configTree = root.addChild(new Interface('ConfigTree'));
+      main.addChild(new Member('Config', configTree));
+
+      const statusTree = root.addChild(new Interface('StatusTree'));
+      main.addChild(new Member('Status', statusTree));
+
+      // XAPI command APIs
+      const audio = commandTree.addChild(new Tree('Audio'));
+      audio
         .addChild(new Tree('Microphones'))
         .addChild(new Command('Mute'));
+      const audioPlayArgs = root.addChild(new Interface('AudioPlayArgs'));
+      const onOffLiteral = new Literal(new Plain('On'), new Plain('Off'));
+      audioPlayArgs.addChild(new Member('Loop', onOffLiteral, { required: false }));
+      audio
+        .addChild(new Tree('Sound'))
+        .addChild(new Command('Play', audioPlayArgs));
       commandTree.addChild(new Command('Dial'));
 
       // XAPI config APIs
-      const configTree = root.addChild(new Interface('ConfigTree'));
-      main.addChild(new Member('Config', configTree));
       configTree
         .addChild(new Tree('SystemUnit'))
         .addChild(new Config('Name', new Plain('string')));
 
       // XAPI status APIs
-      const statusTree = root.addChild(new Interface('StatusTree'));
-      main.addChild(new Member('Status', statusTree));
       statusTree
         .addChild(new Tree('Audio'))
         .addChild(new Status('Volume', new Plain('number')));
