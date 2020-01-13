@@ -1,6 +1,6 @@
 import redent from 'redent';
 
-abstract class Node {
+export abstract class Node {
   protected children: Node[];
 
   constructor() {

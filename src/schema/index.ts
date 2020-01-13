@@ -1,4 +1,4 @@
-import redent from 'redent';
+import { Node, Root, ImportStatement, Tree, Member, Command, Plain, Literal } from './nodes';
 
 export interface GenerateOpts {
   access?: 'public-api' | 'public-api-preview';
@@ -6,36 +6,103 @@ export interface GenerateOpts {
   xapiImport?: string;
 }
 
-export function generateCommands(schema: any) {
-  return `
-    export interface CommandTree
-    {}
-  `;
+interface Leaf {
+  command?: string;
+  ValueSpace: ValueSpace;
 }
 
-export function generate(schema: any, options?: GenerateOpts) {
+interface ValueSpace {
+  type: 'Integer' | 'Literal' | 'String';
+  Value?: string[];
+}
+
+function parseValueSpace(valuespace: ValueSpace) {
+  switch (valuespace.type) {
+    case 'Integer':
+      return new Plain('number');
+    case 'String':
+      return new Plain('string');
+    case 'Literal':
+      if (!valuespace.Value) {
+        throw new Error('Missing literal valuespace values');
+      }
+      if (!valuespace.Value.length) {
+        throw new Error('Empty literal valuespace values');
+      }
+      return new Literal(...valuespace.Value);
+  }
+}
+
+function isLeaf(value: unknown): value is Leaf {
+  return (value as Leaf).command === 'True';
+}
+
+function parseParameters(command: Leaf): Member[] {
+  const params: Member[] = [];
+
+  for (const [param, props] of Object.entries(command)) {
+    if (param.match(/^[a-z]/)) {  // skip lowercase props
+      continue;
+    }
+    const valuespace = parseValueSpace(props.ValueSpace);
+    params.push(new Member(param, valuespace));
+  }
+
+  return params;
+}
+
+function parseCommandTree(root: Root, tree: Node, schema: any) {
+  for (const [key, value] of Object.entries(schema)) {
+    if (isLeaf(value)) {
+      const params = parseParameters(value);
+      if (!params.length) {
+        tree.addChild(new Command(key));
+      } else {
+        const paramsType = root.addInterface(`${key}Args`);
+        paramsType.addChildren(params);
+        tree.addChild(new Command(key, paramsType));
+      }
+    } else {
+      const subTree = tree.addChild(new Tree(key));
+      parseCommandTree(root, subTree, value);
+    }
+  }
+}
+
+function parseCommands(root: Root, schema: any) {
+  if (!schema) {
+    return;
+  }
+
+  if (typeof schema !== 'object') {
+    throw new Error('Schema.Command is not an object');
+  }
+
+  const commandTree = root.addInterface('CommandTree');
+  root.getMain().addChild(new Member('Command', commandTree));
+
+  parseCommandTree(root, commandTree, schema);
+}
+
+export function parse(schema: any, options?: GenerateOpts): Root {
   const xapiPath = options && options.xapiImport ? options.xapiImport : 'jsxapi';
   const role = options && options.role ? options.role : 'Admin';
   const access = options && options.access ? options.access : 'public-api';
-  return redent(`
-    import XAPI from "${xapiPath}";
 
-    export class TypedXAPI extends XAPI {}
+  const root = new Root();
 
-    export default TypedXAPI;
+  // import ... from ...
+  root.addChild(new ImportStatement(undefined, xapiPath));
 
-    export interface TypedXAPI {
-      Command: CommandTree;
-      Config: ConfigTree;
-      Status: StatusTree;
-    }
+  // Main XAPI class
+  root.addMain();
 
-    ${generateCommands(schema.Command)}
+  parseCommands(root, schema.Command);
 
-    export interface ConfigTree {
-    }
+  return root;
+}
 
-    export interface StatusTree {
-    }
-  `);
+export function generate(schema: any, options?: GenerateOpts) {
+  const root = parse(schema, options);
+  return root.serialize();
 }
