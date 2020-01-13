@@ -20,16 +20,32 @@ abstract class Node {
 }
 
 export class Root extends Node {
+  private interfaceNames = new Set<string>();
+
+  addChild<T extends Node>(child: T): T {
+    if (child instanceof Interface) {
+      if (this.interfaceNames.has(child.name)) {
+        throw new Error(`Interface already exists: ${child.name}`);
+      }
+      this.interfaceNames.add(child.name);
+    }
+    return super.addChild(child);
+  }
+
   addInterface(name: string): Interface {
     return this.addChild(new Interface(name));
   }
 
-  addMain(name?: string, base?: string) {
+  addMain(name?: string, base?: string): MainClass {
     return this.addChild(new MainClass(name, base));
   }
 
   serialize(): string {
-    return this.children.map((c) => c.serialize()).join('\n\n');
+    const lines = [];
+    for (const child of this.children) {
+      lines.push(child.serialize());
+    }
+    return lines.join('\n\n');
   }
 }
 

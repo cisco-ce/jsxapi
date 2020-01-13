@@ -25,6 +25,14 @@ describe('schema nodes', () => {
       expect(root.serialize()).toMatch('export interface DialArgs {}');
     });
 
+    it('interface names must be unique', () => {
+      const root = new Root();
+      root.addInterface('DialArgs');
+      expect(() => root.addInterface('DialArgs')).toThrow();
+    });
+
+    it.todo('can only add a single Main class');
+
     it('can build entire module', () => {
       // .ts module
       const root = new Root();
