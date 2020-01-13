@@ -104,7 +104,7 @@ export class Literal implements Type {
   constructor(...members: Valuespace[]) {
     this.members = members.map((m) => {
       if (typeof m === 'string') {
-        return new Plain(m);
+        return new Plain(`'${m}'`);
       }
       return m;
     });

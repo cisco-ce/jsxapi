@@ -43,8 +43,8 @@ export interface StatusTree {
 }
 
 export interface AudioPlayArgs {
-  Sound: Alert | Busy | CallInitiate;
-  Loop?: On | Off;
+  Sound: 'Alert' | 'Busy' | 'CallInitiate';
+  Loop?: 'On' | 'Off';
 }
 
 export interface DialArgs {
@@ -63,7 +63,7 @@ exports[`schema nodes Tree renders levels of nesting 2`] = `
 exports[`schema nodes Tree renders levels of nesting 3`] = `
 "Audio: {
   Microphones: {
-    LedIndicator: On | Off,
+    LedIndicator: 'On' | 'Off',
   },
 }"
 `;
