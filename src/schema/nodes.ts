@@ -62,8 +62,13 @@ export class Plain implements Type {
 export class Literal implements Type {
   private members: Type[];
 
-  constructor(...members: Type[]) {
-    this.members = members;
+  constructor(...members: (Type | string)[]) {
+    this.members = members.map((m) => {
+      if (typeof m === 'string') {
+        return new Plain(m);
+      }
+      return m;
+    });
   }
 
   getType() {

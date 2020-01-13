@@ -50,8 +50,8 @@ describe('schema nodes', () => {
       const audio = commandTree.addChild(new Tree('Audio'));
       audio.addChild(new Tree('Microphones')).addChild(new Command('Mute'));
       const audioPlayArgs = root.addChild(new Interface('AudioPlayArgs'));
-      const soundLiteral = new Literal(new Plain('Alert'), new Plain('Busy'), new Plain('CallInitiate'));
-      const onOffLiteral = new Literal(new Plain('On'), new Plain('Off'));
+      const soundLiteral = new Literal('Alert', 'Busy', 'CallInitiate');
+      const onOffLiteral = new Literal('On', 'Off');
       audioPlayArgs.addChildren([
         new Member('Sound', soundLiteral),
         new Member('Loop', onOffLiteral, { required: false }),
