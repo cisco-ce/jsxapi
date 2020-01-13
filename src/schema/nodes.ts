@@ -47,6 +47,8 @@ function renderTree(nodes: Node[], terminator: string) {
   return redent(serialized.join('\n'), 2);
 }
 
+type Valuespace = Type | string;
+
 interface Type {
   getType(): string;
 }
@@ -62,7 +64,7 @@ export class Plain implements Type {
 export class Literal implements Type {
   private members: Type[];
 
-  constructor(...members: (Type | string)[]) {
+  constructor(...members: Valuespace[]) {
     this.members = members.map((m) => {
       if (typeof m === 'string') {
         return new Plain(m);
@@ -108,12 +110,15 @@ ${super.serialize()} `;
 }
 
 export class Member extends Node {
+  private type: Type;
+
   constructor(
     readonly name: string,
-    readonly type: Type,
+    type: Valuespace,
     readonly options?: { required: boolean },
   ) {
     super();
+    this.type = typeof type === 'string' ? new Plain(type) : type;
   }
 
   serialize(): string {
@@ -134,12 +139,21 @@ export class Tree extends Node {
 }
 
 export class Command extends Node {
+  private params?: Type;
+  private retval?: Type;
+
   constructor(
     readonly name: string,
-    readonly params?: Type,
-    readonly retval?: Type,
+    params?: Valuespace,
+    retval?: Valuespace,
   ) {
     super();
+    if (params) {
+      this.params = typeof params === 'string' ? new Plain(params) : params;
+    }
+    if (retval) {
+      this.retval = typeof retval === 'string' ? new Plain(retval) : retval;
+    }
   }
 
   serialize(): string {
@@ -150,7 +164,7 @@ export class Command extends Node {
 }
 
 export class Config extends Tree {
-  constructor(name: string, readonly valuespace: Type) {
+  constructor(name: string, readonly valuespace: Valuespace) {
     super(name);
     this.addChild(new Command('get', undefined, valuespace));
     this.addChild(new Command('set', valuespace));
@@ -158,7 +172,7 @@ export class Config extends Tree {
 }
 
 export class Status extends Tree {
-  constructor(name: string, readonly valuespace: Type) {
+  constructor(name: string, readonly valuespace: Valuespace) {
     super(name);
     this.addChild(new Command('get', undefined, valuespace));
   }

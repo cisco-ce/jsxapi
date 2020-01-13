@@ -60,18 +60,18 @@ describe('schema nodes', () => {
         .addChild(new Tree('Sound'))
         .addChild(new Command('Play', audioPlayArgs));
       const dialArgs = root.addChild(new Interface('DialArgs'));
-      dialArgs.addChild(new Member('Number', new Plain('string')));
+      dialArgs.addChild(new Member('Number', 'string'));
       commandTree.addChild(new Command('Dial', dialArgs));
 
       // XAPI config APIs
       configTree
         .addChild(new Tree('SystemUnit'))
-        .addChild(new Config('Name', new Plain('string')));
+        .addChild(new Config('Name', 'string'));
 
       // XAPI status APIs
       statusTree
         .addChild(new Tree('Audio'))
-        .addChild(new Status('Volume', new Plain('number')));
+        .addChild(new Status('Volume', 'number'));
 
       // It dumps the shit
       expect(root.serialize()).toMatchSnapshot();
