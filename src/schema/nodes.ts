@@ -74,8 +74,7 @@ export class Literal implements Type {
   }
 
   getType() {
-    const members = this.members.map((m) => m.getType()).join(' | ');
-    return `${members}`;
+    return this.members.map((m) => m.getType()).join(' | ');
   }
 }
 
