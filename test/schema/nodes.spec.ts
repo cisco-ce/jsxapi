@@ -149,7 +149,18 @@ describe('schema nodes', () => {
     });
   });
 
-  describe('Tree', () => {});
+  describe('Tree', () => {
+    it('renders levels of nesting', () => {
+      const audio = new Tree('Audio');
+      expect(audio.serialize()).toMatchSnapshot();
+
+      const mic = audio.addChild(new Tree('Microphones'));
+      expect(audio.serialize()).toMatchSnapshot();
+
+      mic.addChild(new Member('LedIndicator', new Literal('On', 'Off')));
+      expect(audio.serialize()).toMatchSnapshot();
+    });
+  });
 
   describe('Command', () => {
     it('serializes empty args and response', () => {

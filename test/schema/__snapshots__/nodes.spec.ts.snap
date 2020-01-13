@@ -51,3 +51,19 @@ export interface DialArgs {
   Number: string;
 }"
 `;
+
+exports[`schema nodes Tree renders levels of nesting 1`] = `"Audio: {}"`;
+
+exports[`schema nodes Tree renders levels of nesting 2`] = `
+"Audio: {
+  Microphones: {},
+}"
+`;
+
+exports[`schema nodes Tree renders levels of nesting 3`] = `
+"Audio: {
+  Microphones: {
+    LedIndicator: On | Off,
+  },
+}"
+`;
