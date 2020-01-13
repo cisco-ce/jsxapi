@@ -149,27 +149,17 @@ export class Command extends Node {
   }
 }
 
-export class Config extends Node {
-  constructor(readonly name: string, readonly valuespace: Type) {
-    super();
+export class Config extends Tree {
+  constructor(name: string, readonly valuespace: Type) {
+    super(name);
     this.addChild(new Command('get', undefined, valuespace));
     this.addChild(new Command('set', valuespace));
   }
-
-  serialize(): string {
-    const tree = renderTree(this.children, ',');
-    return `${this.name}: {${tree}}`;
-  }
 }
 
-export class Status extends Node {
-  constructor(readonly name: string, readonly valuespace: Type) {
-    super();
+export class Status extends Tree {
+  constructor(name: string, readonly valuespace: Type) {
+    super(name);
     this.addChild(new Command('get', undefined, valuespace));
-  }
-
-  serialize(): string {
-    const tree = renderTree(this.children, ',');
-    return `${this.name}: {${tree}}`;
   }
 }
