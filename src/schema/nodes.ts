@@ -21,6 +21,7 @@ abstract class Node {
 
 export class Root extends Node {
   private interfaceNames = new Set<string>();
+  private main?: MainClass;
 
   addChild<T extends Node>(child: T): T {
     if (child instanceof Interface) {
@@ -37,7 +38,12 @@ export class Root extends Node {
   }
 
   addMain(name?: string, base?: string): MainClass {
-    return this.addChild(new MainClass(name, base));
+    if (this.main) {
+      throw new Error('Main class already defined');
+    }
+    const main = this.addChild(new MainClass(name, base));
+    this.main = main;
+    return main;
   }
 
   serialize(): string {

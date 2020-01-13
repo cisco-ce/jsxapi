@@ -28,10 +28,14 @@ describe('schema nodes', () => {
     it('interface names must be unique', () => {
       const root = new Root();
       root.addInterface('DialArgs');
-      expect(() => root.addInterface('DialArgs')).toThrow();
+      expect(() => root.addInterface('DialArgs')).toThrow(/interface already exists/i);
     });
 
-    it.todo('can only add a single Main class');
+    it('can only add a single Main class', () => {
+      const root = new Root();
+      root.addMain();
+      expect(() => root.addMain()).toThrow(/main class already defined/i);
+    });
 
     it('can build entire module', () => {
       // .ts module
