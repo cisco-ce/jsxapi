@@ -46,11 +46,15 @@ function isLeaf(value: unknown): value is Leaf {
   return (value as Leaf).command === 'True';
 }
 
+function isAttr(key: string): boolean {
+  return !!key.match(/^[a-z]/);
+}
+
 function parseParameters(command: Leaf): Member[] {
   const params: Member[] = [];
 
   for (const [param, props] of Object.entries(command)) {
-    if (param.match(/^[a-z]/)) {
+    if (isAttr(param)) {
       // skip lowercase props
       continue;
     }
@@ -63,6 +67,9 @@ function parseParameters(command: Leaf): Member[] {
 
 function parseCommandTree(root: Root, tree: Node, schema: any) {
   for (const [key, value] of Object.entries(schema)) {
+    if (isAttr(key)) {
+      continue;
+    }
     if (isLeaf(value)) {
       const params = parseParameters(value);
       if (!params.length) {

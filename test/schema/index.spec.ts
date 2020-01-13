@@ -63,6 +63,20 @@ describe('schemas', () => {
         });
       });
 
+      it('ignores lower-case attributes', () => {
+        const parsed = parse({
+          Command: {
+            product: 'Cisco Codec',
+            version: 'ce9.12.0.9a9b746472a (TEST SW, ce-9.12.dev-2685-g9a9b746472a)',
+            apiVersion: '4',
+          },
+        });
+
+        expect(parsed).toMatchObject({
+          children: expect.arrayContaining([main, commandTree]),
+        });
+      });
+
       it('adds sub-commands', () => {
         const schema = {
           Command: {
