@@ -1,4 +1,13 @@
-import { Node, Root, ImportStatement, Tree, Member, Command, Plain, Literal } from './nodes';
+import {
+  Node,
+  Root,
+  ImportStatement,
+  Tree,
+  Member,
+  Command,
+  Plain,
+  Literal,
+} from './nodes';
 
 export interface GenerateOpts {
   access?: 'public-api' | 'public-api-preview';
@@ -41,7 +50,8 @@ function parseParameters(command: Leaf): Member[] {
   const params: Member[] = [];
 
   for (const [param, props] of Object.entries(command)) {
-    if (param.match(/^[a-z]/)) {  // skip lowercase props
+    if (param.match(/^[a-z]/)) {
+      // skip lowercase props
       continue;
     }
     const valuespace = parseValueSpace(props.ValueSpace);
@@ -85,7 +95,8 @@ function parseCommands(root: Root, schema: any) {
 }
 
 export function parse(schema: any, options?: GenerateOpts): Root {
-  const xapiPath = options && options.xapiImport ? options.xapiImport : 'jsxapi';
+  const xapiPath =
+    options && options.xapiImport ? options.xapiImport : 'jsxapi';
   const role = options && options.role ? options.role : 'Admin';
   const access = options && options.access ? options.access : 'public-api';
 

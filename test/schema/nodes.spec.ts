@@ -28,7 +28,9 @@ describe('schema nodes', () => {
     it('interface names must be unique', () => {
       const root = new Root();
       root.addInterface('DialArgs');
-      expect(() => root.addInterface('DialArgs')).toThrow(/interface already exists/i);
+      expect(() => root.addInterface('DialArgs')).toThrow(
+        /interface already exists/i,
+      );
     });
 
     it('can only add a single Main class', () => {
@@ -47,8 +49,8 @@ describe('schema nodes', () => {
         const root = new Root();
         const main = root.addMain();
         expect(root.getMain()).toEqual(main);
-      })
-    })
+      });
+    });
 
     it('can build entire module', () => {
       // .ts module
@@ -185,27 +187,6 @@ describe('schema nodes', () => {
     });
   });
 
-  describe('Command', () => {
-    it('serializes empty args and response', () => {
-      const command = new Command('Mute');
-      expect(command.serialize()).toMatch('Mute(): Promise<any>');
-    });
-
-    it('supports parameter list', () => {
-      const dialArgs = new Root().addInterface('DialArgs');
-      const command = new Command('Dial', dialArgs);
-      expect(command.serialize()).toMatch('Dial(args: DialArgs): Promise<any>');
-    });
-
-    it('supports return type', () => {
-      const callHistoryArgs = new Root().addInterface('CallHistoryGetArgs');
-      const callHistoryResponse = new Root().addInterface('CallHistoryGetResult');
-      const command = new Command('Get', callHistoryArgs, callHistoryResponse);
-      expect(command.serialize()).toMatch(
-        'Get(args: CallHistoryGetArgs): Promise<CallHistoryGetResult>',
-      );
-    });
-  });
 
   describe('Config', () => {
     it('adds get()', () => {
@@ -220,6 +201,9 @@ describe('schema nodes', () => {
       expect(output).toMatch('set(args: string): Promise<any>');
     });
   });
+      const callHistoryResponse = new Root().addInterface(
+        'CallHistoryGetResult',
+      );
 
   describe('Status', () => {
     it('adds get()', () => {

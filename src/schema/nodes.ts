@@ -178,11 +178,7 @@ export class Command extends Node {
   private params?: Type;
   private retval?: Type;
 
-  constructor(
-    readonly name: string,
-    params?: Valuespace,
-    retval?: Valuespace,
-  ) {
+  constructor(readonly name: string, params?: Valuespace, retval?: Valuespace) {
     super();
     if (params) {
       this.params = typeof params === 'string' ? new Plain(params) : params;

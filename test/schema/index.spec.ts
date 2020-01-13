@@ -1,14 +1,20 @@
 import redent from 'redent';
 import { generate, parse } from '../../src/schema';
-import { Root, ImportStatement, Member, Tree, Command, Plain, Literal } from '../../src/schema/nodes';
+import {
+  Root,
+  ImportStatement,
+  Member,
+  Tree,
+  Command,
+  Plain,
+  Literal,
+} from '../../src/schema/nodes';
 
 describe('schemas', () => {
   describe('parse()', () => {
     it('imports XAPI from jsxapi', () => {
       expect(parse({})).toMatchObject({
-        children: expect.arrayContaining([
-          new ImportStatement(),
-        ]),
+        children: expect.arrayContaining([new ImportStatement()]),
       });
     });
 
@@ -17,22 +23,20 @@ describe('schemas', () => {
       expect(parsed).toMatchObject({
         children: expect.arrayContaining([
           new ImportStatement(undefined, '../src/xapi'),
-        ])
+        ]),
       });
     });
 
     it('adds XAPI subtype', () => {
       expect(parse({})).toMatchObject({
-        children: expect.arrayContaining([
-          new Root().addMain(),
-        ]),
+        children: expect.arrayContaining([new Root().addMain()]),
       });
     });
 
     it('fails with incorrect Command type', () => {
       const schema = { Command: 'foobar' };
       expect(() => parse(schema)).toThrow();
-    })
+    });
 
     it.todo('adds Config tree');
     it.todo('adds Status tree');
@@ -55,10 +59,7 @@ describe('schemas', () => {
         });
 
         expect(parsed).toMatchObject({
-          children: expect.arrayContaining([
-            main,
-            commandTree,
-          ]),
+          children: expect.arrayContaining([main, commandTree]),
         });
       });
 
@@ -110,10 +111,7 @@ describe('schemas', () => {
         const display = mics.addChild(new Command('Display', displayArgs));
 
         expect(parse(schema)).toMatchObject({
-          children: expect.arrayContaining([
-            main,
-            commandTree,
-          ])
+          children: expect.arrayContaining([main, commandTree]),
         });
       });
     });
