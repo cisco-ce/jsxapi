@@ -37,6 +37,19 @@ describe('schema nodes', () => {
       expect(() => root.addMain()).toThrow(/main class already defined/i);
     });
 
+    describe('getMain()', () => {
+      it('throws with no main defined', () => {
+        const root = new Root();
+        expect(() => root.getMain()).toThrow(/no main class defined/i);
+      });
+
+      it('can get main class', () => {
+        const root = new Root();
+        const main = root.addMain();
+        expect(root.getMain()).toEqual(main);
+      })
+    })
+
     it('can build entire module', () => {
       // .ts module
       const root = new Root();

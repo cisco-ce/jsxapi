@@ -46,6 +46,13 @@ export class Root extends Node {
     return main;
   }
 
+  getMain(): MainClass {
+    if (!this.main) {
+      throw new Error('No main class defined');
+    }
+    return this.main;
+  }
+
   serialize(): string {
     const lines = [];
     for (const child of this.children) {
