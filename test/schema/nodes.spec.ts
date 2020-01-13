@@ -106,12 +106,12 @@ describe('schema nodes', () => {
   describe('ImportStatement', () => {
     it('serializes import child', () => {
       const node = new ImportStatement();
-      expect(node.serialize()).toMatch('import { XAPI } from "jsxapi";');
+      expect(node.serialize()).toMatch('import { XAPI, connectGen } from "jsxapi";');
     });
 
-    it('can customize import name and module', () => {
-      const node = new ImportStatement('{ XAPI as XapiBase }', '../../xapi');
-      expect(node.serialize()).toMatch('import { XAPI as XapiBase } from "../../xapi";');
+    it('can customize module', () => {
+      const node = new ImportStatement('../../xapi');
+      expect(node.serialize()).toMatch('import { XAPI, connectGen } from "../../xapi";');
     });
   });
 
@@ -134,6 +134,11 @@ describe('schema nodes', () => {
       const main = new Root().addMain();
       expect(main.serialize()).toMatch('export default TypedXAPI');
     });
+
+    it('uses connectGen to export connect', () => {
+      const main = new Root().addMain();
+      expect(main.serialize()).toMatch('export const connect = connectGen(TypedXAPI);');
+    })
 
     it('exports an interface with name', () => {
       const main = new Root().addMain();

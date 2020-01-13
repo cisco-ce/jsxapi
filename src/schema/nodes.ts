@@ -63,15 +63,14 @@ export class Root extends Node {
 }
 
 export class ImportStatement extends Node {
-  constructor(
-    readonly importName: string = '{ XAPI }',
-    readonly moduleName: string = 'jsxapi',
-  ) {
+  private importName = 'XAPI';
+
+  constructor(readonly moduleName: string = 'jsxapi') {
     super();
   }
 
   serialize(): string {
-    return `import ${this.importName} from "${this.moduleName}";`;
+    return `import { ${this.importName}, connectGen } from "${this.moduleName}";`;
   }
 }
 
@@ -140,6 +139,7 @@ class MainClass extends Interface {
 export class ${this.name} extends ${this.base} {}
 
 export default ${this.name};
+export const connect = connectGen(${this.name});
 
 ${super.serialize()} `;
   }

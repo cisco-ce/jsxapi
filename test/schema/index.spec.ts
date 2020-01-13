@@ -22,7 +22,7 @@ describe('schemas', () => {
       const parsed = parse({}, { xapiImport: '../src/xapi' });
       expect(parsed).toMatchObject({
         children: expect.arrayContaining([
-          new ImportStatement(undefined, '../src/xapi'),
+          new ImportStatement('../src/xapi'),
         ]),
       });
     });

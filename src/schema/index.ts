@@ -111,7 +111,7 @@ export function parse(schema: any, options?: GenerateOpts): Root {
   const root = new Root();
 
   // import ... from ...
-  root.addChild(new ImportStatement(undefined, xapiPath));
+  root.addChild(new ImportStatement(xapiPath));
 
   // Main XAPI class
   root.addMain();
