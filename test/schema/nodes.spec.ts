@@ -183,4 +183,32 @@ describe('schema nodes', () => {
       );
     });
   });
+
+  describe('Config', () => {
+    it('adds get()', () => {
+      const output = new Config('Name', 'string').serialize();
+      expect(output).toMatch('Name: {');
+      expect(output).toMatch('get(): Promise<string>');
+    });
+
+    it('adds set()', () => {
+      const output = new Config('Name', 'string').serialize();
+      expect(output).toMatch('Name: {');
+      expect(output).toMatch('set(args: string): Promise<any>');
+    });
+  });
+
+  describe('Status', () => {
+    it('adds get()', () => {
+      const output = new Status('Volume', 'number').serialize();
+      expect(output).toMatch('Volume: {');
+      expect(output).toMatch('get(): Promise<number>');
+    });
+
+    it('doest not add set()', () => {
+      const output = new Status('Volume', 'number').serialize();
+      expect(output).toMatch('Volume: {');
+      expect(output).not.toMatch('set');
+    });
+  });
 });
