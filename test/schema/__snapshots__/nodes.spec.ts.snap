@@ -22,7 +22,7 @@ export interface CommandTree {
       Play(args: AudioPlayArgs): Promise<any>,
     },
   };
-  Dial(): Promise<any>;
+  Dial(args: DialArgs): Promise<any>;
 }
 
 export interface ConfigTree {
@@ -43,6 +43,11 @@ export interface StatusTree {
 }
 
 export interface AudioPlayArgs {
+  Sound: Alert | Busy | CallInitiate;
   Loop?: On | Off;
+}
+
+export interface DialArgs {
+  Number: string;
 }"
 `;

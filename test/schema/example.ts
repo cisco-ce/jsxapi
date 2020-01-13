@@ -17,7 +17,6 @@ export interface CommandTree {
     },
     Sound: {
       Play(args: AudioPlayArgs): Promise<void>,
-      Stop(): Promise<void>,
     },
   };
   Dial(args: DialArgs): Promise<any>;

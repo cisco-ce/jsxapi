@@ -50,14 +50,18 @@ describe('schema nodes', () => {
       const audio = commandTree.addChild(new Tree('Audio'));
       audio.addChild(new Tree('Microphones')).addChild(new Command('Mute'));
       const audioPlayArgs = root.addChild(new Interface('AudioPlayArgs'));
+      const soundLiteral = new Literal(new Plain('Alert'), new Plain('Busy'), new Plain('CallInitiate'));
       const onOffLiteral = new Literal(new Plain('On'), new Plain('Off'));
-      audioPlayArgs.addChild(
+      audioPlayArgs.addChildren([
+        new Member('Sound', soundLiteral),
         new Member('Loop', onOffLiteral, { required: false }),
-      );
+      ]);
       audio
         .addChild(new Tree('Sound'))
         .addChild(new Command('Play', audioPlayArgs));
-      commandTree.addChild(new Command('Dial'));
+      const dialArgs = root.addChild(new Interface('DialArgs'));
+      dialArgs.addChild(new Member('Number', new Plain('string')));
+      commandTree.addChild(new Command('Dial', dialArgs));
 
       // XAPI config APIs
       configTree

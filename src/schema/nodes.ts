@@ -12,6 +12,10 @@ abstract class Node {
     return child;
   }
 
+  addChildren<T extends Node>(children: T[]) {
+    this.children = this.children.concat(children);
+  }
+
   abstract serialize(): string;
 }
 
