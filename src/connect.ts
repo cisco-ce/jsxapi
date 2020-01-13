@@ -3,6 +3,7 @@ import Url from 'url-parse';
 import log from './log';
 import { InitBackend, Options } from './types';
 import XAPI from './xapi';
+import { Backend } from './backend';
 
 export const globalDefaults: Options = {
   command: '',
@@ -14,9 +15,9 @@ export const globalDefaults: Options = {
   username: 'admin',
 };
 
-export interface Connect {
-  (options: Partial<Options>): XAPI;
-  (url: string, options?: Partial<Options>): XAPI;
+export interface Connect<T extends XAPI> {
+  (options: Partial<Options>): T;
+  (url: string, options?: Partial<Options>): T;
 }
 
 function resolveOptions(
@@ -58,11 +59,11 @@ function resolveOptions(
  * @param options Connect options.
  * @return XAPI interface connected to the given URI.
  */
-export default function connectOverload(
+export default function connectOverload<T extends XAPI>(
   initBackend: InitBackend,
   defaults: Partial<Options>,
-): Connect {
-  return (...args: any[]) => {
+): (XAPI: new (backend: Backend) => T) => Connect<T> {
+  return (XAPI) => (...args: any[]) => {
     let url: string;
     let options: Options;
 

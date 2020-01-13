@@ -2,6 +2,8 @@ import WSBackend from './backend/ws';
 import connectOverload from './connect';
 import websocketConnect from './transport/ws';
 import { Options } from './types';
+import XAPI from './xapi';
+import { Backend } from './backend';
 
 export { default as XAPI } from './xapi';
 
@@ -22,8 +24,11 @@ function initBackend(opts: Options) {
   }
 }
 
+export function connectGen<T extends XAPI>(XAPI: new (backend: Backend) => T) {
+  return connectOverload<T>(initBackend, { protocol: 'wss:' })(XAPI);
+}
 
 /**
  * Function for connecting to the XAPI.
  */
-export const connect = connectOverload(initBackend, { protocol: 'wss:' });
+export const connect = connectGen(XAPI);
