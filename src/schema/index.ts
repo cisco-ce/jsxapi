@@ -65,7 +65,7 @@ function parseParameters(command: Leaf): Member[] {
   return params;
 }
 
-function parseCommandTree(root: Root, tree: Node, schema: any) {
+function parseCommandTree(root: Root, tree: Node, schema: any, path: string[]) {
   for (const [key, value] of Object.entries(schema)) {
     if (isAttr(key)) {
       continue;
@@ -75,13 +75,14 @@ function parseCommandTree(root: Root, tree: Node, schema: any) {
       if (!params.length) {
         tree.addChild(new Command(key));
       } else {
-        const paramsType = root.addInterface(`${key}Args`);
+        const fullPath = path.concat(key).join('');
+        const paramsType = root.addInterface(`${fullPath}Args`);
         paramsType.addChildren(params);
         tree.addChild(new Command(key, paramsType));
       }
     } else {
       const subTree = tree.addChild(new Tree(key));
-      parseCommandTree(root, subTree, value);
+      parseCommandTree(root, subTree, value, path.concat(key));
     }
   }
 }
@@ -98,7 +99,7 @@ function parseCommands(root: Root, schema: any) {
   const commandTree = root.addInterface('CommandTree');
   root.getMain().addChild(new Member('Command', commandTree));
 
-  parseCommandTree(root, commandTree, schema);
+  parseCommandTree(root, commandTree, schema, []);
 }
 
 export function parse(schema: any, options?: GenerateOpts): Root {

@@ -113,7 +113,7 @@ describe('schemas', () => {
           },
         };
 
-        const displayArgs = root.addInterface('DisplayArgs');
+        const displayArgs = root.addInterface('MessageAlertDisplayArgs');
         displayArgs.addChildren([
           new Member('Duration', new Plain('number')),
           new Member('Text', new Plain('string')),
