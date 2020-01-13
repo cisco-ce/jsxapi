@@ -64,7 +64,7 @@ export class Root extends Node {
 
 export class ImportStatement extends Node {
   constructor(
-    readonly importName: string = 'XAPI',
+    readonly importName: string = '{ XAPI }',
     readonly moduleName: string = 'jsxapi',
   ) {
     super();
