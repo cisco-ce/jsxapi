@@ -3,8 +3,6 @@ import redent from 'redent';
 import {
   Root,
   ImportStatement,
-  MainClass,
-  Interface,
   Command,
   Tree,
   Member,
@@ -23,7 +21,7 @@ describe('schema nodes', () => {
 
     it('allows creating new interfaces', () => {
       const root = new Root();
-      root.addChild(new Interface('DialArgs'));
+      root.addInterface('DialArgs');
       expect(root.serialize()).toMatch('export interface DialArgs {}');
     });
 
@@ -35,21 +33,21 @@ describe('schema nodes', () => {
       root.addChild(new ImportStatement());
 
       // Main XAPI class
-      const main = root.addChild(new MainClass());
+      const main = root.addMain();
 
-      const commandTree = root.addChild(new Interface('CommandTree'));
+      const commandTree = root.addInterface('CommandTree');
       main.addChild(new Member('Command', commandTree));
 
-      const configTree = root.addChild(new Interface('ConfigTree'));
+      const configTree = root.addInterface('ConfigTree');
       main.addChild(new Member('Config', configTree));
 
-      const statusTree = root.addChild(new Interface('StatusTree'));
+      const statusTree = root.addInterface('StatusTree');
       main.addChild(new Member('Status', statusTree));
 
       // XAPI command APIs
       const audio = commandTree.addChild(new Tree('Audio'));
       audio.addChild(new Tree('Microphones')).addChild(new Command('Mute'));
-      const audioPlayArgs = root.addChild(new Interface('AudioPlayArgs'));
+      const audioPlayArgs = root.addInterface('AudioPlayArgs');
       const soundLiteral = new Literal('Alert', 'Busy', 'CallInitiate');
       const onOffLiteral = new Literal('On', 'Off');
       audioPlayArgs.addChildren([
@@ -59,7 +57,7 @@ describe('schema nodes', () => {
       audio
         .addChild(new Tree('Sound'))
         .addChild(new Command('Play', audioPlayArgs));
-      const dialArgs = root.addChild(new Interface('DialArgs'));
+      const dialArgs = root.addInterface('DialArgs');
       dialArgs.addChild(new Member('Number', 'string'));
       commandTree.addChild(new Command('Dial', dialArgs));
 
@@ -92,33 +90,33 @@ describe('schema nodes', () => {
 
   describe('MainClass', () => {
     it('extends base class', () => {
-      const main = new MainClass();
+      const main = new Root().addMain();
       expect(main.serialize()).toMatch(
         'export class TypedXAPI extends XAPI {}',
       );
     });
 
     it('supports passing custom names', () => {
-      const main = new MainClass('XapiWithTypes', 'JSXAPI');
+      const main = new Root().addMain('XapiWithTypes', 'JSXAPI');
       expect(main.serialize()).toMatch(
         'export class XapiWithTypes extends JSXAPI {}',
       );
     });
 
     it('exports as default', () => {
-      const main = new MainClass();
+      const main = new Root().addMain();
       expect(main.serialize()).toMatch('export default TypedXAPI');
     });
 
     it('exports an interface with name', () => {
-      const main = new MainClass();
+      const main = new Root().addMain();
       expect(main.serialize()).toMatch('export interface TypedXAPI {}');
     });
   });
 
   describe('Interface', () => {
     it('can add command (function)', () => {
-      const iface = new Interface('CommandTree');
+      const iface = new Root().addInterface('CommandTree');
       iface.addChild(new Command('Dial'));
       expect(iface.serialize()).toMatch(
         redent(`
@@ -130,7 +128,7 @@ describe('schema nodes', () => {
     });
 
     it('can add tree', () => {
-      const iface = new Interface('CommandTree');
+      const iface = new Root().addInterface('CommandTree');
       iface
         .addChild(new Tree('Audio'))
         .addChild(new Tree('Microphones'))
@@ -169,14 +167,14 @@ describe('schema nodes', () => {
     });
 
     it('supports parameter list', () => {
-      const dialArgs = new Interface('DialArgs');
+      const dialArgs = new Root().addInterface('DialArgs');
       const command = new Command('Dial', dialArgs);
       expect(command.serialize()).toMatch('Dial(args: DialArgs): Promise<any>');
     });
 
     it('supports return type', () => {
-      const callHistoryArgs = new Interface('CallHistoryGetArgs');
-      const callHistoryResponse = new Interface('CallHistoryGetResult');
+      const callHistoryArgs = new Root().addInterface('CallHistoryGetArgs');
+      const callHistoryResponse = new Root().addInterface('CallHistoryGetResult');
       const command = new Command('Get', callHistoryArgs, callHistoryResponse);
       expect(command.serialize()).toMatch(
         'Get(args: CallHistoryGetArgs): Promise<CallHistoryGetResult>',

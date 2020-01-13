@@ -20,6 +20,14 @@ abstract class Node {
 }
 
 export class Root extends Node {
+  addInterface(name: string): Interface {
+    return this.addChild(new Interface(name));
+  }
+
+  addMain(name?: string, base?: string) {
+    return this.addChild(new MainClass(name, base));
+  }
+
   serialize(): string {
     return this.children.map((c) => c.serialize()).join('\n\n');
   }
@@ -78,7 +86,7 @@ export class Literal implements Type {
   }
 }
 
-export class Interface extends Node implements Type {
+class Interface extends Node implements Type {
   constructor(readonly name: string) {
     super();
   }
@@ -93,7 +101,7 @@ export class Interface extends Node implements Type {
   }
 }
 
-export class MainClass extends Interface {
+class MainClass extends Interface {
   constructor(name: string = 'TypedXAPI', readonly base: string = 'XAPI') {
     super(name);
   }
