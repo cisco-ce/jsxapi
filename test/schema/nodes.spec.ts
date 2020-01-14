@@ -213,9 +213,6 @@ describe('schema nodes', () => {
       expect(output).toMatch('set(args: string): Promise<any>');
     });
   });
-      const callHistoryResponse = new Root().addInterface(
-        'CallHistoryGetResult',
-      );
 
   describe('Status', () => {
     it('adds get()', () => {
