@@ -128,6 +128,10 @@ describe('schemas', () => {
           children: expect.arrayContaining([main, commandTree]),
         });
       });
+
+      it.todo('non-required parameters');
+      it.todo('LiteralArray valuespace');
+      it.todo('multiline commands');
     });
 
     xdescribe('Config', () => {
