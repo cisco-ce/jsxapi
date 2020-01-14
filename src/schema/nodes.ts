@@ -159,7 +159,8 @@ export class Member extends Node {
 
   serialize(): string {
     const optional = !this.options || this.options.required ? '' : '?';
-    return `${this.name}${optional}: ${this.type.getType()}`;
+    const name = this.name.match(/^[a-z][a-z0-9]*$/i) ? this.name : `"${this.name}"`;
+    return `${name}${optional}: ${this.type.getType()}`;
   }
 }
 

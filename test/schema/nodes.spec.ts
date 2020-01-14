@@ -179,6 +179,13 @@ describe('schema nodes', () => {
     });
   });
 
+  describe('Member', () => {
+    it('quotes members with names containing special characters', () => {
+      const option = new Member('Option.1', 'string');
+      expect(option.serialize()).toMatch('"Option.1": string');
+    })
+  });
+
   describe('Tree', () => {
     it('renders levels of nesting', () => {
       const audio = new Tree('Audio');
