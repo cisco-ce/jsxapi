@@ -212,6 +212,13 @@ describe('schema nodes', () => {
       expect(output).toMatch('Name: {');
       expect(output).toMatch('set(args: string): Promise<any>');
     });
+
+    it('adds on() and once()', () => {
+      const output = new Config('Volume', 'number').serialize();
+      expect(output).toMatch('Volume: {');
+      expect(output).toMatch('on(handler: (value: number) => void): void');
+      expect(output).toMatch('once(handler: (value: number) => void): void');
+    });
   });
 
   describe('Status', () => {
@@ -225,6 +232,13 @@ describe('schema nodes', () => {
       const output = new Status('Volume', 'number').serialize();
       expect(output).toMatch('Volume: {');
       expect(output).not.toMatch('set');
+    });
+
+    it('adds on() and once()', () => {
+      const output = new Status('Volume', 'number').serialize();
+      expect(output).toMatch('Volume: {');
+      expect(output).toMatch('on(handler: (value: number) => void): void');
+      expect(output).toMatch('once(handler: (value: number) => void): void');
     });
   });
 });

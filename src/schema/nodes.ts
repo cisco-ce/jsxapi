@@ -97,6 +97,26 @@ export class Plain implements Type {
   }
 }
 
+export class Function extends Node implements Type {
+  constructor(
+    readonly name: string,
+    readonly args: [string, Type][] = [],
+    readonly ret: Type = new Plain('void'),
+  ) {
+    super();
+  }
+
+  getType(separator: string = ' =>') {
+    const args = this.args.map(([n, t]) => `${n}: ${t.getType()}`).join(', ');
+    const ret = this.ret.getType();
+    return `(${args})${separator} ${ret}`;
+  }
+
+  serialize() {
+    return `${this.name}${this.getType(':')}`;
+  }
+}
+
 export class Literal implements Type {
   private members: Type[];
 
@@ -159,7 +179,9 @@ export class Member extends Node {
 
   serialize(): string {
     const optional = !this.options || this.options.required ? '' : '?';
-    const name = this.name.match(/^[a-z][a-z0-9]*$/i) ? this.name : `"${this.name}"`;
+    const name = this.name.match(/^[a-z][a-z0-9]*$/i)
+      ? this.name
+      : `"${this.name}"`;
     return `${name}${optional}: ${this.type.getType()}`;
   }
 }
@@ -199,14 +221,22 @@ export class Command extends Node {
 export class Config extends Tree {
   constructor(name: string, readonly valuespace: Valuespace) {
     super(name);
-    this.addChild(new Command('get', undefined, valuespace));
-    this.addChild(new Command('set', valuespace));
+    const vstype = typeof valuespace === 'string' ? new Plain(valuespace) : valuespace;
+    this.addChild(new Command('get', undefined, vstype));
+    this.addChild(new Command('set', vstype));
+    const handler = new Function('handler', [['value', vstype]]);
+    this.addChild(new Function('on', [['handler', handler]]));
+    this.addChild(new Function('once', [['handler', handler]]));
   }
 }
 
 export class Status extends Tree {
   constructor(name: string, readonly valuespace: Valuespace) {
     super(name);
-    this.addChild(new Command('get', undefined, valuespace));
+    const vstype = typeof valuespace === 'string' ? new Plain(valuespace) : valuespace;
+    this.addChild(new Command('get', undefined, vstype));
+    const handler = new Function('handler', [['value', vstype]]);
+    this.addChild(new Function('on', [['handler', handler]]));
+    this.addChild(new Function('once', [['handler', handler]]));
   }
 }

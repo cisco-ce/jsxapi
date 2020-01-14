@@ -31,6 +31,8 @@ export interface ConfigTree {
     Name: {
       get(): Promise<string>,
       set(args: string): Promise<any>,
+      on(handler: (value: string) => void): void,
+      once(handler: (value: string) => void): void,
     },
   };
 }
@@ -39,6 +41,8 @@ export interface StatusTree {
   Audio: {
     Volume: {
       get(): Promise<number>,
+      on(handler: (value: number) => void): void,
+      once(handler: (value: number) => void): void,
     },
   };
 }
