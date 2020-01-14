@@ -21,16 +21,20 @@ interface Leaf {
 }
 
 interface ValueSpace {
-  type: 'Integer' | 'Literal' | 'String';
+  type: 'Integer' | 'IntegerArray' | 'Literal' | 'LiteralArray' | 'String' | 'StringArray';
   Value?: string[];
 }
 
-function parseValueSpace(valuespace: ValueSpace) {
+function parseValueSpace(valuespace: ValueSpace, path: string[]) {
   switch (valuespace.type) {
     case 'Integer':
       return new Plain('number');
+    case 'IntegerArray':
+      return new Plain('number[]');
     case 'String':
       return new Plain('string');
+    case 'StringArray':
+      return new Plain('string[]');
     case 'Literal':
       if (!valuespace.Value) {
         throw new Error('Missing literal valuespace values');
@@ -39,6 +43,11 @@ function parseValueSpace(valuespace: ValueSpace) {
         throw new Error('Empty literal valuespace values');
       }
       return new Literal(...valuespace.Value);
+    case 'LiteralArray':
+      console.error(`warn: ${path.join('/')}: LiteralArray valuespace is broken, using string[]`);
+      return new Plain('string[]');
+    default:
+      throw new Error(`Invalid ValueSpace type: ${valuespace.type}`);
   }
 }
 
@@ -50,7 +59,7 @@ function isAttr(key: string): boolean {
   return !!key.match(/^[a-z]/);
 }
 
-function parseParameters(command: Leaf): Member[] {
+function parseParameters(command: Leaf, path: string[]): Member[] {
   const params: Member[] = [];
 
   for (const [param, props] of Object.entries(command)) {
@@ -58,8 +67,14 @@ function parseParameters(command: Leaf): Member[] {
       // skip lowercase props
       continue;
     }
-    const valuespace = parseValueSpace(props.ValueSpace);
-    params.push(new Member(param, valuespace));
+    const fullPath = path.concat(param);
+    try {
+      const vs = Array.isArray(props) ? props[0].ValueSpace : props.ValueSpace;
+      const valuespace = parseValueSpace(vs, fullPath);
+      params.push(new Member(param, valuespace));
+    } catch (error) {
+      console.error(`warning: '${fullPath.join('/')}' error parsing valuespace: ${error}`);
+    }
   }
 
   return params;
@@ -71,12 +86,12 @@ function parseCommandTree(root: Root, tree: Node, schema: any, path: string[]) {
       continue;
     }
     if (isLeaf(value)) {
-      const params = parseParameters(value);
+      const fullPath = path.concat(key);
+      const params = parseParameters(value, fullPath);
       if (!params.length) {
         tree.addChild(new Command(key));
       } else {
-        const fullPath = path.concat(key).join('');
-        const paramsType = root.addInterface(`${fullPath}Args`);
+        const paramsType = root.addInterface(`${fullPath.join('')}Args`);
         paramsType.addChildren(params);
         tree.addChild(new Command(key, paramsType));
       }
