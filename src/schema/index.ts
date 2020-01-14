@@ -21,6 +21,7 @@ interface Leaf {
 }
 
 interface ValueSpace {
+  required: 'True' | 'False';
   type: 'Integer' | 'IntegerArray' | 'Literal' | 'LiteralArray' | 'String' | 'StringArray';
   Value?: string[];
 }
@@ -69,9 +70,10 @@ function parseParameters(command: Leaf, path: string[]): Member[] {
     }
     const fullPath = path.concat(param);
     try {
-      const vs = Array.isArray(props) ? props[0].ValueSpace : props.ValueSpace;
-      const valuespace = parseValueSpace(vs, fullPath);
-      params.push(new Member(param, valuespace));
+      const ps = Array.isArray(props) ? props[0] : props;
+      const valuespace = parseValueSpace(ps.ValueSpace, fullPath);
+      const required = ps.required === 'True';
+      params.push(new Member(param, valuespace, { required }));
     } catch (error) {
       console.error(`warning: '${fullPath.join('/')}' error parsing valuespace: ${error}`);
     }

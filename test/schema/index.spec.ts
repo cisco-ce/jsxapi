@@ -93,7 +93,7 @@ describe('schemas', () => {
                     },
                   },
                   Text: {
-                    required: 'False',
+                    required: 'True',
                     ValueSpace: {
                       type: 'String',
                       minLength: '0',
@@ -115,9 +115,9 @@ describe('schemas', () => {
 
         const displayArgs = root.addInterface('MessageAlertDisplayArgs');
         displayArgs.addChildren([
-          new Member('Duration', new Plain('number')),
-          new Member('Text', new Plain('string')),
-          new Member('Level', new Literal('Info', 'Warning', 'Error')),
+          new Member('Duration', new Plain('number'), { required: false }),
+          new Member('Text', new Plain('string'), { required: true }),
+          new Member('Level', new Literal('Info', 'Warning', 'Error'), { required: false }),
         ]);
 
         const audio = commandTree.addChild(new Tree('Message'));
