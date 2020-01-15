@@ -129,7 +129,7 @@ describe('schema nodes', () => {
       // XAPI config APIs
       configTree
         .addChild(new Tree('SystemUnit'))
-        .addChild(new Member('Name', 'Config<string>'));
+        .addChild(new Config('Name', 'string'));
 
       // XAPI status APIs
       statusTree
@@ -249,46 +249,17 @@ describe('schema nodes', () => {
     });
   });
 
-
   describe('Config', () => {
-    it('adds get()', () => {
-      const output = new Config('Name', 'string').serialize();
-      expect(output).toMatch('Name: {');
-      expect(output).toMatch('get(): Promise<string>');
-    });
-
-    it('adds set()', () => {
-      const output = new Config('Name', 'string').serialize();
-      expect(output).toMatch('Name: {');
-      expect(output).toMatch('set(args: string): Promise<any>');
-    });
-
-    it('adds on() and once()', () => {
-      const output = new Config('Volume', 'number').serialize();
-      expect(output).toMatch('Volume: {');
-      expect(output).toMatch('on(handler: (value: number) => void): void');
-      expect(output).toMatch('once(handler: (value: number) => void): void');
+    it('is a member with a generic Config<T>', () => {
+      const config = new Config('Name', 'string');
+      expect(config.serialize()).toMatch('Name: Config<string>');
     });
   });
 
   describe('Status', () => {
-    it('adds get()', () => {
-      const output = new Status('Volume', 'number').serialize();
-      expect(output).toMatch('Volume: {');
-      expect(output).toMatch('get(): Promise<number>');
-    });
-
-    it('doest not add set()', () => {
-      const output = new Status('Volume', 'number').serialize();
-      expect(output).toMatch('Volume: {');
-      expect(output).not.toMatch('set');
-    });
-
-    it('adds on() and once()', () => {
-      const output = new Status('Volume', 'number').serialize();
-      expect(output).toMatch('Volume: {');
-      expect(output).toMatch('on(handler: (value: number) => void): void');
-      expect(output).toMatch('once(handler: (value: number) => void): void');
+    it('is a member with a generic Status<T>', () => {
+      const status = new Status('Volume', 'number');
+      expect(status.serialize()).toMatch('Volume: Status<number>');
     });
   });
 });

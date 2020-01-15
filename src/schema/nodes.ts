@@ -256,25 +256,16 @@ export class Command extends Node {
   }
 }
 
-export class Config extends Tree {
-  constructor(name: string, readonly valuespace: Valuespace) {
-    super(name);
-    const vstype = typeof valuespace === 'string' ? new Plain(valuespace) : valuespace;
-    this.addChild(new Command('get', undefined, vstype));
-    this.addChild(new Command('set', vstype));
-    const handler = new Function('handler', [['value', vstype]]);
-    this.addChild(new Function('on', [['handler', handler]]));
-    this.addChild(new Function('once', [['handler', handler]]));
+export class Config extends Member {
+  constructor(name: string, valuespace: Valuespace) {
+    const inner = typeof valuespace === 'string' ? new Plain(valuespace) : valuespace;
+    super(name, new Plain(`Config<${inner.getType()}>`));
   }
 }
 
-export class Status extends Tree {
-  constructor(name: string, readonly valuespace: Valuespace) {
-    super(name);
-    const vstype = typeof valuespace === 'string' ? new Plain(valuespace) : valuespace;
-    this.addChild(new Command('get', undefined, vstype));
-    const handler = new Function('handler', [['value', vstype]]);
-    this.addChild(new Function('on', [['handler', handler]]));
-    this.addChild(new Function('once', [['handler', handler]]));
+export class Status extends Member {
+  constructor(name: string, valuespace: Valuespace) {
+    const inner = typeof valuespace === 'string' ? new Plain(valuespace) : valuespace;
+    super(name, new Plain(`Status<${inner.getType()}>`));
   }
 }
