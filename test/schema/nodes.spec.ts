@@ -186,8 +186,17 @@ describe('schema nodes', () => {
 
   describe('Interface', () => {
     it('can extend', () => {
-      const iface = new Root().addInterface('Config', ['Gettable', 'Settable', 'Listenable']);
-      expect(iface.serialize()).toMatch('export interface Config extends Gettable, Settable, Listenable {}');
+      const root = new Root();
+      root.addInterface('Gettable');
+      const iface = root.addInterface('Config', ['Gettable']);
+      expect(iface.serialize()).toMatch('export interface Config extends Gettable {}');
+    });
+
+    it('extending from an interface requires it to exist', () => {
+      const root = new Root();
+      expect(() => root.addInterface('Config', ['Gettable'])).toThrow(
+        /cannot add interface Config.*missing interfaces: Gettable/i,
+      );
     });
 
     it('can add command (function)', () => {

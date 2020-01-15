@@ -34,6 +34,10 @@ export class Root extends Node {
   }
 
   addInterface(name: string, extends_: string[] = []): Interface {
+    const missing = extends_.filter((e) => !this.interfaceNames.has(e));
+    if (missing.length) {
+      throw new Error(`Cannot add interface ${name} due to missing interfaces: ${missing.join(', ')}`);
+    }
     return this.addChild(new Interface(name, extends_));
   }
 
