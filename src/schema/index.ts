@@ -75,31 +75,6 @@ function isAttr(key: string): boolean {
   return !!key.match(/^[a-z]/);
 }
 
-/**
- * Parse command parameters.
- */
-function parseParameters(command: Leaf, path: string[]): Member[] {
-  const params: Member[] = [];
-
-  for (const [param, props] of Object.entries(command)) {
-    if (isAttr(param)) {
-      // skip lowercase props
-      continue;
-    }
-    const fullPath = path.concat(param);
-    try {
-      const ps = Array.isArray(props) ? props[0] : props;
-      const valuespace = parseValueSpace(ps.ValueSpace, fullPath);
-      const required = ps.required === 'True';
-      params.push(new Member(param, valuespace, { required }));
-    } catch (error) {
-      console.error(`warning: '${fullPath.join('/')}' error parsing valuespace: ${error}`);
-    }
-  }
-
-  return params;
-}
-
 function forEachEntries(
   schema: any,
   visitor: (key: string, value: any) => void,
@@ -107,6 +82,27 @@ function forEachEntries(
   Object.entries(schema)
     .filter(([key]) => !isAttr(key))
     .forEach(([key, value]) => visitor(key, value));
+}
+
+/**
+ * Parse command parameters.
+ */
+function parseParameters(command: CommandLeaf, path: string[]): Member[] {
+  const params: Member[] = [];
+
+  forEachEntries(command, (key, value) => {
+    const fullPath = path.concat(key);
+    try {
+      const ps = Array.isArray(value) ? value[0] : value;
+      const valuespace = parseValueSpace(ps.ValueSpace, fullPath);
+      const required = ps.required === 'True';
+      params.push(new Member(key, valuespace, { required }));
+    } catch (error) {
+      console.error(`warning: '${fullPath.join('/')}' error parsing valuespace: ${error}`);
+    }
+  });
+
+  return params;
 }
 
 /**
