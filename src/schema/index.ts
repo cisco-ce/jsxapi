@@ -8,6 +8,7 @@ import {
   Plain,
   Literal,
   List,
+  Type,
 } from './nodes';
 
 export interface GenerateOpts {
@@ -27,7 +28,10 @@ interface ValueSpace {
   Value?: string[];
 }
 
-function parseValueSpace(valuespace: ValueSpace, path: string[]) {
+/**
+ * Parse a valuespace into a Type definition.
+ */
+function parseValueSpace(valuespace: ValueSpace, path: string[]): Type {
   switch (valuespace.type) {
     case 'Integer':
       return new Plain('number');
@@ -52,14 +56,28 @@ function parseValueSpace(valuespace: ValueSpace, path: string[]) {
   }
 }
 
+/**
+ * Check if an object is a command definition.
+ *
+ * Command have { command: 'True' } in the schema.
+ */
 function isCommandLeaf(value: unknown): value is Leaf {
   return (value as Leaf).command === 'True';
 }
 
+/**
+ * Check if a key of an object is considered an attribute and not a child node.
+ *
+ * The schema convention is that all keys starting with lowercase are considered
+ * attributes.
+ */
 function isAttr(key: string): boolean {
   return !!key.match(/^[a-z]/);
 }
 
+/**
+ * Parse command parameters.
+ */
 function parseParameters(command: Leaf, path: string[]): Member[] {
   const params: Member[] = [];
 
@@ -91,6 +109,9 @@ function forEachEntries(
     .forEach(([key, value]) => visitor(key, value));
 }
 
+/**
+ * Parse the recursive tree of command definitions.
+ */
 function parseCommandTree(root: Root, schema: any, tree: Node, path: string[]) {
   forEachEntries(schema, (key, value) => {
     if (isCommandLeaf(value)) {
@@ -110,11 +131,17 @@ function parseCommandTree(root: Root, schema: any, tree: Node, path: string[]) {
   });
 }
 
+/**
+ * Parse the recursive tree of configuration definitions.
+ */
 function parseConfigTree(root: Root, schema: any, tree: Node, path: string[]) {
   forEachEntries(schema, (key, value) => {
   });
 }
 
+/**
+ * Parse the recursive tree of status definitions.
+ */
 function parseStatusTree(root: Root, schema: any, tree: Node, path: string[]) {
   forEachEntries(schema, (key, value) => {
   });
@@ -122,6 +149,14 @@ function parseStatusTree(root: Root, schema: any, tree: Node, path: string[]) {
 
 type SchemaParser = (root: Root, schema: any, tree: Tree, path: string[]) => void;
 
+/**
+ * Generic function to parse a schema tree.
+ *
+ * @type The type of document to parse in the schema.
+ * @root The root node of the generated module.
+ * @schema Full schema definition.
+ * @parser A parsing function to parse a subtree of 'type'.
+ */
 function parseSchema(
   type: 'Command' | 'Config' | 'Status',
   root: Root,
@@ -149,6 +184,9 @@ function parseSchema(
   parser(root, subSchema, tree, []);
 }
 
+/**
+ * Parse and generate a module of a schema definition.
+ */
 export function parse(schema: any, options?: GenerateOpts): Root {
   const xapiPath =
     options && options.xapiImport ? options.xapiImport : 'jsxapi';
@@ -170,6 +208,9 @@ export function parse(schema: any, options?: GenerateOpts): Root {
   return root;
 }
 
+/**
+ * Serialize a TypeScript module from a schema definition.
+ */
 export function generate(schema: any, options?: GenerateOpts) {
   const root = parse(schema, options);
   return root.serialize();

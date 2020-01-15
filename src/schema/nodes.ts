@@ -85,7 +85,7 @@ function renderTree(nodes: Node[], terminator: string) {
 
 type Valuespace = Type | string;
 
-interface Type {
+export interface Type {
   getType(): string;
 }
 
