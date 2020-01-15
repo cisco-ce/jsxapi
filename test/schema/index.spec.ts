@@ -8,6 +8,7 @@ import {
   Command,
   Plain,
   Literal,
+  Config,
   List,
 } from '../../src/schema/nodes';
 
@@ -167,7 +168,7 @@ describe('schemas', () => {
         expect(parse(schema)).toMatchObject({
           children: expect.arrayContaining([main, commandTree]),
         });
-      })
+      });
 
       it.todo('non-required parameters');
       it.todo('LiteralArray valuespace');
@@ -175,13 +176,49 @@ describe('schemas', () => {
     });
 
     xdescribe('Config', () => {
-      it('exports empty ConfigTree', () => {
-        expect(generate({})).toMatch(
-          redent(`
-          export interface ConfigTree {
+      let root: Root;
+      let main: any;
+      let configTree: any;
+
+      beforeEach(() => {
+        root = new Root();
+        main = root.addMain();
+        configTree = root.addInterface('ConfigTree');
+        main.addChild(new Member('Config', configTree));
+      });
+
+      it('adds Config tree', () => {
+        const parsed = parse({
+          Configuration: {},
+        });
+
+        expect(parsed).toMatchObject({
+          children: expect.arrayContaining([main, configTree]),
+        });
+      });
+
+      it('adds config nodes', () => {
+        const schema = {
+          Configuration: {
+            Audio: {
+              DefaultVolume: {
+                ValueSpace: {
+                  type: 'Integer',
+                  default: '50',
+                  min: '0',
+                  max: '100',
+                },
+              },
+            },
           }
-        `).trim(),
-        );
+        };
+
+        const audio = configTree.addChild(new Tree('Audio'));
+        audio.addChild(new Config('DefaultVolume', new Plain('number')));
+
+        expect(parse(schema)).toMatchObject({
+          children: expect.arrayContaining([main, configTree]),
+        });
       });
     });
 

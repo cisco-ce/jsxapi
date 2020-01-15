@@ -52,7 +52,7 @@ function parseValueSpace(valuespace: ValueSpace, path: string[]) {
   }
 }
 
-function isLeaf(value: unknown): value is Leaf {
+function isCommandLeaf(value: unknown): value is Leaf {
   return (value as Leaf).command === 'True';
 }
 
@@ -82,12 +82,18 @@ function parseParameters(command: Leaf, path: string[]): Member[] {
   return params;
 }
 
-function parseCommandTree(root: Root, tree: Node, schema: any, path: string[]) {
-  for (const [key, value] of Object.entries(schema)) {
-    if (isAttr(key)) {
-      continue;
-    }
-    if (isLeaf(value)) {
+function forEachEntries(
+  schema: any,
+  visitor: (key: string, value: any) => void,
+) {
+  Object.entries(schema)
+    .filter(([key]) => !isAttr(key))
+    .forEach(([key, value]) => visitor(key, value));
+}
+
+function parseCommandTree(root: Root, schema: any, tree: Node, path: string[]) {
+  forEachEntries(schema, (key, value) => {
+    if (isCommandLeaf(value)) {
       const fullPath = path.concat(key);
       const params = parseParameters(value, fullPath);
       if (!params.length) {
@@ -99,24 +105,48 @@ function parseCommandTree(root: Root, tree: Node, schema: any, path: string[]) {
       }
     } else {
       const subTree = tree.addChild(new Tree(key));
-      parseCommandTree(root, subTree, value, path.concat(key));
+      parseCommandTree(root, value, subTree, path.concat(key));
     }
-  }
+  });
 }
 
-function parseCommands(root: Root, schema: any) {
-  if (!schema) {
+function parseConfigTree(root: Root, schema: any, tree: Node, path: string[]) {
+  forEachEntries(schema, (key, value) => {
+  });
+}
+
+function parseStatusTree(root: Root, schema: any, tree: Node, path: string[]) {
+  forEachEntries(schema, (key, value) => {
+  });
+}
+
+type SchemaParser = (root: Root, schema: any, tree: Tree, path: string[]) => void;
+
+function parseSchema(
+  type: 'Command' | 'Config' | 'Status',
+  root: Root,
+  schema: any,
+  parser: SchemaParser,
+) {
+  const key = {
+    Command: 'Command',
+    Config: 'Configuration',
+    Status: 'Status',
+  }[type];
+  const subSchema = schema[key];
+
+  if (!subSchema) {
     return;
   }
 
-  if (typeof schema !== 'object') {
-    throw new Error('Schema.Command is not an object');
+  if (typeof subSchema !== 'object') {
+    throw new Error(`schema.${type} is not an object`);
   }
 
-  const commandTree = root.addInterface('CommandTree');
-  root.getMain().addChild(new Member('Command', commandTree));
+  const tree = root.addInterface(`${type}Tree`);
+  root.getMain().addChild(new Member(type, tree));
 
-  parseCommandTree(root, commandTree, schema, []);
+  parser(root, subSchema, tree, []);
 }
 
 export function parse(schema: any, options?: GenerateOpts): Root {
@@ -133,7 +163,9 @@ export function parse(schema: any, options?: GenerateOpts): Root {
   // Main XAPI class
   root.addMain();
 
-  parseCommands(root, schema.Command);
+  parseSchema('Command', root, schema, parseCommandTree);
+  parseSchema('Config', root, schema, parseConfigTree);
+  parseSchema('Status', root, schema, parseStatusTree);
 
   return root;
 }
