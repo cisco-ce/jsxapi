@@ -160,6 +160,11 @@ describe('schema nodes', () => {
   });
 
   describe('Interface', () => {
+    it('can extend', () => {
+      const iface = new Root().addInterface('Config', ['Gettable', 'Settable', 'Listenable']);
+      expect(iface.serialize()).toMatch('export interface Config extends Gettable, Settable, Listenable {}');
+    });
+
     it('can add command (function)', () => {
       const iface = new Root().addInterface('CommandTree');
       iface.addChild(new Command('Dial'));

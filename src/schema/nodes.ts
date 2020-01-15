@@ -33,8 +33,8 @@ export class Root extends Node {
     return super.addChild(child);
   }
 
-  addInterface(name: string): Interface {
-    return this.addChild(new Interface(name));
+  addInterface(name: string, extends_: string[] = []): Interface {
+    return this.addChild(new Interface(name, extends_));
   }
 
   addMain(name?: string, base?: string): MainClass {
@@ -146,7 +146,7 @@ export class Literal implements Type {
 }
 
 class Interface extends Node implements Type {
-  constructor(readonly name: string) {
+  constructor(readonly name: string, readonly extends_: string[] = []) {
     super();
   }
 
@@ -155,8 +155,9 @@ class Interface extends Node implements Type {
   }
 
   serialize(): string {
+    const ext = this.extends_.length ? ` extends ${this.extends_.join(', ')}` : '';
     const tree = renderTree(this.children, ';');
-    return `export interface ${this.name} {${tree}}`;
+    return `export interface ${this.name}${ext} {${tree}}`;
   }
 }
 
