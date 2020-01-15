@@ -7,6 +7,7 @@ import {
   Command,
   Plain,
   Literal,
+  List,
 } from './nodes';
 
 export interface GenerateOpts {
@@ -37,16 +38,15 @@ function parseValueSpace(valuespace: ValueSpace, path: string[]) {
     case 'StringArray':
       return new Plain('string[]');
     case 'Literal':
+    case 'LiteralArray':
       if (!valuespace.Value) {
         throw new Error('Missing literal valuespace values');
       }
       if (!valuespace.Value.length) {
         throw new Error('Empty literal valuespace values');
       }
-      return new Literal(...valuespace.Value);
-    case 'LiteralArray':
-      console.error(`warn: ${path.join('/')}: LiteralArray valuespace is broken, using string[]`);
-      return new Plain('string[]');
+      const vs = new Literal(...valuespace.Value);
+      return valuespace.type === 'LiteralArray' ? new List(vs) : vs;
     default:
       throw new Error(`Invalid ValueSpace type: ${valuespace.type}`);
   }

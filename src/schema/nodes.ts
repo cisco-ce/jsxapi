@@ -117,6 +117,17 @@ export class Function extends Node implements Type {
   }
 }
 
+export class List implements Type {
+  constructor(readonly elementType: Type) {}
+
+  getType() {
+    const elemType = this.elementType.getType();
+    const withParens =
+      this.elementType instanceof Literal ? `(${elemType})` : elemType;
+    return `${withParens}[]`;
+  }
+}
+
 export class Literal implements Type {
   private members: Type[];
 

@@ -10,6 +10,7 @@ import {
   Plain,
   Status,
   Literal,
+  List,
 } from '../../src/schema/nodes';
 
 describe('schema nodes', () => {
@@ -87,6 +88,18 @@ describe('schema nodes', () => {
       const dialArgs = root.addInterface('DialArgs');
       dialArgs.addChild(new Member('Number', 'string'));
       commandTree.addChild(new Command('Dial', dialArgs));
+
+      const resetArgs = root.addInterface('SystemUnitFactoryResetArgs');
+      resetArgs.addChild(
+        new Member(
+          'Keep',
+          new List(new Literal('LocalSetup', 'Network', 'Provisioning')),
+          { required: false },
+        ),
+      );
+      const reset = commandTree
+        .addChild(new Tree('SystemUnit'))
+        .addChild(new Command('FactoryReset', resetArgs));
 
       // XAPI config APIs
       configTree
@@ -177,6 +190,13 @@ describe('schema nodes', () => {
       `).trim(),
       );
     });
+  });
+
+  describe('List', () => {
+    it('places literal in parentheses', () => {
+      const literalArray = new List(new Literal('Foo', 'Bar', 'Baz'));
+      expect(literalArray.getType()).toMatch("('Foo' | 'Bar' | 'Baz')[]");
+    })
   });
 
   describe('Member', () => {

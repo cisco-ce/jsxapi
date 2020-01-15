@@ -8,6 +8,7 @@ import {
   Command,
   Plain,
   Literal,
+  List,
 } from '../../src/schema/nodes';
 
 describe('schemas', () => {
@@ -120,14 +121,53 @@ describe('schemas', () => {
           new Member('Level', new Literal('Info', 'Warning', 'Error'), { required: false }),
         ]);
 
-        const audio = commandTree.addChild(new Tree('Message'));
+        const audio: Tree = commandTree.addChild(new Tree('Message'));
         const mics = audio.addChild(new Tree('Alert'));
-        const display = mics.addChild(new Command('Display', displayArgs));
+        mics.addChild(new Command('Display', displayArgs));
 
         expect(parse(schema)).toMatchObject({
           children: expect.arrayContaining([main, commandTree]),
         });
       });
+
+      it('parses LiteralArray', () => {
+        const schema = {
+          Command: {
+            SystemUnit: {
+              FactoryReset: {
+                access: 'public-api',
+                command: 'True',
+                role: 'Admin;User',
+                Keep: [{
+                  required:'False',
+                  ValueSpace:{
+                    type: 'LiteralArray',
+                    Value: [
+                      'LocalSetup',
+                      'Network',
+                      'Provisioning',
+                    ],
+                  },
+                }],
+              },
+            },
+          },
+        };
+
+        const resetArgs = root.addInterface('SystemUnitFactoryResetArgs');
+        resetArgs.addChild(
+          new Member('Keep', new List(new Literal('LocalSetup', 'Network', 'Provisioning')), {
+            required: false,
+          }),
+        );
+
+        const systemUnit: Tree = commandTree.addChild(new Tree('SystemUnit'));
+        systemUnit.addChild(new Command('FactoryReset', resetArgs));
+
+        expect(parse(schema)).toMatchObject({
+          children: expect.arrayContaining([main, commandTree]),
+        });
+      })
 
       it.todo('non-required parameters');
       it.todo('LiteralArray valuespace');

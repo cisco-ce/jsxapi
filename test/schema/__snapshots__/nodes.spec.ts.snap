@@ -24,6 +24,9 @@ export interface CommandTree {
     },
   };
   Dial(args: DialArgs): Promise<any>;
+  SystemUnit: {
+    FactoryReset(args: SystemUnitFactoryResetArgs): Promise<any>,
+  };
 }
 
 export interface ConfigTree {
@@ -54,6 +57,10 @@ export interface AudioPlayArgs {
 
 export interface DialArgs {
   Number: string;
+}
+
+export interface SystemUnitFactoryResetArgs {
+  Keep?: ('LocalSetup' | 'Network' | 'Provisioning')[];
 }"
 `;
 
