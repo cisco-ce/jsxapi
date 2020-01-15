@@ -14,6 +14,23 @@ export interface TypedXAPI {
   Status: StatusTree;
 } 
 
+export interface Gettable<T> {
+  get(): Promise<T>;
+}
+
+export interface Settable<T> {
+  set(args: T): Promise<void>;
+}
+
+export interface Listenable<T> {
+  on(handler: (value: T) => void): void;
+  once(handler: (value: T) => void): void;
+}
+
+export interface Config<T> extends Gettable<T>, Settable<T>, Listenable<T> {}
+
+export interface Status<T> extends Gettable<T>, Listenable<T> {}
+
 export interface CommandTree {
   Audio: {
     Microphones: {
@@ -31,12 +48,7 @@ export interface CommandTree {
 
 export interface ConfigTree {
   SystemUnit: {
-    Name: {
-      get(): Promise<string>,
-      set(args: string): Promise<any>,
-      on(handler: (value: string) => void): void,
-      once(handler: (value: string) => void): void,
-    },
+    Name: Config<string>,
   };
 }
 

@@ -53,6 +53,32 @@ export class Root extends Node {
     return this.main;
   }
 
+  addGenericInterfaces() {
+    const gettable = this.addInterface('Gettable<T>');
+    gettable.addChild(new Command('get', undefined, 'T'));
+
+    const settable = this.addInterface('Settable<T>');
+    settable.addChild(new Command('set', 'T', 'void'));
+
+    const listenable = this.addInterface('Listenable<T>');
+    const handler = new Function('handler', [['value', new Plain('T')]]);
+    listenable.addChildren([
+      new Function('on', [['handler', handler]]),
+      new Function('once', [['handler', handler]]),
+    ]);
+
+    this.addInterface('Config<T>', [
+      gettable.name,
+      settable.name,
+      listenable.name,
+    ]);
+
+    this.addInterface('Status<T>', [
+      gettable.name,
+      listenable.name,
+    ]);
+  }
+
   serialize(): string {
     const lines = [];
     for (const child of this.children) {

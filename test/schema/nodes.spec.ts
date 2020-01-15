@@ -11,6 +11,7 @@ import {
   Status,
   Literal,
   List,
+  Function,
 } from '../../src/schema/nodes';
 
 describe('schema nodes', () => {
@@ -53,6 +54,29 @@ describe('schema nodes', () => {
       });
     });
 
+    describe('addGenericInterfaces', () => {
+      it('adds generic interfaces', () => {
+        const root = new Root();
+        root.addGenericInterfaces();
+        const serialized = root.serialize();
+        expect(serialized).toMatch('export interface Gettable<T>');
+        expect(serialized).toMatch('export interface Settable<T>');
+        expect(serialized).toMatch('export interface Listenable<T>');
+      });
+
+      it('adds Config<T> interface', () => {
+        const root = new Root();
+        root.addGenericInterfaces();
+        expect(root.serialize()).toMatch('export interface Config<T> extends Gettable<T>, Settable<T>, Listenable<T>');
+      });
+
+      it('adds Status<T> interface', () => {
+        const root = new Root();
+        root.addGenericInterfaces();
+        expect(root.serialize()).toMatch('export interface Status<T> extends Gettable<T>, Listenable<T>');
+      });
+    });
+
     it('can build entire module', () => {
       // .ts module
       const root = new Root();
@@ -60,8 +84,9 @@ describe('schema nodes', () => {
       // import ... from ...
       root.addChild(new ImportStatement());
 
-      // Main XAPI class
+      // Main XAPI class + generic interfaces
       const main = root.addMain();
+      root.addGenericInterfaces();
 
       const commandTree = root.addInterface('CommandTree');
       main.addChild(new Member('Command', commandTree));
@@ -104,7 +129,7 @@ describe('schema nodes', () => {
       // XAPI config APIs
       configTree
         .addChild(new Tree('SystemUnit'))
-        .addChild(new Config('Name', 'string'));
+        .addChild(new Member('Name', 'Config<string>'));
 
       // XAPI status APIs
       statusTree
