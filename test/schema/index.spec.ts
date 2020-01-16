@@ -175,7 +175,7 @@ describe('schemas', () => {
       it.todo('multiline commands');
     });
 
-    xdescribe('Config', () => {
+    describe('Config', () => {
       let root: Root;
       let main: any;
       let configTree: any;
@@ -214,7 +214,7 @@ describe('schemas', () => {
         };
 
         const audio = configTree.addChild(new Tree('Audio'));
-        audio.addChild(new Config('DefaultVolume', new Plain('number')));
+        audio.addChild(new Config('DefaultVolume', 'number'));
 
         expect(parse(schema)).toMatchObject({
           children: expect.arrayContaining([main, configTree]),

@@ -9,6 +9,7 @@ import {
   Literal,
   List,
   Type,
+  Config,
 } from './nodes';
 
 export interface GenerateOpts {
@@ -17,8 +18,12 @@ export interface GenerateOpts {
   xapiImport?: string;
 }
 
-interface Leaf {
+interface CommandLeaf {
   command?: string;
+  ValueSpace: ValueSpace;
+}
+
+interface ConfigLeaf {
   ValueSpace: ValueSpace;
 }
 
@@ -61,8 +66,15 @@ function parseValueSpace(valuespace: ValueSpace, path: string[]): Type {
  *
  * Command have { command: 'True' } in the schema.
  */
-function isCommandLeaf(value: unknown): value is Leaf {
-  return (value as Leaf).command === 'True';
+function isCommandLeaf(value: unknown): value is CommandLeaf {
+  return (value as CommandLeaf).command === 'True';
+}
+
+/**
+ * Check if an object is a configuration definition.
+ */
+function isConfigLeaf(value: unknown): value is ConfigLeaf {
+  return 'ValueSpace' in (value as ConfigLeaf);
 }
 
 /**
@@ -132,6 +144,16 @@ function parseCommandTree(root: Root, schema: any, tree: Node, path: string[]) {
  */
 function parseConfigTree(root: Root, schema: any, tree: Node, path: string[]) {
   forEachEntries(schema, (key, value) => {
+    const fullPath = path.concat(key);
+    if (isConfigLeaf(value)) {
+      const vs = parseValueSpace(value.ValueSpace, fullPath);
+      tree.addChild(new Config(key, vs));
+    } else if (Array.isArray(value)) {
+      console.error(`warn: ${fullPath.join('/')} arrays not yet supported`);
+    } else {
+      const subTree = tree.addChild(new Tree(key));
+      parseConfigTree(root, value, subTree, path.concat(key));
+    }
   });
 }
 
@@ -196,6 +218,7 @@ export function parse(schema: any, options?: GenerateOpts): Root {
 
   // Main XAPI class
   root.addMain();
+  root.addGenericInterfaces();
 
   parseSchema('Command', root, schema, parseCommandTree);
   parseSchema('Config', root, schema, parseConfigTree);
