@@ -10,6 +10,7 @@ import {
   List,
   Type,
   Config,
+  Status,
 } from './nodes';
 
 export interface GenerateOpts {
@@ -18,13 +19,12 @@ export interface GenerateOpts {
   xapiImport?: string;
 }
 
-interface CommandLeaf {
-  command?: string;
+interface Leaf {
   ValueSpace: ValueSpace;
 }
 
-interface ConfigLeaf {
-  ValueSpace: ValueSpace;
+interface CommandLeaf extends Leaf {
+  command?: string;
 }
 
 interface ValueSpace {
@@ -73,8 +73,8 @@ function isCommandLeaf(value: unknown): value is CommandLeaf {
 /**
  * Check if an object is a configuration definition.
  */
-function isConfigLeaf(value: unknown): value is ConfigLeaf {
-  return 'ValueSpace' in (value as ConfigLeaf);
+function isLeaf(value: unknown): value is Leaf {
+  return 'ValueSpace' in (value as Leaf);
 }
 
 /**
@@ -145,7 +145,7 @@ function parseCommandTree(root: Root, schema: any, tree: Node, path: string[]) {
 function parseConfigTree(root: Root, schema: any, tree: Node, path: string[]) {
   forEachEntries(schema, (key, value) => {
     const fullPath = path.concat(key);
-    if (isConfigLeaf(value)) {
+    if (isLeaf(value)) {
       const vs = parseValueSpace(value.ValueSpace, fullPath);
       tree.addChild(new Config(key, vs));
     } else if (Array.isArray(value)) {
@@ -162,6 +162,16 @@ function parseConfigTree(root: Root, schema: any, tree: Node, path: string[]) {
  */
 function parseStatusTree(root: Root, schema: any, tree: Node, path: string[]) {
   forEachEntries(schema, (key, value) => {
+    const fullPath = path.concat(key);
+    if (isLeaf(value)) {
+      const vs = parseValueSpace(value.ValueSpace, fullPath);
+      tree.addChild(new Status(key, vs));
+    } else if (Array.isArray(value)) {
+      console.error(`warn: ${fullPath.join('/')} arrays not yet supported`);
+    } else {
+      const subTree = tree.addChild(new Tree(key));
+      parseStatusTree(root, value, subTree, path.concat(key));
+    }
   });
 }
 
@@ -184,7 +194,7 @@ function parseSchema(
   const key = {
     Command: 'Command',
     Config: 'Configuration',
-    Status: 'Status',
+    Status: 'StatusSchema',
   }[type];
   const subSchema = schema[key];
 
@@ -199,7 +209,7 @@ function parseSchema(
   const tree = root.addInterface(`${type}Tree`);
   root.getMain().addChild(new Member(type, tree));
 
-  parser(root, subSchema, tree, []);
+  parser(root, subSchema, tree, [type]);
 }
 
 /**

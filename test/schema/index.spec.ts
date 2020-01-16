@@ -10,6 +10,7 @@ import {
   Literal,
   Config,
   List,
+  Status,
 } from '../../src/schema/nodes';
 
 describe('schemas', () => {
@@ -115,7 +116,7 @@ describe('schemas', () => {
           },
         };
 
-        const displayArgs = root.addInterface('MessageAlertDisplayArgs');
+        const displayArgs = root.addInterface('CommandMessageAlertDisplayArgs');
         displayArgs.addChildren([
           new Member('Duration', new Plain('number'), { required: false }),
           new Member('Text', new Plain('string'), { required: true }),
@@ -155,7 +156,7 @@ describe('schemas', () => {
           },
         };
 
-        const resetArgs = root.addInterface('SystemUnitFactoryResetArgs');
+        const resetArgs = root.addInterface('CommandSystemUnitFactoryResetArgs');
         resetArgs.addChild(
           new Member('Keep', new List(new Literal('LocalSetup', 'Network', 'Provisioning')), {
             required: false,
@@ -222,57 +223,48 @@ describe('schemas', () => {
       });
     });
 
-    xdescribe('Status', () => {
-      it('exports empty StatusTree', () => {
-        expect(generate({})).toMatch(
-          redent(`
-          export interface StatusTree {
+    describe('Status', () => {
+      let root: Root;
+      let main: any;
+      let statusTree: any;
+
+      beforeEach(() => {
+        root = new Root();
+        main = root.addMain();
+        statusTree = root.addInterface('StatusTree');
+        main.addChild(new Member('Status', statusTree));
+      });
+
+      it('adds Status tree', () => {
+        const parsed = parse({
+          StatusSchema: {},
+        });
+
+        expect(parsed).toMatchObject({
+          children: expect.arrayContaining([main, statusTree]),
+        });
+      });
+
+      it('adds status nodes', () => {
+        const schema = {
+          StatusSchema: {
+            Audio: {
+              Volume: {
+                ValueSpace: {
+                  type: 'Integer',
+                },
+              },
+            },
           }
-        `).trim(),
-        );
+        };
+
+        const audio = statusTree.addChild(new Tree('Audio'));
+        audio.addChild(new Status('Volume', 'number'));
+
+        expect(parse(schema)).toMatchObject({
+          children: expect.arrayContaining([main, statusTree]),
+        });
       });
     });
   });
-
-  // describe.skip('generateCommands()', () => {
-  //   it('exports empty CommandTree', () => {
-  //     expect(generateCommands(undefined)).toMatch(redent(`
-  //       export interface CommandTree
-  //       {}
-  //     `).trim());
-  //     expect(generateCommands({})).toMatch(redent(`
-  //       export interface CommandTree
-  //       {}
-  //     `).trim());
-  //   });
-
-  //   it('adds command to CommandTree', () => {
-  //     const schema = generateCommands({
-  //       Audio: {
-  //           Microphones: {
-  //             Mute: {
-  //               access: 'public-api',
-  //               command: 'True',
-  //               role: 'Admin;Integrator;User',
-  //               description: 'Mute all microphones.',
-  //             },
-  //           },
-  //         },
-  //     });
-
-  //     expect(schema).toMatch(redent(`
-  //       export interface CommandTree
-  //       {
-  //         Audio: {
-  //           Microphones: {
-  //             Mute(): Promise<void>;
-  //           },
-  //         },
-  //       }
-  //     `).trim());
-  //   });
-
-  //   it.todo('respect roles');
-  //   it.todo('adds doc string');
-  // });
 });
