@@ -242,7 +242,13 @@ describe('schema nodes', () => {
     it('quotes members with names containing special characters', () => {
       const option = new Member('Option.1', 'string');
       expect(option.serialize()).toMatch('"Option.1": string');
-    })
+    });
+
+    it('can add docstring', () => {
+      const docstring = 'Define the default volume for the speakers.';
+      const command = new Member('Microphones', 'number', { docstring });
+      expect(command.serialize()).toMatch(docstring);
+    });
   });
 
   describe('Tree', () => {
@@ -255,6 +261,13 @@ describe('schema nodes', () => {
 
       mic.addChild(new Member('LedIndicator', new Literal('On', 'Off')));
       expect(audio.serialize()).toMatchSnapshot();
+    });
+  });
+
+  describe('Command', () => {
+    it('can add docstring', () => {
+      const command = new Command('Microphones', undefined, undefined, 'Mute all microphones.');
+      expect(command.serialize()).toMatch('Mute all microphones.');
     });
   });
 

@@ -20,6 +20,7 @@ export interface GenerateOpts {
 }
 
 interface Leaf {
+  description?: string;
   ValueSpace: ValueSpace;
 }
 
@@ -126,11 +127,11 @@ function parseCommandTree(root: Root, schema: any, tree: Node, path: string[]) {
       const fullPath = path.concat(key);
       const params = parseParameters(value, fullPath);
       if (!params.length) {
-        tree.addChild(new Command(key));
+        tree.addChild(new Command(key, undefined, undefined, value.description));
       } else {
         const paramsType = root.addInterface(`${fullPath.join('')}Args`);
         paramsType.addChildren(params);
-        tree.addChild(new Command(key, paramsType));
+        tree.addChild(new Command(key, paramsType, undefined, value.description));
       }
     } else {
       const subTree = tree.addChild(new Tree(key));
@@ -147,7 +148,7 @@ function parseConfigTree(root: Root, schema: any, tree: Node, path: string[]) {
     const fullPath = path.concat(key);
     if (isLeaf(value)) {
       const vs = parseValueSpace(value.ValueSpace, fullPath);
-      tree.addChild(new Config(key, vs));
+      tree.addChild(new Config(key, vs, { docstring: value.description }));
     } else if (Array.isArray(value)) {
       console.error(`warn: ${fullPath.join('/')} arrays not yet supported`);
     } else {
@@ -165,7 +166,7 @@ function parseStatusTree(root: Root, schema: any, tree: Node, path: string[]) {
     const fullPath = path.concat(key);
     if (isLeaf(value)) {
       const vs = parseValueSpace(value.ValueSpace, fullPath);
-      tree.addChild(new Status(key, vs));
+      tree.addChild(new Status(key, vs, { docstring: value.description }));
     } else if (Array.isArray(value)) {
       console.error(`warn: ${fullPath.join('/')} arrays not yet supported`);
     } else {

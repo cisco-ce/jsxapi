@@ -87,6 +87,7 @@ describe('schemas', () => {
               Alert: {
                 Display: {
                   command: 'True',
+                  description: 'Display a message on screen.',
                   Duration: {
                     required: 'False',
                     ValueSpace: {
@@ -125,7 +126,7 @@ describe('schemas', () => {
 
         const audio: Tree = commandTree.addChild(new Tree('Message'));
         const mics = audio.addChild(new Tree('Alert'));
-        mics.addChild(new Command('Display', displayArgs));
+        mics.addChild(new Command('Display', displayArgs, undefined, schema.Command.Message.Alert.Display.description));
 
         expect(parse(schema)).toMatchObject({
           children: expect.arrayContaining([main, commandTree]),

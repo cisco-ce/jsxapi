@@ -207,24 +207,40 @@ ${super.serialize()} `;
   }
 }
 
+interface MemberOpts {
+  docstring?: string;
+  required?: boolean;
+}
+
 export class Member extends Node {
   private type: Type;
 
   constructor(
     readonly name: string,
     type: Valuespace,
-    readonly options?: { required: boolean },
+    readonly options: MemberOpts = {},
   ) {
     super();
     this.type = typeof type === 'string' ? new Plain(type) : type;
   }
 
+  formatDocstring() {
+    if (!this.options || !this.options.docstring) {
+      return '';
+    }
+
+    return `/**
+${this.options.docstring}
+*/
+`;
+  }
+
   serialize(): string {
-    const optional = !this.options || this.options.required ? '' : '?';
+    const optional = !('required' in this.options) || this.options.required ? '' : '?';
     const name = this.name.match(/^[a-z][a-z0-9]*$/i)
       ? this.name
       : `"${this.name}"`;
-    return `${name}${optional}: ${this.type.getType()}`;
+    return `${this.formatDocstring()}${name}${optional}: ${this.type.getType()}`;
   }
 }
 
@@ -243,7 +259,7 @@ export class Command extends Node {
   private params?: Type;
   private retval?: Type;
 
-  constructor(readonly name: string, params?: Valuespace, retval?: Valuespace) {
+  constructor(readonly name: string, params?: Valuespace, retval?: Valuespace, readonly docstring?: string) {
     super();
     if (params) {
       this.params = typeof params === 'string' ? new Plain(params) : params;
@@ -253,23 +269,34 @@ export class Command extends Node {
     }
   }
 
+  formatDocstring(): string {
+    if (!this.docstring) {
+      return '';
+    }
+
+    return `/**
+${this.docstring}
+*/
+`;
+  }
+
   serialize(): string {
     const args = this.params ? `args: ${this.params.getType()}` : '';
     const retval = this.retval ? this.retval.getType() : 'any';
-    return `${this.name}(${args}): Promise<${retval}>`;
+    return `${this.formatDocstring()}${this.name}(${args}): Promise<${retval}>`;
   }
 }
 
 export class Config extends Member {
-  constructor(name: string, valuespace: Valuespace) {
+  constructor(name: string, valuespace: Valuespace, options?: MemberOpts) {
     const inner = typeof valuespace === 'string' ? new Plain(valuespace) : valuespace;
-    super(name, new Plain(`Config<${inner.getType()}>`));
+    super(name, new Plain(`Config<${inner.getType()}>`), options);
   }
 }
 
 export class Status extends Member {
-  constructor(name: string, valuespace: Valuespace) {
+  constructor(name: string, valuespace: Valuespace, options?: MemberOpts) {
     const inner = typeof valuespace === 'string' ? new Plain(valuespace) : valuespace;
-    super(name, new Plain(`Status<${inner.getType()}>`));
+    super(name, new Plain(`Status<${inner.getType()}>`), options);
   }
 }
