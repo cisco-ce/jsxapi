@@ -10,6 +10,7 @@ import {
   Literal,
   List,
   Generic,
+  ArrayTree,
 } from '../../src/schema/nodes';
 
 describe('schemas', () => {
@@ -313,6 +314,43 @@ describe('schemas', () => {
 
         const audio = statusTree.addChild(new Tree('Audio'));
         audio.addChild(new Member('Volume', 'number', { docstring: undefined }));
+
+        expect(parse(schema)).toMatchObject({
+          children: expect.arrayContaining([main, statusTree]),
+        });
+      });
+
+      it('can fetch arrays', () => {
+        const schema = {
+          StatusSchema: {
+            Audio: {
+              Input: {
+                Connectors: {
+                  HDMI: [{
+                    Mute: {
+                      access: 'public-api',
+                      read: 'Admin;User',
+                      ValueSpace: {
+                        type: 'Literal',
+                        Value: [
+                          'On',
+                          'Off'
+                        ],
+                      },
+                    },
+                  }],
+                },
+              },
+            },
+          },
+        };
+
+        statusTree
+          .addChild(new Tree('Audio'))
+          .addChild(new Tree('Input'))
+          .addChild(new Tree('Connectors'))
+          .addChild(new ArrayTree('HDMI'))
+          .addChild(new Member('Mute', new Literal('On', 'Off')));
 
         expect(parse(schema)).toMatchObject({
           children: expect.arrayContaining([main, statusTree]),

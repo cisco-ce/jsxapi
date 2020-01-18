@@ -268,6 +268,12 @@ export class Tree extends Node {
   }
 }
 
+export class ArrayTree extends Tree {
+  serialize(): string {
+    return `${super.serialize()}[]`;
+  }
+}
+
 export class Command extends Node {
   private params?: Type;
   private retval?: Type;

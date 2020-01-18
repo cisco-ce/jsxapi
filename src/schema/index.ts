@@ -10,6 +10,7 @@ import {
   List,
   Type,
   Generic,
+  ArrayTree,
 } from './nodes';
 
 export interface GenerateOpts {
@@ -172,7 +173,11 @@ function parseStatusTree(root: Root, schema: any, tree: Node, path: string[]) {
       const vs = parseValueSpace(value.ValueSpace, fullPath);
       tree.addChild(new Member(key, vs, { docstring: value.description }));
     } else if (Array.isArray(value)) {
-      console.error(`warn: ${fullPath.join('/')} arrays not yet supported`);
+      if (value.length !== 1) {
+        throw new Error(`error: ${fullPath.join('/')} contains multiple entries`);
+      }
+      const subTree = tree.addChild(new ArrayTree(key));
+      parseConfigTree(root, value[0], subTree, path.concat([key]));
     } else {
       const subTree = tree.addChild(new Tree(key));
       parseStatusTree(root, value, subTree, path.concat(key));
