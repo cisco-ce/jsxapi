@@ -71,16 +71,21 @@ export class Root extends Node {
       new Function('once', [['handler', handler]]),
     ]);
 
-    this.addInterface('Config<T>', [
-      gettable.name,
-      settable.name,
-      listenable.name,
-    ]);
+    this.addChild(new class extends Node {
+      serialize() {
+        return `\
+type Configify<T> = T extends object
+  ? { [P in keyof T]: Configify<T[P]>; } & Gettable<T> & Listenable<T>
+  : Gettable<T> & Settable<T> & Listenable<T>;`;
+      }
+    });
 
-    this.addInterface('Status<T>', [
-      gettable.name,
-      listenable.name,
-    ]);
+    this.addChild(new class extends Node {
+      serialize() {
+        return `\
+type Statusify<T> = { [P in keyof T]: Statusify<T[P]>; } & Gettable<T> & Listenable<T>;`;
+      }
+    });
   }
 
   serialize(): string {
@@ -124,6 +129,14 @@ export class Plain implements Type {
 
   getType() {
     return this.text;
+  }
+}
+
+export class Generic implements Type {
+  constructor(readonly name: string, readonly inner: Type) {}
+
+  getType() {
+    return `${this.name}<${this.inner.getType()}>`;
   }
 }
 
@@ -284,19 +297,5 @@ ${this.docstring}
     const args = this.params ? `args: ${this.params.getType()}` : '';
     const retval = this.retval ? this.retval.getType() : 'any';
     return `${this.formatDocstring()}${this.name}(${args}): Promise<${retval}>`;
-  }
-}
-
-export class Config extends Member {
-  constructor(name: string, valuespace: Valuespace, options?: MemberOpts) {
-    const inner = typeof valuespace === 'string' ? new Plain(valuespace) : valuespace;
-    super(name, new Plain(`Config<${inner.getType()}>`), options);
-  }
-}
-
-export class Status extends Member {
-  constructor(name: string, valuespace: Valuespace, options?: MemberOpts) {
-    const inner = typeof valuespace === 'string' ? new Plain(valuespace) : valuespace;
-    super(name, new Plain(`Status<${inner.getType()}>`), options);
   }
 }

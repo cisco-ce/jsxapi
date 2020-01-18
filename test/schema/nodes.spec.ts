@@ -6,9 +6,7 @@ import {
   Command,
   Tree,
   Member,
-  Config,
   Plain,
-  Status,
   Literal,
   List,
   Function,
@@ -64,16 +62,16 @@ describe('schema nodes', () => {
         expect(serialized).toMatch('export interface Listenable<T>');
       });
 
-      it('adds Config<T> interface', () => {
+      it('adds Configify type', () => {
         const root = new Root();
         root.addGenericInterfaces();
-        expect(root.serialize()).toMatch('export interface Config<T> extends Gettable<T>, Settable<T>, Listenable<T>');
+        expect(root.serialize()).toMatch('type Configify<T> =');
       });
 
-      it('adds Status<T> interface', () => {
+      it('adds Statusify type', () => {
         const root = new Root();
         root.addGenericInterfaces();
-        expect(root.serialize()).toMatch('export interface Status<T> extends Gettable<T>, Listenable<T>');
+        expect(root.serialize()).toMatch('type Statusify<T> =');
       });
     });
 
@@ -129,12 +127,12 @@ describe('schema nodes', () => {
       // XAPI config APIs
       configTree
         .addChild(new Tree('SystemUnit'))
-        .addChild(new Config('Name', 'string'));
+        .addChild(new Member('Name', 'string'));
 
       // XAPI status APIs
       statusTree
         .addChild(new Tree('Audio'))
-        .addChild(new Status('Volume', 'number'));
+        .addChild(new Member('Volume', 'number'));
 
       // It dumps the shit
       expect(root.serialize()).toMatchSnapshot();
@@ -271,17 +269,7 @@ describe('schema nodes', () => {
     });
   });
 
-  describe('Config', () => {
-    it('is a member with a generic Config<T>', () => {
-      const config = new Config('Name', 'string');
-      expect(config.serialize()).toMatch('Name: Config<string>');
-    });
-  });
-
-  describe('Status', () => {
-    it('is a member with a generic Status<T>', () => {
-      const status = new Status('Volume', 'number');
-      expect(status.serialize()).toMatch('Volume: Status<number>');
-    });
-  });
+  // There is no guarantee in xstatus that a node is present, so the result type
+  // of a getting a status leaf or sub-tree should reflect this.
+  it.todo('Status results should be optional/partial');
 });

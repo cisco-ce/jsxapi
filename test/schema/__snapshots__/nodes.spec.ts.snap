@@ -27,9 +27,11 @@ export interface Listenable<T> {
   once(handler: (value: T) => void): void;
 }
 
-export interface Config<T> extends Gettable<T>, Settable<T>, Listenable<T> {}
+type Configify<T> = T extends object
+  ? { [P in keyof T]: Configify<T[P]>; } & Gettable<T> & Listenable<T>
+  : Gettable<T> & Settable<T> & Listenable<T>;
 
-export interface Status<T> extends Gettable<T>, Listenable<T> {}
+type Statusify<T> = { [P in keyof T]: Statusify<T[P]>; } & Gettable<T> & Listenable<T>;
 
 export interface CommandTree {
   Audio: {
@@ -48,13 +50,13 @@ export interface CommandTree {
 
 export interface ConfigTree {
   SystemUnit: {
-    Name: Config<string>,
+    Name: string,
   };
 }
 
 export interface StatusTree {
   Audio: {
-    Volume: Status<number>,
+    Volume: number,
   };
 }
 

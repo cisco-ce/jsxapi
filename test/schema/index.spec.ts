@@ -8,9 +8,8 @@ import {
   Command,
   Plain,
   Literal,
-  Config,
   List,
-  Status,
+  Generic,
 } from '../../src/schema/nodes';
 
 describe('schemas', () => {
@@ -40,9 +39,6 @@ describe('schemas', () => {
       const schema = { Command: 'foobar' };
       expect(() => parse(schema)).toThrow();
     });
-
-    it.todo('adds Config tree');
-    it.todo('adds Status tree');
 
     describe('Commands', () => {
       let root: Root;
@@ -186,7 +182,7 @@ describe('schemas', () => {
         root = new Root();
         main = root.addMain();
         configTree = root.addInterface('ConfigTree');
-        main.addChild(new Member('Config', configTree));
+        main.addChild(new Member('Config', new Generic('Configify', configTree)));
       });
 
       it('adds Config tree', () => {
@@ -216,7 +212,7 @@ describe('schemas', () => {
         };
 
         const audio = configTree.addChild(new Tree('Audio'));
-        audio.addChild(new Config('DefaultVolume', 'number'));
+        audio.addChild(new Member('DefaultVolume', 'number'));
 
         expect(parse(schema)).toMatchObject({
           children: expect.arrayContaining([main, configTree]),
@@ -270,7 +266,7 @@ describe('schemas', () => {
           .addChild(new Tree('HDMI'))
           .addChildren(['2', '3'].map((n) => {
             const tree = new Tree(n);
-            tree.addChild(new Config('Mode', new Literal('Off', 'On')));
+            tree.addChild(new Member('Mode', new Literal('Off', 'On')));
             return tree;
           }));
 
@@ -289,7 +285,7 @@ describe('schemas', () => {
         root = new Root();
         main = root.addMain();
         statusTree = root.addInterface('StatusTree');
-        main.addChild(new Member('Status', statusTree));
+        main.addChild(new Member('Status', new Generic('Statusify', statusTree)));
       });
 
       it('adds Status tree', () => {
@@ -316,7 +312,7 @@ describe('schemas', () => {
         };
 
         const audio = statusTree.addChild(new Tree('Audio'));
-        audio.addChild(new Status('Volume', 'number'));
+        audio.addChild(new Member('Volume', 'number', { docstring: undefined }));
 
         expect(parse(schema)).toMatchObject({
           children: expect.arrayContaining([main, statusTree]),

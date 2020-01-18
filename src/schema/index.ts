@@ -9,8 +9,7 @@ import {
   Literal,
   List,
   Type,
-  Config,
-  Status,
+  Generic,
 } from './nodes';
 
 export interface GenerateOpts {
@@ -148,7 +147,7 @@ function parseConfigTree(root: Root, schema: any, tree: Node, path: string[]) {
     const fullPath = path.concat(key);
     if (isLeaf(value)) {
       const vs = parseValueSpace(value.ValueSpace, fullPath);
-      tree.addChild(new Config(key, vs, { docstring: value.description }));
+      tree.addChild(new Member(key, vs, { docstring: value.description }));
     } else if (Array.isArray(value)) {
       const subTree = tree.addChild(new Tree(key));
       for (const each of value) {
@@ -171,7 +170,7 @@ function parseStatusTree(root: Root, schema: any, tree: Node, path: string[]) {
     const fullPath = path.concat(key);
     if (isLeaf(value)) {
       const vs = parseValueSpace(value.ValueSpace, fullPath);
-      tree.addChild(new Status(key, vs, { docstring: value.description }));
+      tree.addChild(new Member(key, vs, { docstring: value.description }));
     } else if (Array.isArray(value)) {
       console.error(`warn: ${fullPath.join('/')} arrays not yet supported`);
     } else {
@@ -181,6 +180,9 @@ function parseStatusTree(root: Root, schema: any, tree: Node, path: string[]) {
   });
 }
 
+/**
+ * A parsing function to parse a document subtree.
+ */
 type SchemaParser = (root: Root, schema: any, tree: Tree, path: string[]) => void;
 
 /**
@@ -197,12 +199,21 @@ function parseSchema(
   schema: any,
   parser: SchemaParser,
 ) {
-  const key = {
-    Command: 'Command',
-    Config: 'Configuration',
-    Status: 'StatusSchema',
+  const { rootKey, mkType } = {
+    Command: {
+      rootKey: 'Command',
+      mkType: (t: Type) => t,
+    },
+    Config: {
+      rootKey: 'Configuration',
+      mkType: (t: Type) => new Generic('Configify', t),
+    },
+    Status: {
+      rootKey: 'StatusSchema',
+      mkType: (t: Type) => new Generic('Statusify', t),
+    },
   }[type];
-  const subSchema = schema[key];
+  const subSchema = schema[rootKey];
 
   if (!subSchema) {
     return;
@@ -213,7 +224,7 @@ function parseSchema(
   }
 
   const tree = root.addInterface(`${type}Tree`);
-  root.getMain().addChild(new Member(type, tree));
+  root.getMain().addChild(new Member(type, mkType(tree)));
 
   parser(root, subSchema, tree, [type]);
 }
