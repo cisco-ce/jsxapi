@@ -150,7 +150,12 @@ function parseConfigTree(root: Root, schema: any, tree: Node, path: string[]) {
       const vs = parseValueSpace(value.ValueSpace, fullPath);
       tree.addChild(new Config(key, vs, { docstring: value.description }));
     } else if (Array.isArray(value)) {
-      console.error(`warn: ${fullPath.join('/')} arrays not yet supported`);
+      const subTree = tree.addChild(new Tree(key));
+      for (const each of value) {
+        const id = each.id;
+        const idTree = subTree.addChild(new Tree(id));
+        parseConfigTree(root, each, idTree, path.concat([key, id]));
+      }
     } else {
       const subTree = tree.addChild(new Tree(key));
       parseConfigTree(root, value, subTree, path.concat(key));

@@ -212,11 +212,67 @@ describe('schemas', () => {
                 },
               },
             },
-          }
+          },
         };
 
         const audio = configTree.addChild(new Tree('Audio'));
         audio.addChild(new Config('DefaultVolume', 'number'));
+
+        expect(parse(schema)).toMatchObject({
+          children: expect.arrayContaining([main, configTree]),
+        });
+      });
+
+      it('can fetch arrays', () => {
+        const schema = {
+          Configuration: {
+            Audio: {
+              Input: {
+                HDMI: [{
+                  id: '2',
+                  Mode: {
+                    access: 'public-api',
+                    role: 'Admin;Integrator',
+                    read: 'Admin;Integrator;User',
+                    ValueSpace: {
+                      type: 'Literal',
+                      default: 'On',
+                      Value: [
+                        'Off',
+                        'On'
+                      ],
+                    },
+                  },
+                }, {
+                  id:'3',
+                  Mode: {
+                    access: 'public-api',
+                    role: 'Admin;Integrator',
+                    read: 'Admin;Integrator;User',
+                    ValueSpace: {
+                      type: 'Literal',
+                      default: 'On',
+                      Value: [
+                        'Off',
+                        'On'
+                      ],
+                    },
+                  },
+                }],
+              },
+            },
+          },
+        };
+
+        configTree
+          .addChild(new Tree('Audio'))
+          .addChild(new Tree('Input'))
+          .addChild(new Tree('HDMI'))
+          .addChildren(['2', '3'].map((n) => {
+            const tree = new Tree(n);
+            tree.addChild(new Config('Mode', new Literal('Off', 'On')));
+            return tree;
+          }));
 
         expect(parse(schema)).toMatchObject({
           children: expect.arrayContaining([main, configTree]),
