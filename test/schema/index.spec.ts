@@ -123,7 +123,9 @@ describe('schemas', () => {
 
         const audio: Tree = commandTree.addChild(new Tree('Message'));
         const mics = audio.addChild(new Tree('Alert'));
-        mics.addChild(new Command('Display', displayArgs, undefined, schema.Command.Message.Alert.Display.description));
+        mics.addChild(new Command('Display', displayArgs, undefined, {
+          docstring: schema.Command.Message.Alert.Display.description,
+        }));
 
         expect(parse(schema)).toMatchObject({
           children: expect.arrayContaining([main, commandTree]),
@@ -162,7 +164,47 @@ describe('schemas', () => {
         );
 
         const systemUnit: Tree = commandTree.addChild(new Tree('SystemUnit'));
-        systemUnit.addChild(new Command('FactoryReset', resetArgs));
+        systemUnit.addChild(new Command('FactoryReset', resetArgs, undefined, { docstring: undefined }));
+
+        expect(parse(schema)).toMatchObject({
+          children: expect.arrayContaining([main, commandTree]),
+        });
+      });
+
+      it('parses multiline commands', () => {
+        const schema = {
+          Command: {
+            HttpClient: {
+              Post: {
+                access: 'public-api',
+                command: 'True',
+                multiline: 'True',
+                role: 'Admin',
+                Url: {
+                  required: 'True',
+                  ValueSpace: {
+                    type: 'String',
+                    minLength: '8',
+                    maxLength: '2048',
+                  },
+                },
+              },
+            },
+          },
+        };
+
+        const postArgs = root.addInterface('CommandHttpClientPostArgs');
+        postArgs.addChild(
+          new Member('Url', 'string', {
+            required: true,
+          }),
+        );
+
+        const httpClient: Tree = commandTree.addChild(new Tree('HttpClient'));
+        httpClient.addChild(new Command('Post', postArgs, undefined, {
+          docstring: undefined,
+          multiline: true,
+        }));
 
         expect(parse(schema)).toMatchObject({
           children: expect.arrayContaining([main, commandTree]),
@@ -171,7 +213,6 @@ describe('schemas', () => {
 
       it.todo('non-required parameters');
       it.todo('LiteralArray valuespace');
-      it.todo('multiline commands');
     });
 
     describe('Config', () => {

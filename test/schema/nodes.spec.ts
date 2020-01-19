@@ -264,8 +264,31 @@ describe('schema nodes', () => {
 
   describe('Command', () => {
     it('can add docstring', () => {
-      const command = new Command('Microphones', undefined, undefined, 'Mute all microphones.');
+      const command = new Command('Microphones', undefined, undefined, {
+        docstring: 'Mute all microphones.',
+      });
       expect(command.serialize()).toMatch('Mute all microphones.');
+    });
+
+    it('can be multiline (without params)', () => {
+      const command = new Command('Post', undefined, undefined, {
+        multiline: true,
+      });
+      expect(command.serialize()).toMatch(/\(args: {}, body: string\)/);
+    });
+
+    it('can be multiline (with params)', () => {
+      const postArgs = new Root().addInterface('PostArgs');
+      postArgs.addChild(
+        new Member('Url', 'string', {
+          required: true,
+        }),
+      );
+
+      const command = new Command('Post', postArgs, undefined, {
+        multiline: true,
+      });
+      expect(command.serialize()).toMatch(/\(args: PostArgs, body: string\)/);
     });
   });
 

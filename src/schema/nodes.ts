@@ -274,11 +274,21 @@ export class ArrayTree extends Tree {
   }
 }
 
+interface CommandOpts {
+  docstring?: string;
+  multiline?: boolean;
+}
+
 export class Command extends Node {
   private params?: Type;
   private retval?: Type;
 
-  constructor(readonly name: string, params?: Valuespace, retval?: Valuespace, readonly docstring?: string) {
+  constructor(
+    readonly name: string,
+    params?: Valuespace,
+    retval?: Valuespace,
+    readonly options?: CommandOpts,
+  ) {
     super();
     if (params) {
       this.params = typeof params === 'string' ? new Plain(params) : params;
@@ -289,18 +299,20 @@ export class Command extends Node {
   }
 
   formatDocstring(): string {
-    if (!this.docstring) {
+    if (!this.options || !this.options.docstring) {
       return '';
     }
 
     return `/**
-${this.docstring}
+${this.options.docstring}
 */
 `;
   }
 
   serialize(): string {
-    const args = this.params ? `args: ${this.params.getType()}` : '';
+    const body = this.options && this.options.multiline ? `, body: string` : '';
+    const argsType = this.params ? this.params.getType() : body ? '{}' : '';
+    const args = argsType ? `args: ${argsType}${body}` : '';
     const retval = this.retval ? this.retval.getType() : 'any';
     return `${this.formatDocstring()}${this.name}(${args}): Promise<${retval}>`;
   }

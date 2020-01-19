@@ -26,6 +26,7 @@ interface Leaf {
 
 interface CommandLeaf extends Leaf {
   command?: string;
+  multiline?: 'True' | 'False';
 }
 
 interface ValueSpace {
@@ -126,13 +127,16 @@ function parseCommandTree(root: Root, schema: any, tree: Node, path: string[]) {
     if (isCommandLeaf(value)) {
       const fullPath = path.concat(key);
       const params = parseParameters(value, fullPath);
-      if (!params.length) {
-        tree.addChild(new Command(key, undefined, undefined, value.description));
-      } else {
-        const paramsType = root.addInterface(`${fullPath.join('')}Args`);
+      const paramsType = !params.length
+        ? undefined
+        : root.addInterface(`${fullPath.join('')}Args`);
+      if (paramsType) {
         paramsType.addChildren(params);
-        tree.addChild(new Command(key, paramsType, undefined, value.description));
       }
+      tree.addChild(new Command(key, paramsType, undefined, {
+        docstring: value.description,
+        multiline: value.multiline && value.multiline === 'True',
+      }));
     } else {
       const subTree = tree.addChild(new Tree(key));
       parseCommandTree(root, value, subTree, path.concat(key));
