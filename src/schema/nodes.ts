@@ -74,7 +74,7 @@ export class Root extends Node {
     this.addChild(new class extends Node {
       serialize() {
         return `\
-type Configify<T> = T extends object
+type Configify<T> = [T] extends [object]
   ? { [P in keyof T]: Configify<T[P]>; } & Gettable<T> & Listenable<T>
   : Gettable<T> & Settable<T> & Listenable<T>;`;
       }

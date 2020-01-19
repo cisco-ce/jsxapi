@@ -27,7 +27,7 @@ export interface Listenable<T> {
   once(handler: (value: T) => void): void;
 }
 
-type Configify<T> = T extends object
+type Configify<T> = [T] extends [object]
   ? { [P in keyof T]: Configify<T[P]>; } & Gettable<T> & Listenable<T>
   : Gettable<T> & Settable<T> & Listenable<T>;
 
