@@ -203,7 +203,7 @@ describe('schema nodes', () => {
       expect(iface.serialize()).toMatch(
         redent(`
         export interface CommandTree {
-          Dial(): Promise<any>;
+          Dial<R=any>(): Promise<R>;
         }
       `).trim(),
       );
@@ -220,7 +220,7 @@ describe('schema nodes', () => {
         export interface CommandTree {
           Audio: {
             Microphones: {
-              Mute(): Promise<any>,
+              Mute<R=any>(): Promise<R>,
             },
           };
         }

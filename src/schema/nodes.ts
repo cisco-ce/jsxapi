@@ -314,6 +314,6 @@ ${this.options.docstring}
     const argsType = this.params ? this.params.getType() : body ? '{}' : '';
     const args = argsType ? `args: ${argsType}${body}` : '';
     const retval = this.retval ? this.retval.getType() : 'any';
-    return `${this.formatDocstring()}${this.name}(${args}): Promise<${retval}>`;
+    return `${this.formatDocstring()}${this.name}<R=${retval}>(${args}): Promise<R>`;
   }
 }

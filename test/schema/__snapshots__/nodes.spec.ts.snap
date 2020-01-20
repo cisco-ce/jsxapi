@@ -15,11 +15,11 @@ export interface TypedXAPI {
 } 
 
 export interface Gettable<T> {
-  get(): Promise<T>;
+  get<R=T>(): Promise<R>;
 }
 
 export interface Settable<T> {
-  set(args: T): Promise<void>;
+  set<R=void>(args: T): Promise<R>;
 }
 
 export interface Listenable<T> {
@@ -36,15 +36,15 @@ type Statusify<T> = { [P in keyof T]: Statusify<T[P]>; } & Gettable<T> & Listena
 export interface CommandTree {
   Audio: {
     Microphones: {
-      Mute(): Promise<any>,
+      Mute<R=any>(): Promise<R>,
     },
     Sound: {
-      Play(args: AudioPlayArgs): Promise<any>,
+      Play<R=any>(args: AudioPlayArgs): Promise<R>,
     },
   };
-  Dial(args: DialArgs): Promise<any>;
+  Dial<R=any>(args: DialArgs): Promise<R>;
   SystemUnit: {
-    FactoryReset(args: SystemUnitFactoryResetArgs): Promise<any>,
+    FactoryReset<R=any>(args: SystemUnitFactoryResetArgs): Promise<R>,
   };
 }
 
