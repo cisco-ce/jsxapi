@@ -15,11 +15,11 @@ export interface TypedXAPI {
 } 
 
 export interface Gettable<T> {
-  get<R=T>(): Promise<R>;
+  get(): Promise<T>;
 }
 
 export interface Settable<T> {
-  set<R=void>(args: T): Promise<R>;
+  set(value: T): Promise<void>;
 }
 
 export interface Listenable<T> {

@@ -58,11 +58,16 @@ export class Root extends Node {
   }
 
   addGenericInterfaces() {
+    const templateParam = new Plain('T');
     const gettable = this.addInterface('Gettable<T>');
-    gettable.addChild(new Command('get', undefined, 'T'));
+    gettable.addChild(
+      new Function('get', [], new Generic('Promise', templateParam)),
+    );
 
     const settable = this.addInterface('Settable<T>');
-    settable.addChild(new Command('set', 'T', 'void'));
+    settable.addChild(
+      new Function('set', [['value', templateParam]], new Generic('Promise', 'void')),
+    );
 
     const listenable = this.addInterface('Listenable<T>');
     const handler = new Function('handler', [['value', new Plain('T')]]);
@@ -133,10 +138,16 @@ export class Plain implements Type {
 }
 
 export class Generic implements Type {
-  constructor(readonly name: string, readonly inner: Type) {}
+  private name: Type;
+  private inner: Type;
+
+  constructor(name: Valuespace, inner: Valuespace) {
+    this.name = typeof name === 'string' ? new Plain(name) : name;
+    this.inner = typeof inner === 'string' ? new Plain(inner) : inner;
+  }
 
   getType() {
-    return `${this.name}<${this.inner.getType()}>`;
+    return `${this.name.getType()}<${this.inner.getType()}>`;
   }
 }
 
