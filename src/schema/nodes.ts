@@ -125,6 +125,10 @@ function renderTree(nodes: Node[], terminator: string) {
 
 type Valuespace = Type | string;
 
+function vsToType(vs: Valuespace): Type {
+  return typeof vs === 'string' ? new Plain(vs) : vs;
+}
+
 export interface Type {
   getType(): string;
 }
@@ -142,8 +146,8 @@ export class Generic implements Type {
   private inner: Type;
 
   constructor(name: Valuespace, inner: Valuespace) {
-    this.name = typeof name === 'string' ? new Plain(name) : name;
-    this.inner = typeof inner === 'string' ? new Plain(inner) : inner;
+    this.name = vsToType(name);
+    this.inner = vsToType(inner);
   }
 
   getType() {
@@ -245,7 +249,7 @@ export class Member extends Node {
     readonly options: MemberOpts = {},
   ) {
     super();
-    this.type = typeof type === 'string' ? new Plain(type) : type;
+    this.type = vsToType(type);
   }
 
   formatDocstring() {
@@ -302,10 +306,10 @@ export class Command extends Node {
   ) {
     super();
     if (params) {
-      this.params = typeof params === 'string' ? new Plain(params) : params;
+      this.params = vsToType(params);
     }
     if (retval) {
-      this.retval = typeof retval === 'string' ? new Plain(retval) : retval;
+      this.retval = vsToType(retval);
     }
   }
 
