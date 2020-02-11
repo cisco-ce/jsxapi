@@ -5,9 +5,10 @@ if (process.argv.length < 3) {
   throw new Error('usage: <schema.json> ...[schema.json]');
 }
 
-const schema = process.argv.slice(2).reduce((schema, schemafile) => {
+const fullSchema = process.argv.slice(2).reduce((schema, schemafile) => {
   const json = fs.readFileSync(schemafile, 'utf8');
   return { ...schema, ...JSON.parse(json) };
 }, {});
 
-console.log(parse(schema).serialize());
+// tslint:disable-next-line no-console
+console.log(parse(fullSchema).serialize());

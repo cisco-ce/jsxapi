@@ -1,9 +1,9 @@
 import Url from 'url-parse';
 
+import { Backend } from './backend';
 import log from './log';
 import { InitBackend, Options } from './types';
 import XAPI from './xapi';
-import { Backend } from './backend';
 
 export const globalDefaults: Options = {
   command: '',
@@ -63,7 +63,7 @@ export default function connectOverload<T extends XAPI>(
   initBackend: InitBackend,
   defaults: Partial<Options>,
 ): (XAPI: new (backend: Backend) => T) => Connect<T> {
-  return (XAPI) => (...args: any[]) => {
+  return (xapi) => (...args: any[]) => {
     let url: string;
     let options: Options;
 
@@ -87,6 +87,6 @@ export default function connectOverload<T extends XAPI>(
     log.info('connecting to', url);
 
     const backend = initBackend(opts);
-    return new XAPI(backend);
+    return new xapi(backend);
   };
 }

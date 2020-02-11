@@ -1,16 +1,16 @@
 import {
-  Node,
-  Root,
-  ImportStatement,
-  Tree,
-  Member,
-  Command,
-  Plain,
-  Literal,
-  List,
-  Type,
-  Generic,
   ArrayTree,
+  Command,
+  Generic,
+  ImportStatement,
+  List,
+  Literal,
+  Member,
+  Node,
+  Plain,
+  Root,
+  Tree,
+  Type,
 } from './nodes';
 
 export interface GenerateOpts {
@@ -112,6 +112,7 @@ function parseParameters(command: CommandLeaf, path: string[]): Member[] {
       const required = ps.required === 'True';
       params.push(new Member(key, valuespace, { required }));
     } catch (error) {
+      // tslint:disable-next-line no-console
       console.error(`warning: '${fullPath.join('/')}' error parsing valuespace: ${error}`);
     }
   });
@@ -210,16 +211,16 @@ function parseSchema(
 ) {
   const { rootKey, mkType } = {
     Command: {
-      rootKey: 'Command',
       mkType: (t: Type) => t,
+      rootKey: 'Command',
     },
     Config: {
-      rootKey: 'Configuration',
       mkType: (t: Type) => new Generic('Configify', t),
+      rootKey: 'Configuration',
     },
     Status: {
-      rootKey: 'StatusSchema',
       mkType: (t: Type) => new Generic('Statusify', t),
+      rootKey: 'StatusSchema',
     },
   }[type];
   const subSchema = schema[rootKey];

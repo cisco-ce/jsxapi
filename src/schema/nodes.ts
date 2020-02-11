@@ -7,23 +7,23 @@ export abstract class Node {
     this.children = [];
   }
 
-  addChild<T extends Node>(child: T): T {
+  public addChild<T extends Node>(child: T): T {
     this.children.push(child);
     return child;
   }
 
-  addChildren<T extends Node>(children: T[]) {
+  public addChildren<T extends Node>(children: T[]) {
     this.children = this.children.concat(children);
   }
 
-  abstract serialize(): string;
+  public abstract serialize(): string;
 }
 
 export class Root extends Node {
   private interfaceNames = new Set<string>();
   private main?: MainClass;
 
-  addChild<T extends Node>(child: T): T {
+  public addChild<T extends Node>(child: T): T {
     if (child instanceof Interface) {
       if (this.interfaceNames.has(child.name)) {
         throw new Error(`Interface already exists: ${child.name}`);
@@ -33,15 +33,15 @@ export class Root extends Node {
     return super.addChild(child);
   }
 
-  addInterface(name: string, extends_: string[] = []): Interface {
-    const missing = extends_.filter((e) => !this.interfaceNames.has(e));
+  public addInterface(name: string, extend: string[] = []): Interface {
+    const missing = extend.filter((e) => !this.interfaceNames.has(e));
     if (missing.length) {
       throw new Error(`Cannot add interface ${name} due to missing interfaces: ${missing.join(', ')}`);
     }
-    return this.addChild(new Interface(name, extends_));
+    return this.addChild(new Interface(name, extend));
   }
 
-  addMain(name?: string, base?: string): MainClass {
+  public addMain(name?: string, base?: string): MainClass {
     if (this.main) {
       throw new Error('Main class already defined');
     }
@@ -50,14 +50,14 @@ export class Root extends Node {
     return main;
   }
 
-  getMain(): MainClass {
+  public getMain(): MainClass {
     if (!this.main) {
       throw new Error('No main class defined');
     }
     return this.main;
   }
 
-  addGenericInterfaces() {
+  public addGenericInterfaces() {
     const templateParam = new Plain('T');
     const gettable = this.addInterface('Gettable<T>');
     gettable.addChild(
@@ -77,23 +77,23 @@ export class Root extends Node {
     ]);
 
     this.addChild(new class extends Node {
-      serialize() {
+      public serialize() {
         return `\
 type Configify<T> = [T] extends [object]
   ? { [P in keyof T]: Configify<T[P]>; } & Gettable<T> & Listenable<T>
   : Gettable<T> & Settable<T> & Listenable<T>;`;
       }
-    });
+    }());
 
     this.addChild(new class extends Node {
-      serialize() {
+      public serialize() {
         return `\
 type Statusify<T> = { [P in keyof T]: Statusify<T[P]>; } & Gettable<T> & Listenable<T>;`;
       }
-    });
+    }());
   }
 
-  serialize(): string {
+  public serialize(): string {
     const lines = [];
     for (const child of this.children) {
       lines.push(child.serialize());
@@ -109,7 +109,7 @@ export class ImportStatement extends Node {
     super();
   }
 
-  serialize(): string {
+  public serialize(): string {
     return `import { ${this.importName}, connectGen } from "${this.moduleName}";`;
   }
 }
@@ -136,7 +136,7 @@ export interface Type {
 export class Plain implements Type {
   constructor(readonly text: string) {}
 
-  getType() {
+  public getType() {
     return this.text;
   }
 }
@@ -150,7 +150,7 @@ export class Generic implements Type {
     this.inner = vsToType(inner);
   }
 
-  getType() {
+  public getType() {
     return `${this.name.getType()}<${this.inner.getType()}>`;
   }
 }
@@ -158,19 +158,19 @@ export class Generic implements Type {
 export class Function extends Node implements Type {
   constructor(
     readonly name: string,
-    readonly args: [string, Type][] = [],
+    readonly args: Array<[string, Type]> = [],
     readonly ret: Type = new Plain('void'),
   ) {
     super();
   }
 
-  getType(separator: string = ' =>') {
+  public getType(separator: string = ' =>') {
     const args = this.args.map(([n, t]) => `${n}: ${t.getType()}`).join(', ');
     const ret = this.ret.getType();
     return `(${args})${separator} ${ret}`;
   }
 
-  serialize() {
+  public serialize() {
     return `${this.name}${this.getType(':')}`;
   }
 }
@@ -178,7 +178,7 @@ export class Function extends Node implements Type {
 export class List implements Type {
   constructor(readonly elementType: Type) {}
 
-  getType() {
+  public getType() {
     const elemType = this.elementType.getType();
     const withParens =
       this.elementType instanceof Literal ? `(${elemType})` : elemType;
@@ -198,22 +198,22 @@ export class Literal implements Type {
     });
   }
 
-  getType() {
+  public getType() {
     return this.members.map((m) => m.getType()).join(' | ');
   }
 }
 
 class Interface extends Node implements Type {
-  constructor(readonly name: string, readonly extends_: string[] = []) {
+  constructor(readonly name: string, readonly extend: string[] = []) {
     super();
   }
 
-  getType(): string {
+  public getType(): string {
     return this.name;
   }
 
-  serialize(): string {
-    const ext = this.extends_.length ? ` extends ${this.extends_.join(', ')}` : '';
+  public serialize(): string {
+    const ext = this.extend.length ? ` extends ${this.extend.join(', ')}` : '';
     const tree = renderTree(this.children, ';');
     return `export interface ${this.name}${ext} {${tree}}`;
   }
@@ -224,7 +224,7 @@ class MainClass extends Interface {
     super(name);
   }
 
-  serialize(): string {
+  public serialize(): string {
     return `\
 export class ${this.name} extends ${this.base} {}
 
@@ -252,7 +252,7 @@ export class Member extends Node {
     this.type = vsToType(type);
   }
 
-  formatDocstring() {
+  public formatDocstring() {
     if (!this.options || !this.options.docstring) {
       return '';
     }
@@ -263,7 +263,7 @@ ${this.options.docstring}
 `;
   }
 
-  serialize(): string {
+  public serialize(): string {
     const optional = !('required' in this.options) || this.options.required ? '' : '?';
     const name = this.name.match(/^[a-z][a-z0-9]*$/i)
       ? this.name
@@ -277,14 +277,14 @@ export class Tree extends Node {
     super();
   }
 
-  serialize(): string {
+  public serialize(): string {
     const tree = renderTree(this.children, ',');
     return `${this.name}: {${tree}}`;
   }
 }
 
 export class ArrayTree extends Tree {
-  serialize(): string {
+  public serialize(): string {
     return `${super.serialize()}[]`;
   }
 }
@@ -313,7 +313,7 @@ export class Command extends Node {
     }
   }
 
-  formatDocstring(): string {
+  public formatDocstring(): string {
     if (!this.options || !this.options.docstring) {
       return '';
     }
@@ -324,7 +324,7 @@ ${this.options.docstring}
 `;
   }
 
-  serialize(): string {
+  public serialize(): string {
     const body = this.options && this.options.multiline ? `, body: string` : '';
     const argsType = this.params ? this.params.getType() : body ? '{}' : '';
     const args = argsType ? `args: ${argsType}${body}` : '';
