@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import WS from 'ws';
 
+import log from '../log';
 import { XapiRequest } from '../xapi/types';
 import { Backend } from './';
 
@@ -55,6 +56,7 @@ export default class WSBackend extends EventEmitter implements Backend {
 
   public execute(command: XapiRequest): Promise<void> {
     return this.isReady.then(() => {
+      log.debug('[transport] (send): ', JSON.stringify(command));
       this.ws.send(JSON.stringify(command));
     });
   }
@@ -72,6 +74,7 @@ export default class WSBackend extends EventEmitter implements Backend {
   }
 
   private handleMessage: WebSocket['onmessage'] = (message) => {
+    log.debug('[transport] (receive): ', message.data);
     const data = JSON.parse(message.data as string);
     this.emit('data', data);
   }
