@@ -95,23 +95,23 @@ export function parseFeedbackResponse(response: any) {
   return collapse(response);
 }
 
-function assertValidCommandResponse(response: any) {
-  if (!{}.hasOwnProperty.call(response, 'CommandResponse')) {
-    throw new XAPIError(
-      INVALID_RESPONSE,
-      'Invalid command response: Missing "CommandResponse" attribute',
-    );
-  }
-
-  const keys = Object.keys(response.CommandResponse);
-  if (keys.length !== 1) {
+function assertResponseSuccess(response: any): any  {
+  const keys = Object.keys(response).filter((k) => k !== 'ResultId');
+  if (keys.length > 1) {
     throw new XAPIError(
       INVALID_RESPONSE,
       `Invalid command response: Wrong number of keys (${keys.length})`,
     );
   }
 
-  const root = response.CommandResponse[keys[0]];
+  if ({}.hasOwnProperty.call(response, 'CommandResponse')) {
+    return assertResponseSuccess(response.CommandResponse);
+  }
+
+  const root = response[keys[0]];
+  if (!root || !{}.hasOwnProperty.call(root, 'status')) {
+    return root;
+  }
 
   switch (root.status) {
     case 'Error': {
@@ -135,6 +135,17 @@ function assertValidCommandResponse(response: any) {
         `Invalid command status: ${root.status}`,
       );
   }
+}
+
+function assertValidCommandResponse(response: any) {
+  if (!{}.hasOwnProperty.call(response, 'CommandResponse')) {
+    throw new XAPIError(
+      INVALID_RESPONSE,
+      'Invalid command response: Missing "CommandResponse" attribute',
+    );
+  }
+
+  return assertResponseSuccess(response);
 }
 
 export function createCommandResponse(response: any) {
@@ -163,7 +174,9 @@ function digObj(path: Array<string | number>, obj: any) {
 
 export function createGetResponse(request: any, response: any) {
   if ({}.hasOwnProperty.call(response, 'CommandResponse')) {
-    assertValidCommandResponse(response);
+    assertResponseSuccess(response.CommandResponse);
+  } else {
+    assertResponseSuccess(response);
   }
 
   return digObj(request.params.Path, collapse(response));
@@ -171,7 +184,9 @@ export function createGetResponse(request: any, response: any) {
 
 export function createSetResponse(request: any, response: any) {
   if ({}.hasOwnProperty.call(response, 'CommandResponse')) {
-    assertValidCommandResponse(response);
+    assertResponseSuccess(response.CommandResponse);
+  } else {
+    assertResponseSuccess(response);
   }
 
   if (Object.keys(response).length > 1) {

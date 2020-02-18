@@ -222,6 +222,48 @@ describe('xapi/rpc', () => {
       const result = createGetResponse(request, response);
       expect(result).toBeUndefined();
     });
+
+    it('extracts error responses', () => {
+      const request = {
+        jsonrpc: '2.0',
+        method: 'xGet',
+        id: '2',
+        params: { Path: ['Status', 'Audio', 'Volume'] },
+      };
+
+      const body = `
+        "Status":{
+          "status":"Error",
+          "Reason":{
+            "Value":"No match on address expression"
+          },
+          "XPath":{
+            "Value":"Status/Audio/Volumee"
+          }
+        }
+      `;
+
+      // Old JSON serialization format
+      const responseWithCommandResponse = JSON.parse(`
+        {
+          "CommandResponse":{ ${body} },
+          "ResultId": "2"
+        }
+      `);
+
+      // New JSON serialization format
+      const responseWithoutCommandResponse = JSON.parse(`
+        {
+          ${body},
+          "ResultId": "2"
+        }
+      `);
+
+      expect(() => createGetResponse(request, responseWithCommandResponse))
+        .toThrow('No match on address expression');
+      expect(() => createGetResponse(request, responseWithoutCommandResponse))
+        .toThrow('No match on address expression');
+    });
   });
 
   describe('createSetResponse', () => {
@@ -281,26 +323,39 @@ describe('xapi/rpc', () => {
           Value: 'foo',
         },
       };
-      const response = JSON.parse(`
-        {
-          "CommandResponse":{
-            "Configuration":{
-              "status":"Error",
-              "Error":{
-                "Value":"No match on address expression."
-              },
-              "XPath":{
-                "Value":"Configuration/Video/Output/Connector[99]/MonitorRole"
-              }
-            }
+
+      const body = `
+        "Configuration":{
+          "status":"Error",
+          "Error":{
+            "Value":"No match on address expression."
           },
+          "XPath":{
+            "Value":"Configuration/Video/Output/Connector[99]/MonitorRole"
+          }
+        }
+      `;
+
+      // Old JSON serialization format
+      const responseWithCommandResponse = JSON.parse(`
+        {
+          "CommandResponse":{ ${body} },
           "ResultId":"1"
         }
       `);
 
-      expect(() => createSetResponse(request, response)).toThrow(
-        'No match on address expression',
-      );
+      // New JSON serialization format
+      const responseWithoutCommandResponse = JSON.parse(`
+        {
+          ${body},
+          "ResultId":"1"
+        }
+      `);
+
+      expect(() => createSetResponse(request, responseWithCommandResponse))
+        .toThrow('No match on address expression');
+      expect(() => createSetResponse(request, responseWithoutCommandResponse))
+        .toThrow('No match on address expression');
     });
 
     it('handles unknown error', () => {
