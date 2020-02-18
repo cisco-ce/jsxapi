@@ -1,6 +1,11 @@
 Changes
 -------
 
+##### v5.0.2 (2020-02-18)
+
+ * Fix TSH response parsing (#56)
+ * Add more debug logging to ws backend
+
 ##### v5.0.1 (2019-12-19)
 
  * Fix browser field in package.json
