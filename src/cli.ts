@@ -3,18 +3,12 @@
 import commander from 'commander';
 
 import * as fs from 'fs';
-import * as path from 'path';
 import * as REPL from 'repl';
 
 import { connect } from './';
 import log from './log';
 import XAPI from './xapi/index.js';
-
-function readPkg() {
-  const filepath = path.join(__dirname, '..', 'package.json');
-  const data = fs.readFileSync(filepath, 'utf8');
-  return JSON.parse(data);
-}
+import pkg from '../package.js';
 
 function evalFile(source: any, xapi: XAPI) {
   const context = new Function('xapi', source);
@@ -33,9 +27,8 @@ function startRepl(xapi: XAPI) {
  * See [[Options]] for options.
  */
 function main() {
-  const { version } = readPkg();
   commander
-    .version(version)
+    .version(pkg.version)
     .arguments('<host> [file]')
     .description('connect to a codec and launch a repl')
     .option('-p, --port <port>', 'port to connect to', 22)

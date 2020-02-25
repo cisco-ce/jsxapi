@@ -5,6 +5,7 @@ import normalizePath from './normalizePath';
 import * as rpc from './rpc';
 
 import { Backend } from '../backend';
+import pkg from '../../package.js';
 import { Config, Event, Status } from './components';
 import Feedback from './feedback';
 import createXapiProxy from './proxy';
@@ -96,6 +97,8 @@ export declare interface XAPI {
  * ```
  */
 export class XAPI extends EventEmitter {
+  public version: string = pkg.version;
+
   public feedback: Feedback;
   public config: Config;
   public status: Status;
