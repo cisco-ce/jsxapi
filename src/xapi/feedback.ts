@@ -54,8 +54,8 @@ export class FeedbackGroup {
   /**
    * Add a deregister handler function to the feedback group.
    *
-   * @param {function()} handler - Handler to add to the group.
-   * @return {FeedbackGroup} - this for chaining.
+   * @param handler - Handler to add to the group.
+   * @return - this for chaining.
    */
   public add(handler: Handler) {
     this.handlers.push(handler);
@@ -65,8 +65,8 @@ export class FeedbackGroup {
   /**
    * Remove a deregister handler function from the feedback group.
    *
-   * @param {function()} handler - Handler to remove from the group.
-   * @return {FeedbackGroup} - this for chaining.
+   * @param handler - Handler to remove from the group.
+   * @return - this for chaining.
    */
   public remove(handler: Handler) {
     this.handlers = this.handlers.filter((h) => h !== handler);
@@ -76,7 +76,7 @@ export class FeedbackGroup {
   /**
    * Call the deregister handler functions associated with this group.
    *
-   * @return {FeedbackGroup} - this for chaining.
+   * @return - this for chaining.
    */
   public off() {
     this.handlers.forEach((handler) => {
@@ -168,7 +168,6 @@ export default class Feedback {
    * @param interceptor Feedback interceptor.
    */
   public readonly eventEmitter = new EventEmitter();
-  private subscriptions = [];
   constructor(readonly xapi: XAPI, readonly interceptor: FeedbackInterceptor = defaultInterceptor) {}
 
   /**
