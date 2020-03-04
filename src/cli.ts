@@ -5,10 +5,10 @@ import commander from 'commander';
 import * as fs from 'fs';
 import * as REPL from 'repl';
 
+import pkg from '../package.js';
 import { connect } from './';
 import log from './log';
 import XAPI from './xapi/index.js';
-import pkg from '../package.js';
 
 function evalFile(source: any, xapi: XAPI) {
   const context = new Function('xapi', source);
