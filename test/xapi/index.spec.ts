@@ -1,5 +1,6 @@
 import Backend from '../../src/backend';
 import XAPI from '../../src/xapi';
+import * as rpc from '../../src/xapi/rpc';
 import { XapiRequest } from '../../src/xapi/types';
 import { METHOD_NOT_FOUND } from '../../src/xapi/exc';
 
@@ -178,8 +179,21 @@ describe('XAPI', () => {
     let execStub: jest.SpyInstance;
 
     beforeEach(() => {
+      let nextFeedbackId = 0;
       execStub = jest.spyOn(XAPI.prototype, 'execute');
-      jest.spyOn(backend, 'execute').mockResolvedValue(undefined);
+      jest
+        .spyOn(backend, 'execute')
+        .mockImplementation(async (request) => {
+          switch (request.method) {
+            case 'xFeedback/Subscribe': {
+              setImmediate(() => {
+                backend.emit('data', rpc.createResponse(request.id!, {
+                  Id: nextFeedbackId++,
+                }));
+              });
+            }
+          }
+        });
     });
 
     afterEach(() => {
@@ -299,9 +313,9 @@ describe('XAPI', () => {
 
     describe('.event', () => {
       describe('.on()', () => {
-        it('registers feedback with feedback handler', () => {
+        it('registers feedback with feedback handler', async () => {
           const handler = jest.fn();
-          xapi.event.on('Standby', handler);
+          await xapi.event.on('Standby', handler).registration;
 
           xapi.feedback.dispatch({ Event: { Standby: 'Active' } });
 
@@ -311,9 +325,10 @@ describe('XAPI', () => {
       });
 
       describe('.off()', () => {
-        it('can de-register feedback', () => {
+        it('can de-register feedback', async () => {
           const handler = jest.fn();
           const off = xapi.event.on('Standby', handler);
+          await off.registration;
 
           xapi.feedback.dispatch({ Event: { Standby: 'Active' } });
           off();

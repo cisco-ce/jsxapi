@@ -184,14 +184,17 @@ export default class Feedback {
       .join('/')
       .toLowerCase();
 
-    this.eventEmitter.on(eventPath, listener);
-
     const registration = this.xapi.execute<FeedbackId>('xFeedback/Subscribe', {
       Query: normalizePath(path),
     });
 
+    const idP = registration.then(({ Id }) => {
+      this.eventEmitter.on(eventPath, listener);
+      return Id;
+    });
+
     const off = () => {
-      registration.then(({ Id }) => {
+      idP.then((Id) => {
         this.xapi.execute('xFeedback/Unsubscribe', { Id });
       });
 
