@@ -1,6 +1,6 @@
 import Backend from '../../src/backend';
 import XAPI from '../../src/xapi';
-import { XapiRequest, XapiResult } from '../../src/xapi/types';
+import { XapiRequest } from '../../src/xapi/types';
 import { METHOD_NOT_FOUND } from '../../src/xapi/exc';
 
 describe('XAPI', () => {
