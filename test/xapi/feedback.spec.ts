@@ -121,6 +121,24 @@ describe('Feedback', () => {
 
       expect(spy).toHaveBeenCalledWith('True', data);
     });
+
+    it('fires only on matching Id', async () => {
+      const spy1 = jest.fn();
+      const spy2 = jest.fn();
+
+      await Promise.all([
+        feedback.on('Status/Audio/Volume', spy1).registration,
+        feedback.on('Status/Audio/Volume', spy2).registration,
+      ]);
+
+      feedback.dispatch({
+        Id: 0,
+        Status: { Audio: { Volume: '50' } },
+      });
+
+      expect(spy1).toHaveBeenCalledTimes(1);
+      expect(spy2).not.toHaveBeenCalled();
+    });
   });
 
   describe('.on()', () => {

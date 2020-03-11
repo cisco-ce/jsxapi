@@ -23,7 +23,7 @@ export type FeedbackInterceptor =
  * Type representing a feedback id.
  */
 interface FeedbackId {
-  Id: string;
+  Id: number;
 }
 
 /**
@@ -106,7 +106,7 @@ function dispatch(
   }
 
   const emitPath = path.join('/').toLowerCase();
-  feedback.eventEmitter.emit(emitPath, data, root);
+  feedback.eventEmitter.emit(emitPath, data, root, root.Id);
 
   if (typeof data === 'object') {
     Object.keys(data).forEach((key) => {
@@ -188,17 +188,29 @@ export default class Feedback {
       Query: normalizePath(path),
     });
 
+    let wrapper: <T = any>(ev: T, root: any, id?: number) => void;
+
     const idP = registration.then(({ Id }) => {
-      this.eventEmitter.on(eventPath, listener);
+      wrapper = (ev, root, id) => {
+        if (typeof id !== 'undefined' && id !== Id) {
+          return;
+        }
+        listener(ev, root);
+      };
+      this.eventEmitter.on(eventPath, wrapper);
       return Id;
     });
 
     const off = () => {
+      if (!wrapper) {
+        return;
+      }
+
       idP.then((Id) => {
         this.xapi.execute('xFeedback/Unsubscribe', { Id });
       });
 
-      this.eventEmitter.removeListener(eventPath, listener);
+      this.eventEmitter.removeListener(eventPath, wrapper);
     };
 
     off.registration = registration;
