@@ -58,22 +58,25 @@ describe('Feedback', () => {
       expect(feedback.dispatch({ Status: 'foo' })).toEqual(feedback);
     });
 
-    it('fires event', () => {
+    it('fires event', async () => {
       const spy = jest.fn();
-      feedback.on('Status', spy);
+      await feedback.on('Status', spy).registration;
       feedback.dispatch({ Status: 'foo' });
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy).toHaveBeenCalledWith('foo', expect.anything());
     });
 
-    it('fires events recursively', () => {
+    it('fires events recursively', async () => {
       const data = { Status: { Audio: { Volume: '50' } } };
       const spies = [jest.fn(), jest.fn(), jest.fn(), jest.fn()];
 
-      feedback.on('', spies[0]);
-      feedback.on('Status', spies[1]);
-      feedback.on('Status/Audio', spies[2]);
-      feedback.on('Status/Audio/Volume', spies[3]);
+      await Promise.all([
+        feedback.on('', spies[0]).registration,
+        feedback.on('Status', spies[1]).registration,
+        feedback.on('Status/Audio', spies[2]).registration,
+        feedback.on('Status/Audio/Volume', spies[3]).registration,
+      ]);
+
       feedback.dispatch(data);
 
       [data, data.Status, data.Status.Audio, data.Status.Audio.Volume].forEach(
@@ -83,12 +86,15 @@ describe('Feedback', () => {
       );
     });
 
-    it('does not invoke unrelated handlers', () => {
+    it('does not invoke unrelated handlers', async () => {
       const spy1 = jest.fn();
       const spy2 = jest.fn();
 
-      feedback.on('Status/Audio/Volume', spy1);
-      feedback.on('Status/Audio/VolumeMute', spy2);
+      await Promise.all([
+        feedback.on('Status/Audio/Volume', spy1).registration,
+        feedback.on('Status/Audio/VolumeMute', spy2).registration,
+      ]);
+
       feedback.dispatch({ Status: { Audio: { VolumeMute: 'off' } } });
 
       expect(spy1).not.toHaveBeenCalled();
@@ -96,41 +102,60 @@ describe('Feedback', () => {
       expect(spy2).toHaveBeenCalledWith('off', expect.anything());
     });
 
-    it('dispatches original feedback payload as second argument', () => {
+    it('dispatches original feedback payload as second argument', async () => {
       const spy = jest.fn();
       const data = { Status: { Call: [{ id: 42, Status: 'Connected' }] } };
 
-      feedback.on('Status/Call/Status', spy);
+      await feedback.on('Status/Call/Status', spy).registration;
       feedback.dispatch(data);
 
       expect(spy).toHaveBeenCalledWith('Connected', data);
     });
 
-    it('can listen to lower-case events', () => {
+    it('can listen to lower-case events', async () => {
       const spy = jest.fn();
       const data = { Status: { Call: [{ id: 42, ghost: 'True' }] } };
 
-      feedback.on('Status/Call/ghost', spy);
+      await feedback.on('Status/Call/ghost', spy).registration;
       feedback.dispatch(data);
 
       expect(spy).toHaveBeenCalledWith('True', data);
     });
+
+    it('fires only on matching Id', async () => {
+      const spy1 = jest.fn();
+      const spy2 = jest.fn();
+
+      await Promise.all([
+        feedback.on('Status/Audio/Volume', spy1).registration,
+        feedback.on('Status/Audio/Volume', spy2).registration,
+      ]);
+
+      feedback.dispatch({
+        Id: 0,
+        Status: { Audio: { Volume: '50' } },
+      });
+
+      expect(spy1).toHaveBeenCalledTimes(1);
+      expect(spy2).not.toHaveBeenCalled();
+    });
   });
 
   describe('.on()', () => {
-    it('registers handler for events', () => {
+    it('registers handler for events', async () => {
       const spy = jest.fn();
 
-      feedback.on('Status/Audio/Volume', spy);
+      await feedback.on('Status/Audio/Volume', spy).registration;
       feedback.dispatch({ Status: { Audio: { Volume: 50 } } });
 
       expect(spy).toHaveBeenCalledWith(50, expect.anything());
     });
 
-    it('returns handler for disabling feedback', () => {
+    it('returns handler for disabling feedback', async () => {
       const spy = jest.fn();
 
       const handler = feedback.on('Status/Audio/Volume', spy);
+      await handler.registration;
       feedback.dispatch({ Status: { Audio: { Volume: 50 } } });
 
       expect(spy).toHaveBeenCalledWith(50, expect.anything());
@@ -163,12 +188,13 @@ describe('Feedback', () => {
       });
     });
 
-    it('cancelling double registration leaves one listener', () => {
+    it('cancelling double registration leaves one listener', async () => {
       const spy = jest.fn();
       const path = 'Status/Audio/Volume';
 
-      feedback.on(path, spy);
+      await feedback.on(path, spy).registration;
       const off = feedback.on(path, spy);
+      await off.registration;
       off();
 
       feedback.dispatch({ Status: { Audio: { Volume: 50 } } });
@@ -187,34 +213,37 @@ describe('Feedback', () => {
       });
     });
 
-    it('can dispatch to normalized path', () => {
+    it('can dispatch to normalized path', async () => {
       const spy = jest.fn();
 
-      feedback.on('status/audio   volume', spy);
+      await feedback.on('status/audio   volume', spy).registration;
       feedback.dispatch({ Status: { Audio: { Volume: 50 } } });
 
       expect(spy).toHaveBeenNthCalledWith(1, 50, expect.anything());
     });
 
-    it('can use crazy casing', () => {
+    it('can use crazy casing', async () => {
       const spy = jest.fn();
 
-      feedback.on('fOO Bar BaZ', spy);
+      await feedback.on('fOO Bar BaZ', spy).registration;
       feedback.dispatch({ Foo: { Bar: { Baz: 50 } } });
 
       expect(spy).toHaveBeenNthCalledWith(1, 50, expect.anything());
     });
 
-    it('handles arrays', () => {
+    it('handles arrays', async () => {
       const spy1 = jest.fn();
       const spy2 = jest.fn();
       const spy3 = jest.fn();
       const spy4 = jest.fn();
 
-      feedback.on('Status/Peripherals/ConnectedDevice/Status', spy1);
-      feedback.on('Status/Peripherals/ConnectedDevice[]/Status', spy2);
-      feedback.on('Status/Peripherals/ConnectedDevice/1115/Status', spy3);
-      feedback.on('Status/Peripherals/ConnectedDevice[1115]/Status', spy4);
+      await Promise.all([
+        feedback.on('Status/Peripherals/ConnectedDevice/Status', spy1).registration,
+        feedback.on('Status/Peripherals/ConnectedDevice[]/Status', spy2).registration,
+        feedback.on('Status/Peripherals/ConnectedDevice/1115/Status', spy3).registration,
+        feedback.on('Status/Peripherals/ConnectedDevice[1115]/Status', spy4).registration,
+      ]);
+
       feedback.dispatch({
         Status: {
           Peripherals: {
@@ -241,10 +270,10 @@ describe('Feedback', () => {
       expect(spy4).not.toHaveBeenCalledWith('Connected', expect.anything());
     });
 
-    it('dispatches array elements one-by-one', () => {
+    it('dispatches array elements one-by-one', async () => {
       const spy = jest.fn();
 
-      feedback.on('foo/bar', spy);
+      await feedback.on('foo/bar', spy).registration;
 
       feedback.dispatch({
         foo: { bar: [{ baz: 'quux' }] },
@@ -254,10 +283,13 @@ describe('Feedback', () => {
       expect(spy).toHaveBeenCalledWith({ baz: 'quux' }, expect.anything());
     });
 
-    it('handles ghost events', () => {
+    it('handles ghost events', async () => {
       const spy = jest.fn();
 
-      feedback.on('Status/Peripherals/ConnectedDevice', spy);
+      await feedback
+        .on('Status/Peripherals/ConnectedDevice', spy)
+        .registration;
+
       feedback.dispatch({
         Status: {
           Peripherals: {
@@ -296,10 +328,11 @@ describe('Feedback', () => {
   });
 
   describe('.once()', () => {
-    it('deregisters after emit', () => {
+    it('deregisters after emit', async () => {
       const spy = jest.fn();
 
-      feedback.once('Status/Audio/Volume', spy);
+      await feedback.once('Status/Audio/Volume', spy).registration;
+
       feedback.dispatch({ Status: { Audio: { Volume: '50' } } });
       feedback.dispatch({ Status: { Audio: { Volume: '70' } } });
 
@@ -328,7 +361,7 @@ describe('Feedback', () => {
       interceptor.mockReset();
     });
 
-    it('can reject feedback', () => {
+    it('can reject feedback', async () => {
       const volumeSpy = jest.fn();
       const data = { Status: { Audio: { Volume: '50' } } };
 
@@ -338,7 +371,7 @@ describe('Feedback', () => {
           fn();
         });
 
-      feedback.on('Status Audio Volume', volumeSpy);
+      await feedback.on('Status Audio Volume', volumeSpy).registration;
 
       feedback.dispatch(data);
       expect(volumeSpy).not.toHaveBeenCalled();
@@ -348,7 +381,7 @@ describe('Feedback', () => {
       expect(volumeSpy).toHaveBeenCalledWith('50', data);
     });
 
-    it('can change the data', () => {
+    it('can change the data', async () => {
       const spy = jest.fn();
 
       interceptor.mockImplementation(
@@ -361,7 +394,7 @@ describe('Feedback', () => {
         },
       );
 
-      feedback.on('Status Audio Volume', spy);
+      await feedback.on('Status Audio Volume', spy).registration;
 
       const data = { Status: { Audio: { Volume: '50' } } };
       feedback.dispatch(data);
@@ -399,9 +432,9 @@ describe('Feedback', () => {
       expect(muteSpy).toHaveBeenNthCalledWith(1, 'On', expect.anything());
     });
 
-    it('only deregisters feedback of the group', () => {
+    it('only deregisters feedback of the group', async () => {
       const rootSpy = jest.fn();
-      xapi.status.on('Audio/Volume', rootSpy);
+      await xapi.status.on('Audio/Volume', rootSpy).registration;
 
       group.off();
 
@@ -419,11 +452,15 @@ describe('Feedback', () => {
       expect(muteSpy).not.toHaveBeenCalled();
     });
 
-    it('supports .once()', () => {
+    it('supports .once()', async () => {
       const spy = jest.fn();
 
       group.off();
-      group.add(xapi.status.once('Audio/Volume', spy));
+
+      const subscription = xapi.status.once('Audio/Volume', spy);
+      group.add(subscription);
+
+      await subscription.registration;
 
       feedback.dispatch({ Status: { Audio: { Volume: '50' } } });
       feedback.dispatch({ Status: { Audio: { Volume: '70' } } });
