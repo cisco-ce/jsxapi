@@ -35,7 +35,7 @@
     "test": "npm run lint && npm run jest",
     "jest": "jest",
     "tdd": "jest --watch",
-    "version": "npm run build && git add -u"
+    "version": "node ./bump-version.js && npm run build && git add -u"
   },
   "dependencies": {
     "commander": "^4.0.1",

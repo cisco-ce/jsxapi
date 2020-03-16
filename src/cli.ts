@@ -5,9 +5,9 @@ import commander from 'commander';
 import * as fs from 'fs';
 import * as REPL from 'repl';
 
-import pkg from '../package.js';
 import { connect } from './';
 import log from './log';
+import version from './version';
 import XAPI from './xapi/index.js';
 
 function evalFile(source: any, xapi: XAPI) {
@@ -28,7 +28,7 @@ function startRepl(xapi: XAPI) {
  */
 function main() {
   commander
-    .version(pkg.version)
+    .version(version)
     .arguments('<host> [file]')
     .description('connect to a codec and launch a repl')
     .option('-p, --port <port>', 'port to connect to', 22)
