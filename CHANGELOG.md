@@ -1,6 +1,11 @@
 Changes
 -------
 
+##### v5.0.3 (2020-03-16)
+
+ * Add version string to XAPI instance.
+ * Fix duplicate feedback emission using WebSockets.
+
 ##### v5.0.2 (2020-02-18)
 
  * Fix TSH response parsing (#56)
