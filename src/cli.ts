@@ -17,6 +17,7 @@ function evalFile(source: any, xapi: XAPI) {
 
 function startRepl(xapi: XAPI) {
   const repl = REPL.start({});
+  repl.setupHistory('.jsxapi-cli-history', () => undefined);
   repl.on('exit', () => xapi.close());
   repl.context.xapi = xapi;
 }
