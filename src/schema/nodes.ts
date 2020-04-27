@@ -236,24 +236,30 @@ ${super.serialize()} `;
 }
 
 interface MemberOpts {
-  docstring?: string;
-  required?: boolean;
+  docstring: string;
+  required: boolean;
 }
 
 export class Member extends Node {
   private type: Type;
+  private options: MemberOpts;
 
   constructor(
     readonly name: string,
     type: Valuespace,
-    readonly options: MemberOpts = {},
+    options?: Partial<MemberOpts>,
   ) {
     super();
     this.type = vsToType(type);
+    this.options = {
+      required: true,
+      docstring: '',
+      ...options,
+    };
   }
 
   public formatDocstring() {
-    if (!this.options || !this.options.docstring) {
+    if (!this.options.docstring) {
       return '';
     }
 
@@ -290,19 +296,20 @@ export class ArrayTree extends Tree {
 }
 
 interface CommandOpts {
-  docstring?: string;
-  multiline?: boolean;
+  docstring: string;
+  multiline: boolean;
 }
 
 export class Command extends Node {
   private params?: Type;
   private retval?: Type;
+  private options: CommandOpts;
 
   constructor(
     readonly name: string,
     params?: Valuespace,
     retval?: Valuespace,
-    readonly options?: CommandOpts,
+    options?: Partial<CommandOpts>,
   ) {
     super();
     if (params) {
@@ -311,6 +318,11 @@ export class Command extends Node {
     if (retval) {
       this.retval = vsToType(retval);
     }
+    this.options = {
+      docstring: '',
+      multiline: false,
+      ...options,
+    };
   }
 
   public formatDocstring(): string {

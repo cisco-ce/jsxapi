@@ -135,8 +135,8 @@ function parseCommandTree(root: Root, schema: any, tree: Node, path: string[]) {
         paramsType.addChildren(params);
       }
       tree.addChild(new Command(key, paramsType, undefined, {
-        docstring: value.description,
-        multiline: value.multiline && value.multiline === 'True',
+        docstring: value.description || '',
+        multiline: !!value.multiline && value.multiline === 'True',
       }));
     } else {
       const subTree = tree.addChild(new Tree(key));
@@ -153,7 +153,7 @@ function parseConfigTree(root: Root, schema: any, tree: Node, path: string[]) {
     const fullPath = path.concat(key);
     if (isLeaf(value)) {
       const vs = parseValueSpace(value.ValueSpace, fullPath);
-      tree.addChild(new Member(key, vs, { docstring: value.description }));
+      tree.addChild(new Member(key, vs, { docstring: value.description || '' }));
     } else if (Array.isArray(value)) {
       const subTree = tree.addChild(new Tree(key));
       for (const each of value) {
@@ -176,7 +176,7 @@ function parseStatusTree(root: Root, schema: any, tree: Node, path: string[]) {
     const fullPath = path.concat(key);
     if (isLeaf(value)) {
       const vs = parseValueSpace(value.ValueSpace, fullPath);
-      tree.addChild(new Member(key, vs, { docstring: value.description }));
+      tree.addChild(new Member(key, vs, { docstring: value.description || '' }));
     } else if (Array.isArray(value)) {
       if (value.length !== 1) {
         throw new Error(`error: ${fullPath.join('/')} contains multiple entries`);

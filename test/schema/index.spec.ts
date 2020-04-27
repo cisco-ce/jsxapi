@@ -163,7 +163,7 @@ describe('schemas', () => {
         );
 
         const systemUnit: Tree = commandTree.addChild(new Tree('SystemUnit'));
-        systemUnit.addChild(new Command('FactoryReset', resetArgs, undefined, { docstring: undefined }));
+        systemUnit.addChild(new Command('FactoryReset', resetArgs, undefined));
 
         expect(parse(schema)).toMatchObject({
           children: expect.arrayContaining([main, commandTree]),
@@ -194,14 +194,11 @@ describe('schemas', () => {
 
         const postArgs = root.addInterface('CommandHttpClientPostArgs');
         postArgs.addChild(
-          new Member('Url', 'string', {
-            required: true,
-          }),
+          new Member('Url', 'string', { required: true }),
         );
 
         const httpClient: Tree = commandTree.addChild(new Tree('HttpClient'));
         httpClient.addChild(new Command('Post', postArgs, undefined, {
-          docstring: undefined,
           multiline: true,
         }));
 
@@ -353,7 +350,7 @@ describe('schemas', () => {
         };
 
         const audio = statusTree.addChild(new Tree('Audio'));
-        audio.addChild(new Member('Volume', 'number', { docstring: undefined }));
+        audio.addChild(new Member('Volume', 'number'));
 
         expect(parse(schema)).toMatchObject({
           children: expect.arrayContaining([main, statusTree]),
