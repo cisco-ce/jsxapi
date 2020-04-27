@@ -21,7 +21,7 @@ interface Requests {
 export declare interface XAPI {
   on(event: 'error', listener: (error: Error) => void): this;
   on(event: 'ready', listener: (xapi: XAPI) => void): this;
-  on(event: string, listener: () => {}): this;
+  on(event: string, listener: () => void): this;
 }
 
 /**
