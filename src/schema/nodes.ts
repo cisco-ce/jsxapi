@@ -325,10 +325,16 @@ ${this.options.docstring}
   }
 
   public serialize(): string {
-    const body = this.options && this.options.multiline ? `, body: string` : '';
-    const argsType = this.params ? this.params.getType() : body ? '{}' : '';
-    const args = argsType ? `args: ${argsType}${body}` : '';
+    const args = [];
+    if (this.params) {
+      const argsType = this.params.getType();
+      args.push(`args: ${argsType}`);
+    }
+    if (this.options && this.options.multiline) {
+      args.push('body: string');
+    }
+    const argString = args.join(', ');
     const retval = this.retval ? this.retval.getType() : 'any';
-    return `${this.formatDocstring()}${this.name}<R=${retval}>(${args}): Promise<R>`;
+    return `${this.formatDocstring()}${this.name}<R=${retval}>(${argString}): Promise<R>`;
   }
 }

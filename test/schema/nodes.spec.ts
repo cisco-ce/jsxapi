@@ -274,7 +274,7 @@ describe('schema nodes', () => {
       const command = new Command('Post', undefined, undefined, {
         multiline: true,
       });
-      expect(command.serialize()).toMatch(/\(args: {}, body: string\)/);
+      expect(command.serialize()).toMatch(/\(body: string\)/);
     });
 
     it('can be multiline (with params)', () => {
