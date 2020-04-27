@@ -238,11 +238,19 @@ export class XAPI extends EventEmitter {
    * @param body Multi-line body for commands requiring it.
    * @return Resolved with the command response when ready.
    */
-  public command<T = any>(path: Path, params?: any, body?: string) {
+  public command<T = any>(path: Path, params?: object | string, body?: string): Promise<T> {
     const apiPath = normalizePath(path).join('/');
     const method = `xCommand/${apiPath}`;
-    const executeParams =
-      body === undefined ? params : Object.assign({ body }, params);
+
+    let executeParams;
+    if (typeof params === 'string' && typeof body === 'undefined') {
+      executeParams = { body: params };
+    } else if ((typeof params === 'object' || !params) && typeof body === 'string') {
+      executeParams = Object.assign({ body }, params);
+    } else {
+      executeParams = params;
+    }
+
     return this.execute<T>(method, executeParams);
   }
 
