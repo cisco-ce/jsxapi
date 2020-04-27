@@ -1,5 +1,4 @@
-import redent from 'redent';
-import { generate, parse } from '../../src/schema';
+import { parse } from '../../src/schema';
 import {
   Root,
   ImportStatement,

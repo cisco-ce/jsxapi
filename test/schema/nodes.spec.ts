@@ -6,10 +6,8 @@ import {
   Command,
   Tree,
   Member,
-  Plain,
   Literal,
   List,
-  Function,
 } from '../../src/schema/nodes';
 
 describe('schema nodes', () => {
