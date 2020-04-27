@@ -212,6 +212,12 @@ class Interface extends Node implements Type {
     return this.name;
   }
 
+  public allOptional(): boolean {
+    return !this.children.some((child) => {
+      return !(child instanceof Member) || child.isRequired;
+    })
+  }
+
   public serialize(): string {
     const ext = this.extend.length ? ` extends ${this.extend.join(', ')}` : '';
     const tree = renderTree(this.children, ';');
@@ -258,6 +264,10 @@ export class Member extends Node {
     };
   }
 
+  get isRequired() {
+    return this.options.required;
+  }
+
   public formatDocstring() {
     if (!this.options.docstring) {
       return '';
@@ -301,20 +311,16 @@ interface CommandOpts {
 }
 
 export class Command extends Node {
-  private params?: Type;
   private retval?: Type;
   private options: CommandOpts;
 
   constructor(
     readonly name: string,
-    params?: Valuespace,
+    readonly params?: Interface,
     retval?: Valuespace,
     options?: Partial<CommandOpts>,
   ) {
     super();
-    if (params) {
-      this.params = vsToType(params);
-    }
     if (retval) {
       this.retval = vsToType(retval);
     }
@@ -338,11 +344,13 @@ ${this.options.docstring}
 
   public serialize(): string {
     const args = [];
+    const hasBody = this.options.multiline;
     if (this.params) {
       const argsType = this.params.getType();
-      args.push(`args: ${argsType}`);
+      const optional = !hasBody && this.params.allOptional() ? '?' : '';
+      args.push(`args${optional}: ${argsType}`);
     }
-    if (this.options && this.options.multiline) {
+    if (hasBody) {
       args.push('body: string');
     }
     const argString = args.join(', ');

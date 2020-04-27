@@ -70,6 +70,7 @@ export interface DialArgs {
 }
 
 export interface SystemUnitFactoryResetArgs {
+  Confirm: Yes;
   Keep?: ('LocalSetup' | 'Network' | 'Provisioning')[];
 }"
 `;

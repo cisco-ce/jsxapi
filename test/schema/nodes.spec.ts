@@ -112,13 +112,16 @@ describe('schema nodes', () => {
 
       const resetArgs = root.addInterface('SystemUnitFactoryResetArgs');
       resetArgs.addChild(
+        new Member('Confirm', 'Yes', { required: true }),
+      );
+      resetArgs.addChild(
         new Member(
           'Keep',
           new List(new Literal('LocalSetup', 'Network', 'Provisioning')),
           { required: false },
         ),
       );
-      const reset = commandTree
+      commandTree
         .addChild(new Tree('SystemUnit'))
         .addChild(new Command('FactoryReset', resetArgs));
 
@@ -266,6 +269,24 @@ describe('schema nodes', () => {
         docstring: 'Mute all microphones.',
       });
       expect(command.serialize()).toMatch('Mute all microphones.');
+    });
+
+    it('params arg optional if all members are optional (no body)', () => {
+      const httpArgs = new Root().addInterface('HttpArgs');
+      httpArgs.addChild(
+        new Member('Url', 'string', { required: false }),
+      );
+      httpArgs.addChild(
+        new Member('ResultBody', new Literal('None', 'PlainText'), { required: false }),
+      );
+
+      const getCmd = new Command('Get', httpArgs, undefined);
+      expect(getCmd.serialize()).toMatch(/\(args\?: HttpArgs\)/);
+
+      const postCmd = new Command('Post', httpArgs, undefined, {
+        multiline: true,
+      });
+      expect(postCmd.serialize()).toMatch(/\(args: HttpArgs, body: string\)/);
     });
 
     it('can be multiline (without params)', () => {
