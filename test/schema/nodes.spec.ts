@@ -1,13 +1,13 @@
 import redent from 'redent';
 
 import {
-  Root,
-  ImportStatement,
   Command,
-  Tree,
-  Member,
-  Literal,
+  ImportStatement,
   List,
+  Literal,
+  Member,
+  Root,
+  Tree,
 } from '../../src/schema/nodes';
 
 describe('schema nodes', () => {
@@ -75,10 +75,7 @@ describe('schema nodes', () => {
 
     it('can build entire module', () => {
       // .ts module
-      const root = new Root();
-
-      // import ... from ...
-      root.addChild(new ImportStatement());
+      const root = new Root('jsxapi');
 
       // Main XAPI class + generic interfaces
       const main = root.addMain();
@@ -142,13 +139,13 @@ describe('schema nodes', () => {
 
   describe('ImportStatement', () => {
     it('serializes import child', () => {
-      const node = new ImportStatement();
+      const node = new ImportStatement('jsxapi', ['XAPI', 'connectGen']);
       expect(node.serialize()).toMatch('import { XAPI, connectGen } from "jsxapi";');
     });
 
     it('can customize module', () => {
-      const node = new ImportStatement('../../xapi');
-      expect(node.serialize()).toMatch('import { XAPI, connectGen } from "../../xapi";');
+      const node = new ImportStatement('../../xapi', ['TypedXAPI']);
+      expect(node.serialize()).toMatch('import { TypedXAPI } from "../../xapi";');
     });
   });
 

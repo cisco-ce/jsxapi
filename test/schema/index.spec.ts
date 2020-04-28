@@ -1,22 +1,28 @@
 import { parse } from '../../src/schema';
 import {
-  Root,
-  ImportStatement,
-  Member,
-  Tree,
-  Command,
-  Plain,
-  Literal,
-  List,
-  Generic,
   ArrayTree,
+  Command,
+  Generic,
+  ImportStatement,
+  List,
+  Literal,
+  Member,
+  Plain,
+  Root,
+  Tree,
 } from '../../src/schema/nodes';
 
 describe('schemas', () => {
   describe('parse()', () => {
     it('imports XAPI from jsxapi', () => {
       expect(parse({})).toMatchObject({
-        children: expect.arrayContaining([new ImportStatement()]),
+        children: expect.arrayContaining([
+          expect.objectContaining({
+            children: expect.arrayContaining([
+              new ImportStatement('jsxapi', ['XAPI', 'connectGen']),
+            ]),
+          }),
+        ]),
       });
     });
 
@@ -24,7 +30,11 @@ describe('schemas', () => {
       const parsed = parse({}, { xapiImport: '../src/xapi' });
       expect(parsed).toMatchObject({
         children: expect.arrayContaining([
-          new ImportStatement('../src/xapi'),
+          expect.objectContaining({
+            children: expect.arrayContaining([
+              new ImportStatement('../src/xapi', ['XAPI', 'connectGen']),
+            ]),
+          }),
         ]),
       });
     });

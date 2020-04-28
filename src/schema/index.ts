@@ -2,7 +2,6 @@ import {
   ArrayTree,
   Command,
   Generic,
-  ImportStatement,
   List,
   Literal,
   Member,
@@ -248,10 +247,7 @@ export function parse(schema: any, options?: GenerateOpts): Root {
   const role = options && options.role ? options.role : 'Admin';
   const access = options && options.access ? options.access : 'public-api';
 
-  const root = new Root();
-
-  // import ... from ...
-  root.addChild(new ImportStatement(xapiPath));
+  const root = new Root(xapiPath);
 
   // Main XAPI class
   root.addMain();

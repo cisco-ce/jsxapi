@@ -20,8 +20,14 @@ export abstract class Node {
 }
 
 export class Root extends Node {
+  private imports = new Imports();
   private interfaceNames = new Set<string>();
   private main?: MainClass;
+
+  constructor(readonly libName: string = 'jsxapi') {
+    super();
+    this.addChild(this.imports);
+  }
 
   public addChild<T extends Node>(child: T): T {
     if (child instanceof Interface) {
@@ -31,6 +37,11 @@ export class Root extends Node {
       this.interfaceNames.add(child.name);
     }
     return super.addChild(child);
+  }
+
+  public addImports(path: string, imports: string[]) {
+    const fullPath = [this.libName, path].filter(x => !!x).join('/');
+    this.imports.addImports(fullPath, imports);
   }
 
   public addInterface(name: string, extend: string[] = []): Interface {
@@ -45,7 +56,7 @@ export class Root extends Node {
     if (this.main) {
       throw new Error('Main class already defined');
     }
-    const main = this.addChild(new MainClass(name, base));
+    const main = this.addChild(new MainClass(this, name, base));
     this.main = main;
     return main;
   }
@@ -102,15 +113,46 @@ type Statusify<T> = { [P in keyof T]: Statusify<T[P]>; } & Gettable<T> & Listena
   }
 }
 
-export class ImportStatement extends Node {
-  private importName = 'XAPI';
+class Imports extends Node {
+  private imports = new Map<string, ImportStatement>();
 
-  constructor(readonly moduleName: string = 'jsxapi') {
+  public addImports(path: string, imports: string[]) {
+    let importStatement = this.imports.get(path);
+
+    if (!importStatement) {
+      importStatement = new ImportStatement(path);
+      this.imports.set(path, importStatement);
+      this.addChild(importStatement);
+    }
+
+    importStatement.addImports(imports);
+    return importStatement;
+  }
+
+  serialize() {
+    return Array.from(this.imports.values())
+      .map((i) => i.serialize())
+      .join('\n');
+  }
+}
+
+export class ImportStatement extends Node {
+  private imports: Set<string>;
+
+  constructor(readonly moduleName: string, imports?: string[]) {
     super();
+    this.imports = new Set(imports || []);
+  }
+
+  public addImports(imports: string[]) {
+    for (const name of imports) {
+      this.imports.add(name);
+    }
   }
 
   public serialize(): string {
-    return `import { ${this.importName}, connectGen } from "${this.moduleName}";`;
+    const imports = Array.from(this.imports);
+    return `import { ${imports.join(', ')} } from "${this.moduleName}";`;
   }
 }
 
@@ -226,8 +268,11 @@ class Interface extends Node implements Type {
 }
 
 class MainClass extends Interface {
-  constructor(name: string = 'TypedXAPI', readonly base: string = 'XAPI') {
+  private connectGen = 'connectGen';
+
+  constructor(root: Root, name: string = 'TypedXAPI', readonly base: string = 'XAPI') {
     super(name);
+    root.addImports('', [base, this.connectGen]);
   }
 
   public serialize(): string {
@@ -235,7 +280,7 @@ class MainClass extends Interface {
 export class ${this.name} extends ${this.base} {}
 
 export default ${this.name};
-export const connect = connectGen(${this.name});
+export const connect = ${this.connectGen}(${this.name});
 
 ${super.serialize()} `;
   }
