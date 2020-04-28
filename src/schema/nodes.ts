@@ -80,11 +80,13 @@ export class Root extends Node {
       new Function('set', [['value', templateParam]], new Generic('Promise', 'void')),
     );
 
+    this.addImports('lib/xapi/feedback', ['Registration']);
+    const registration = new Plain('Registration');
     const listenable = this.addInterface('Listenable<T>');
     const handler = new Function('handler', [['value', new Plain('T')]]);
     listenable.addChildren([
-      new Function('on', [['handler', handler]]),
-      new Function('once', [['handler', handler]]),
+      new Function('on', [['handler', handler]], registration),
+      new Function('once', [['handler', handler]], registration),
     ]);
 
     this.addChild(new class extends Node {

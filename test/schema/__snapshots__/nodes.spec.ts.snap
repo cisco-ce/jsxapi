@@ -2,6 +2,7 @@
 
 exports[`schema nodes Root can build entire module 1`] = `
 "import { XAPI, connectGen } from \\"jsxapi\\";
+import { Registration } from \\"jsxapi/lib/xapi/feedback\\";
 
 export class TypedXAPI extends XAPI {}
 
@@ -23,8 +24,8 @@ export interface Settable<T> {
 }
 
 export interface Listenable<T> {
-  on(handler: (value: T) => void): void;
-  once(handler: (value: T) => void): void;
+  on(handler: (value: T) => void): Registration;
+  once(handler: (value: T) => void): Registration;
 }
 
 type Configify<T> = [T] extends [object]
