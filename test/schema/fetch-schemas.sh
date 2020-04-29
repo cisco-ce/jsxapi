@@ -21,7 +21,7 @@ xdoc Path: "$2" Schema: true Format: "$fmt"
 EOF
 }
 
-for doc in command config status; do
+for doc in command config event status; do
     echo "Fetching '$doc.$fmt'"
     get_schema "$1" "$doc" > "$doc.$fmt"
 done

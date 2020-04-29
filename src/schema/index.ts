@@ -24,14 +24,30 @@ interface Leaf {
 }
 
 interface CommandLeaf extends Leaf {
-  command?: string;
+  command?: 'True';
   multiline?: 'True' | 'False';
+}
+
+interface EventLeaf extends Leaf {
+  type?: 'int' | 'literal' | 'string';
 }
 
 interface ValueSpace {
   required: 'True' | 'False';
   type: 'Integer' | 'IntegerArray' | 'Literal' | 'LiteralArray' | 'String' | 'StringArray';
   Value?: string[];
+}
+
+function parseEventType(type: EventLeaf['type'], path: string[]): Type {
+  switch (type) {
+    case 'int':
+      return new Plain('number');
+    case 'literal':
+    case 'string':
+      return new Plain('string');
+    default:
+      throw new Error(`Invalid Event type: ${type}`);
+  }
 }
 
 /**
@@ -69,6 +85,15 @@ function parseValueSpace(valuespace: ValueSpace, path: string[]): Type {
  */
 function isCommandLeaf(value: unknown): value is CommandLeaf {
   return (value as CommandLeaf).command === 'True';
+}
+
+/**
+ * Check if an object is an event definition.
+ *
+ * Events have { event: 'True' } in the schema.
+ */
+function isEventLeaf(value: unknown): value is EventLeaf {
+  return 'type' in (value as Leaf);
 }
 
 /**
@@ -168,6 +193,27 @@ function parseConfigTree(root: Root, schema: any, tree: Node, path: string[]) {
 }
 
 /**
+ * Parse the recursive tree of event definitions.
+ */
+function parseEventTree(root: Root, schema: any, tree: Node, path: string[]) {
+  forEachEntries(schema, (key, value) => {
+    const fullPath = path.concat(key);
+    if (isEventLeaf(value)) {
+      const vs = parseEventType(value.type, fullPath);
+      tree.addChild(new Member(key, vs, { docstring: value.description || '' }));
+    } else if (Array.isArray(value)) {
+      const subTree = tree.addChild(new ArrayTree(key));
+      for (const item of value) {
+        parseEventTree(root, item, subTree, path.concat([key]));
+      }
+    } else {
+      const subTree = tree.addChild(new Tree(key));
+      parseEventTree(root, value, subTree, path.concat(key));
+    }
+  });
+}
+
+/**
  * Parse the recursive tree of status definitions.
  */
 function parseStatusTree(root: Root, schema: any, tree: Node, path: string[]) {
@@ -203,7 +249,7 @@ type SchemaParser = (root: Root, schema: any, tree: Tree, path: string[]) => voi
  * @parser A parsing function to parse a subtree of 'type'.
  */
 function parseSchema(
-  type: 'Command' | 'Config' | 'Status',
+  type: 'Command' | 'Config' | 'Event' | 'Status',
   root: Root,
   schema: any,
   parser: SchemaParser,
@@ -216,6 +262,10 @@ function parseSchema(
     Config: {
       mkType: (t: Type) => new Generic('Configify', t),
       rootKey: 'Configuration',
+    },
+    Event: {
+      mkType: (t: Type) => new Generic('Eventify', t),
+      rootKey: 'Event',
     },
     Status: {
       mkType: (t: Type) => new Generic('Statusify', t),
@@ -255,6 +305,7 @@ export function parse(schema: any, options?: GenerateOpts): Root {
 
   parseSchema('Command', root, schema, parseCommandTree);
   parseSchema('Config', root, schema, parseConfigTree);
+  parseSchema('Event', root, schema, parseEventTree);
   parseSchema('Status', root, schema, parseStatusTree);
 
   return root;

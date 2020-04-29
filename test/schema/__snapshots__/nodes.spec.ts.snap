@@ -32,6 +32,8 @@ type Configify<T> = [T] extends [object]
   ? { [P in keyof T]: Configify<T[P]>; } & Gettable<T> & Listenable<T>
   : Gettable<T> & Settable<T> & Listenable<T>;
 
+type Eventify<T> = { [P in keyof T]: Eventify<T[P]>; } & Listenable<T>;
+
 type Statusify<T> = { [P in keyof T]: Statusify<T[P]>; } & Gettable<T> & Listenable<T>;
 
 export interface CommandTree {

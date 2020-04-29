@@ -324,6 +324,92 @@ describe('schemas', () => {
       });
     });
 
+    describe('Event', () => {
+      let root: Root;
+      let main: any;
+      let eventTree: any;
+
+      beforeEach(() => {
+        root = new Root();
+        main = root.addMain();
+        eventTree = root.addInterface('EventTree');
+        main.addChild(new Member('Event', new Generic('Eventify', eventTree)));
+      });
+
+      it('adds Event tree', () => {
+        const parsed = parse({
+          Event: {},
+        });
+
+        expect(parsed).toMatchObject({
+          children: expect.arrayContaining([main, eventTree]),
+        });
+      });
+
+      it('adds sub-commands', () => {
+        const schema = {
+          Event: {
+            Macros: {
+              Macro: {
+                Saved: {
+                  Name: { 'type': 'string' },
+                  access: 'public-api',
+                  event: 'True',
+                  read: 'Admin;User;Integrator;RoomControl'
+                },
+              },
+              Runtime: {
+                Ready: {
+                  access: 'public-api',
+                  event: 'True',
+                  read: 'Admin;User;Integrator;RoomControl',
+                },
+              }
+            },
+            Peripherals: {
+              DeviceDiscovery: {
+                Device: [
+                  {
+                    DeviceType: { type: 'literal' },
+                    MacAddress: {type: 'string' },
+                    Name: { type: 'string' },
+                  },
+                ],
+                access: 'public-api',
+                event: 'True',
+                read: 'Admin;User',
+              },
+            }
+          },
+        };
+
+        const macros = eventTree
+          .addChild(new Tree('Macros'));
+
+        macros
+          .addChild(new Tree('Macro'))
+          .addChild(new Tree('Saved'))
+          .addChild(new Member('Name', 'string'));
+
+        macros
+          .addChild(new Tree('Runtime'))
+          .addChild(new Tree('Ready'));
+
+        const device = eventTree
+          .addChild(new Tree('Peripherals'))
+          .addChild(new Tree('DeviceDiscovery'))
+          .addChild(new ArrayTree('Device'));
+
+        device.addChild(new Member('DeviceType', 'string'));
+        device.addChild(new Member('MacAddress', 'string'));
+        device.addChild(new Member('Name', 'string'));
+
+        expect(parse(schema)).toMatchObject({
+          children: expect.arrayContaining([main, eventTree]),
+        });
+      });
+    });
+
     describe('Status', () => {
       let root: Root;
       let main: any;

@@ -101,6 +101,13 @@ type Configify<T> = [T] extends [object]
     this.addChild(new class extends Node {
       public serialize() {
         return `\
+type Eventify<T> = { [P in keyof T]: Eventify<T[P]>; } & Listenable<T>;`;
+      }
+    }());
+
+    this.addChild(new class extends Node {
+      public serialize() {
+        return `\
 type Statusify<T> = { [P in keyof T]: Statusify<T[P]>; } & Gettable<T> & Listenable<T>;`;
       }
     }());
