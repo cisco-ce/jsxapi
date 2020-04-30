@@ -227,7 +227,7 @@ function parseStatusTree(root: Root, schema: any, tree: Node, path: string[]) {
         throw new Error(`error: ${fullPath.join('/')} contains multiple entries`);
       }
       const subTree = tree.addChild(new ArrayTree(key));
-      parseConfigTree(root, value[0], subTree, path.concat([key]));
+      parseStatusTree(root, value[0], subTree, path.concat([key]));
     } else {
       const subTree = tree.addChild(new Tree(key));
       parseStatusTree(root, value, subTree, path.concat(key));
