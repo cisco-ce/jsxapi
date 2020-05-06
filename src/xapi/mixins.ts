@@ -5,7 +5,7 @@ import { Listener, Path } from './types';
 /**
  * Mixin for XAPI sections that can trigger feedback.
  */
-export class Listenable {
+export class Listenable<T=any> {
   public xapi!: XAPI;
   public normalizePath!: typeof normalizePath;
 
@@ -17,7 +17,7 @@ export class Listenable {
    * @typeparam T Event type.
    * @return Handler to deregister the feedback registration.
    */
-  public on<T = any>(path: Path, listener: Listener<T>) {
+  public on(path: Path, listener: Listener<T>) {
     return this.xapi.feedback.on(this.normalizePath(path) as any, listener);
   }
 
@@ -30,7 +30,7 @@ export class Listenable {
    * @typeparam T Event type.
    * @return Handler to deregister the feedback registration.
    */
-  public once<T = any>(path: Path, listener: Listener<T>) {
+  public once(path: Path, listener: Listener<T>) {
     return this.xapi.feedback.once(this.normalizePath(path) as any, listener);
   }
 
@@ -47,7 +47,7 @@ export class Listenable {
 /**
  * Mixin for XAPI sections that can hold a value that may be fetched.
  */
-export class Gettable {
+export class Gettable<T=any> {
   public xapi!: XAPI;
   public normalizePath!: typeof normalizePath;
   /**
@@ -69,7 +69,7 @@ export class Gettable {
    * @typeparam T The return type of the get request.
    * @return Resolved to the configuration value when ready.
    */
-  public get<T = any>(path: Path): Promise<T> {
+  public get(path: Path): Promise<T> {
     return this.xapi.execute('xGet', {
       Path: this.normalizePath(path),
     });
@@ -79,7 +79,7 @@ export class Gettable {
 /**
  * Mixin for XAPI sections that can hold a value that may be fetched.
  */
-export class Settable {
+export class Settable<T=number | string> {
   public xapi!: XAPI;
   public normalizePath!: typeof normalizePath;
   /**
@@ -94,7 +94,7 @@ export class Settable {
    * @param value Configuration value.
    * @return Resolved to the status value when ready.
    */
-  public set(path: Path, value: number | string) {
+  public set(path: Path, value: T) {
     return this.xapi.execute('xSet', {
       Path: this.normalizePath(path),
       Value: value,
