@@ -9,6 +9,8 @@ import xdgBasedir from 'xdg-basedir';
 
 import { connect } from './';
 import log from './log';
+import fetch from './schema/fetch';
+import generate from './schema/generate';
 import version from './version';
 import XAPI from './xapi/index.js';
 
@@ -35,6 +37,16 @@ function startRepl(xapi: XAPI) {
  * See [[Options]] for options.
  */
 function main() {
+  commander
+    .command('generate-api <hosts...>')
+    .description('generate a typed XAPI based on schemas on <hosts>')
+    .action(async (hosts) => {
+      const xapis = hosts.map((host: string) => connect(host));
+      const docs = await fetch(xapis);
+      console.log(generate(docs));
+      xapis.forEach((xapi: XAPI) => xapi.close());
+    });
+
   commander
     .version(version)
     .arguments('<host> [file]')
