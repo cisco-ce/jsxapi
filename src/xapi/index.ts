@@ -255,6 +255,19 @@ export class XAPI extends EventEmitter {
   }
 
   /**
+   * Interface to XAPI documents.
+   *
+   * @param path Path to xDocument.
+   * @return xDocument as specified by path.
+   */
+  public doc<T = any>(path: Path) {
+    return this.execute<T>('xDoc', {
+      Path: normalizePath(path),
+      Type: 'Schema',
+    });
+  }
+
+  /**
    * Execute the given JSON-RPC request on the backend.
    *
    * ```typescript

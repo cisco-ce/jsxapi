@@ -19,6 +19,7 @@ describe('XAPI', () => {
       'Command',
       'config',
       'Config',
+      'doc',
       'event',
       'Event',
       'feedback',
@@ -334,6 +335,20 @@ describe('XAPI', () => {
 
           expect(execStub).toHaveNthReturnedWith(1, result);
         });
+      });
+    });
+
+    describe('.doc', () => {
+      it('invokes and returns .execute()', () => {
+        const result = xapi.doc('Configuration');
+
+        expect(execStub).toHaveBeenCalledTimes(1);
+        expect(execStub).toHaveBeenCalledWith('xDoc', {
+          Path: ['Configuration'],
+          Type: 'Schema',
+        });
+
+        expect(execStub).toHaveNthReturnedWith(1, result);
       });
     });
 

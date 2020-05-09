@@ -677,6 +677,29 @@ Last login from 10.228.101.226 at 2017-12-01 13:14:47
           '(╯°□°)╯︵ ┻━┻',
         ].join('\n'),
       },
+      // xDoc
+      {
+        name: '"xDoc" for top-level',
+        request: {
+          method: 'xDoc',
+          params: {
+            Path: ['Configuration'],
+            Type: 'Schema',
+          },
+        },
+        expected: 'xDocument Format: "JSON" Path: "Configuration" Schema: "True" | resultId="request-1"',
+      },
+      {
+        name: '"xDoc" for sub-path',
+        request: {
+          method: 'xDoc',
+          params: {
+            Path: ['Status', 'Audio', 'Volume'],
+            Type: 'Schema',
+          },
+        },
+        expected: 'xDocument Format: "JSON" Path: "Status/Audio/Volume" Schema: "True" | resultId="request-1"',
+      },
       // xGet
       {
         name: '"xGet" for plain config path',
