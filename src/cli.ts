@@ -31,7 +31,7 @@ function main() {
     .version(version)
     .arguments('<host> [file]')
     .description('connect to a codec and launch a repl')
-    .option('-p, --port <port>', 'port to connect to', 22)
+    .option('-p, --port <port>', 'port to connect to')
     .option('-U, --username <user>', 'username to authenticate with', 'admin')
     .option('-P, --password <password>', 'password to authenticate with', '')
     .option('-C, --command <command>', 'command to execute on remote host', '')
