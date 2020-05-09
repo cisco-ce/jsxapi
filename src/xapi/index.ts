@@ -99,14 +99,45 @@ export declare interface XAPI {
 export class XAPI extends EventEmitter {
   public version: string = version;
 
+  /**
+   * Interface to XAPI feedback registration.
+   */
   public feedback: Feedback;
-  public config: Config;
-  public status: Status;
-  public event: Event;
 
+  /**
+   * Interface to XAPI configurations.
+   */
+  public config = new Config(this);
+
+  /**
+   * Interface to XAPI events.
+   */
+  public event = new Event(this);
+
+  /**
+   * Interface to XAPI statuses.
+   */
+  public status = new Status(this);
+
+  /**
+   * Proxy for XAPI Status.
+   */
   public Command: any;
+
+  /**
+   * Proxy for XAPI Status.
+   */
+
   public Config: any;
+  /**
+   * Proxy for XAPI Status.
+   */
+
   public Status: any;
+
+  /**
+   * Proxy for XAPI Status.
+   */
   public Event: any;
 
   /**
@@ -122,44 +153,10 @@ export class XAPI extends EventEmitter {
     options: XapiOptions = { seal: true }) {
     super();
 
-    /**
-     * Interface to XAPI feedback registration.
-     */
     this.feedback = new Feedback(this, options.feedbackInterceptor);
-
-    /**
-     * Interface to XAPI configurations.
-     */
-    this.config = new Config(this);
-
-    /**
-     * Interface to XAPI events.
-     */
-    this.event = new Event(this);
-
-    /**
-     * Interface to XAPI statuses.
-     */
-    this.status = new Status(this);
-
-    /**
-     * Proxy for XAPI Command.
-     */
     this.Command = createXapiProxy(this, this.command);
-
-    /**
-     * Proxy for XAPI Configuration.
-     */
     this.Config = createXapiProxy(this, this.config);
-
-    /**
-     * Proxy for XAPI Event.
-     */
     this.Event = createXapiProxy(this, this.event);
-
-    /**
-     * Proxy for XAPI Status.
-     */
     this.Status = createXapiProxy(this, this.status);
 
     // Restrict object mutation
