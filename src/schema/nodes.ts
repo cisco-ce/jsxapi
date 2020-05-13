@@ -52,11 +52,11 @@ export class Root extends Node {
     return this.addChild(new Interface(name, extend));
   }
 
-  public addMain(name?: string, base?: string): MainClass {
+  public addMain(name?: string, options: Partial<MainOptions> = {}): MainClass {
     if (this.main) {
       throw new Error('Main class already defined');
     }
-    const main = this.addChild(new MainClass(this, name, base));
+    const main = this.addChild(new MainClass(this, name, options));
     this.main = main;
     return main;
   }
@@ -276,20 +276,38 @@ class Interface extends Node implements Type {
   }
 }
 
+interface MainOptions {
+  base: string,
+  withConnect: boolean;
+}
+
 class MainClass extends Interface {
   private connectGen = 'connectGen';
+  private readonly options: MainOptions;
 
-  constructor(root: Root, name: string = 'TypedXAPI', readonly base: string = 'XAPI') {
+  constructor(root: Root, readonly name: string = 'TypedXAPI', options: Partial<MainOptions> = {}) {
     super(name);
-    root.addImports('', [base, this.connectGen]);
+    this.options = {
+      base: 'XAPI',
+      withConnect: true,
+      ...options,
+    };
+    const imports = [this.options.base];
+    if (this.options.withConnect) {
+      imports.push(this.connectGen);
+    }
+    root.addImports('', imports);
   }
 
   public serialize(): string {
+    const exports = [`export default ${this.name};`];
+    if (this.options.withConnect) {
+      exports.push(`export const connect = ${this.connectGen}(${this.name});`);
+    }
     return `\
-export class ${this.name} extends ${this.base} {}
+export class ${this.name} extends ${this.options.base} {}
 
-export default ${this.name};
-export const connect = ${this.connectGen}(${this.name});
+${exports.join('\n')}
 
 ${super.serialize()} `;
   }

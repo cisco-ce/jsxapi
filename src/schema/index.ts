@@ -13,9 +13,11 @@ import {
 } from './nodes';
 
 export interface GenerateOpts {
-  access?: 'public-api' | 'public-api-preview';
-  role?: 'Admin' | 'User' | 'Integrator' | 'RoomControl';
-  xapiImport?: string;
+  access: 'public-api' | 'public-api-preview';
+  role: 'Admin' | 'User' | 'Integrator' | 'RoomControl';
+  mainClass?: string;
+  withConnect: boolean,
+  xapiImport: string;
 }
 
 interface Leaf {
@@ -291,16 +293,19 @@ function parseSchema(
 /**
  * Parse and generate a module of a schema definition.
  */
-export function parse(schema: any, options?: GenerateOpts): Root {
-  const xapiPath =
-    options && options.xapiImport ? options.xapiImport : 'jsxapi';
-  const role = options && options.role ? options.role : 'Admin';
-  const access = options && options.access ? options.access : 'public-api';
+export function parse(schema: any, options: Partial<GenerateOpts> = {}): Root {
+  const opts: GenerateOpts = {
+    access: 'public-api',
+    role: 'Admin',
+    withConnect: true,
+    xapiImport: 'jsxapi',
+    ...options,
+  };
 
-  const root = new Root(xapiPath);
+  const root = new Root(opts.xapiImport);
 
   // Main XAPI class
-  root.addMain();
+  root.addMain(opts.mainClass, { withConnect: opts.withConnect });
   root.addGenericInterfaces();
 
   parseSchema('Command', root, schema, parseCommandTree);
@@ -314,7 +319,7 @@ export function parse(schema: any, options?: GenerateOpts): Root {
 /**
  * Serialize a TypeScript module from a schema definition.
  */
-export function generate(schema: any, options?: GenerateOpts) {
+export function generate(schema: any, options: Partial<GenerateOpts> = {}) {
   const root = parse(schema, options);
   return root.serialize();
 }

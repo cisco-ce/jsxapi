@@ -45,6 +45,20 @@ describe('schemas', () => {
       });
     });
 
+    it('can rename XAPI subtype', () => {
+      expect(parse({}, { mainClass: 'MyXAPI' })).toMatchObject({
+        children: expect.arrayContaining([new Root().addMain('MyXAPI')]),
+      });
+    });
+
+    it('can exclude "connect" export', () => {
+      expect(parse({}, { withConnect: false })).toMatchObject({
+        children: expect.arrayContaining([
+          new Root().addMain(undefined, { withConnect: false }),
+        ]),
+      });
+    });
+
     it('fails with incorrect Command type', () => {
       const schema = { Command: 'foobar' };
       expect(() => parse(schema)).toThrow();

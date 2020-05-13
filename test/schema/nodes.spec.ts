@@ -158,7 +158,7 @@ describe('schema nodes', () => {
     });
 
     it('supports passing custom names', () => {
-      const main = new Root().addMain('XapiWithTypes', 'JSXAPI');
+      const main = new Root().addMain('XapiWithTypes', { base: 'JSXAPI' });
       expect(main.serialize()).toMatch(
         'export class XapiWithTypes extends JSXAPI {}',
       );
@@ -169,10 +169,21 @@ describe('schema nodes', () => {
       expect(main.serialize()).toMatch('export default TypedXAPI');
     });
 
-    it('uses connectGen to export connect', () => {
-      const main = new Root().addMain();
-      expect(main.serialize()).toMatch('export const connect = connectGen(TypedXAPI);');
-    })
+    it('uses connectGen to export connect by default', () => {
+      const root = new Root();
+      root.addMain();
+      const serialized = root.serialize();
+      expect(serialized).toMatch(/import.*connect.*from.*jsxapi/);
+      expect(serialized).toMatch('export const connect = connectGen(TypedXAPI);');
+    });
+
+    it('can skip generating connect export', () => {
+      const root = new Root();
+      root.addMain(undefined, { withConnect: false });
+      const serialized = root.serialize();
+      expect(serialized).not.toMatch(/import.*connect/);
+      expect(serialized).not.toMatch(/export.*connect/);
+    });
 
     it('exports an interface with name', () => {
       const main = new Root().addMain();
