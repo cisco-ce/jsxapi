@@ -178,7 +178,7 @@ export function createDocumentResponse(request: any, response: any) {
   const path = [...Path];
   const document = path[0].toLowerCase();
 
-  // Shim document/query inconsitencies
+  // Shim document/query inconsistencies
   if (isSchema && 'status'.startsWith(document)) {
     path[0] = 'StatusSchema';
   } else if ('configuration'.startsWith(document)) {

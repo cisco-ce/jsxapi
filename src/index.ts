@@ -46,6 +46,14 @@ export function connectGen<T extends XAPI>(xapi: new (backend: Backend) => T) {
 }
 
 /**
- * Function for connecting to the XAPI.
+ * Connect to an XAPI endpoint.
+ *
+ * ```typescript
+ * const xapi = connect('ssh://host.example.com:22');
+ * ```
+ *
+ * @param url Connection specification.
+ * @param options Connect options.
+ * @return XAPI interface connected to the given URI.
  */
 export const connect = connectGen(XAPI);

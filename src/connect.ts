@@ -48,17 +48,6 @@ function resolveOptions(
   return realOpts;
 }
 
-/**
- * Connect to an XAPI endpoint.
- *
- * ```typescript
- * const xapi = connect('ssh://host.example.com:22');
- * ```
- *
- * @param url Connection specification.
- * @param options Connect options.
- * @return XAPI interface connected to the given URI.
- */
 export default function connectOverload<T extends XAPI>(
   initBackend: InitBackend,
   defaults: Partial<Options>,
