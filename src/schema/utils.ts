@@ -29,7 +29,7 @@ export function merge(a: object, b: object, path: string[] = []) {
     if (!result.hasOwnProperty(key)) {
       result[key] = value;
     } else if (typeof value !== typeof result[key]) {
-      throw new Error(`Mismatching types: ${pathStr}`)
+      throw new Error(`Mismatching types: ${pathStr}`);
     } else if (Array.isArray(value)) {
       if (typeof result[key][0] === 'object') {
         result[key][0] = merge(result[key][0], value[0], fullPath);
@@ -43,7 +43,8 @@ export function merge(a: object, b: object, path: string[] = []) {
     } else if (typeof value === 'object') {
       result[key] = merge(result[key], value, fullPath);
     } else if (result[key] !== value) {
-      console.error(`Warning: Mismatch on value for ${pathStr}`)
+      // tslint:disable-next-line no-console
+      console.error(`Warning: Mismatch on value for ${pathStr}`);
     }
   }
 

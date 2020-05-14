@@ -40,7 +40,7 @@ export class Root extends Node {
   }
 
   public addImports(path: string, imports: string[]) {
-    const fullPath = [this.libName, path].filter(x => !!x).join('/');
+    const fullPath = [this.libName, path].filter((x) => !!x).join('/');
     this.imports.addImports(fullPath, imports);
   }
 
@@ -138,7 +138,7 @@ class Imports extends Node {
     return importStatement;
   }
 
-  serialize() {
+  public serialize() {
     return Array.from(this.imports.values())
       .map((i) => i.serialize())
       .join('\n');
@@ -266,7 +266,7 @@ class Interface extends Node implements Type {
   public allOptional(): boolean {
     return !this.children.some((child) => {
       return !(child instanceof Member) || child.isRequired;
-    })
+    });
   }
 
   public serialize(): string {
@@ -277,7 +277,7 @@ class Interface extends Node implements Type {
 }
 
 interface MainOptions {
-  base: string,
+  base: string;
   withConnect: boolean;
 }
 
@@ -330,8 +330,8 @@ export class Member extends Node {
     super();
     this.type = vsToType(type);
     this.options = {
-      required: true,
       docstring: '',
+      required: true,
       ...options,
     };
   }

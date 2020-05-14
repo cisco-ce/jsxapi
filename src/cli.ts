@@ -43,6 +43,7 @@ function main() {
     .action(async (hosts) => {
       const xapis = hosts.map((host: string) => connect(host));
       const docs = await fetch(xapis);
+      // tslint:disable-next-line no-console
       console.log(generate(docs));
       xapis.forEach((xapi: XAPI) => xapi.close());
     });

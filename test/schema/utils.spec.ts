@@ -38,7 +38,7 @@ describe('schemas', () => {
           bar: 'baz',
         },
       };
-      expect(merge(a, {})).toEqual(a);
+      expect(merge({}, a)).toEqual(a);
     });
 
     it('right identity', () => {
@@ -47,7 +47,7 @@ describe('schemas', () => {
           bar: 'baz',
         },
       };
-      expect(merge({}, a)).toEqual(a);
+      expect(merge(a, {})).toEqual(a);
     });
 
     it('merges two schemas', () => {

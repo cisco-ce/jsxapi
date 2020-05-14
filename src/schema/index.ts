@@ -16,7 +16,7 @@ export interface GenerateOpts {
   access: 'public-api' | 'public-api-preview';
   role: 'Admin' | 'User' | 'Integrator' | 'RoomControl';
   mainClass?: string;
-  withConnect: boolean,
+  withConnect: boolean;
   xapiImport: string;
 }
 
@@ -92,7 +92,9 @@ function isCommandLeaf(value: unknown): value is CommandLeaf {
 /**
  * Check if an object is an event definition.
  *
- * Events have { event: 'True' } in the schema.
+ * Events have { event: 'True' } in the schema - however, the XAPI allows to
+ * subscribe even more granularly to attributes of events. We consider a leaf to
+ * be the attributes with scalar values.
  */
 function isEventLeaf(value: unknown): value is EventLeaf {
   return 'type' in (value as Leaf);

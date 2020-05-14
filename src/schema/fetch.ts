@@ -10,7 +10,7 @@ export default async function fetch(xapis: XAPI | XAPI[]) {
     'Status',
   ];
 
-  return await Promise.all(xapis.reduce((reqs: Promise<object>[], xapi) => {
+  return await Promise.all(xapis.reduce((reqs: Array<Promise<object>>, xapi) => {
     return [
       ...reqs,
       ...paths.map(async (p) => {
@@ -20,4 +20,4 @@ export default async function fetch(xapis: XAPI | XAPI[]) {
       }),
     ];
   }, []));
-};
+}
