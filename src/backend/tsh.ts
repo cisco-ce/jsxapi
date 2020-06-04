@@ -182,9 +182,9 @@ export default class TSHBackend extends Backend {
     const { Path, Type } = request.params;
 
     const tshParams: any = {
-      Path: Path.join('/'),
-      Schema: Type === 'Schema' ? 'True': 'False',
       Format: 'JSON',
+      Path: Path.join('/'),
+      Schema: Type === 'Schema' ? 'True' : 'False',
     };
 
     const paramsStr = Object.keys(tshParams)

@@ -5,7 +5,7 @@ import { Listener, Path } from './types';
 /**
  * Mixin for XAPI sections that can trigger feedback.
  */
-export class Listenable<T=any> {
+export class Listenable<T = any> {
   public xapi!: XAPI;
   public normalizePath!: typeof normalizePath;
 
@@ -47,7 +47,7 @@ export class Listenable<T=any> {
 /**
  * Mixin for XAPI sections that can hold a value that may be fetched.
  */
-export class Gettable<T=any> {
+export class Gettable<T = any> {
   public xapi!: XAPI;
   public normalizePath!: typeof normalizePath;
   /**
@@ -79,7 +79,7 @@ export class Gettable<T=any> {
 /**
  * Mixin for XAPI sections that can hold a value that may be fetched.
  */
-export class Settable<T=number | string> {
+export class Settable<T = number | string> {
   public xapi!: XAPI;
   public normalizePath!: typeof normalizePath;
   /**
