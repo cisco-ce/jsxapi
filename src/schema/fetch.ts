@@ -1,4 +1,5 @@
 import XAPI from '../xapi';
+import { flatten } from './utils';
 
 export default async function fetch(xapis: XAPI | XAPI[]) {
   xapis = Array.isArray(xapis) ? xapis : [xapis];
@@ -10,14 +11,11 @@ export default async function fetch(xapis: XAPI | XAPI[]) {
     'Status',
   ];
 
-  return await Promise.all(xapis.reduce((reqs: Array<Promise<object>>, xapi) => {
-    return [
-      ...reqs,
-      ...paths.map(async (p) => {
-        const doc = await xapi.doc(p);
-        const key = p === 'Status' ? 'StatusSchema' : p;
-        return { [key]: doc };
-      }),
-    ];
-  }, []));
+  const requests = xapis.map((xapi) => paths.map(async (path) => {
+    const doc = await xapi.doc(path);
+    const key = path === 'Status' ? 'StatusSchema' : path;
+    return { [key]: doc };
+  }));
+
+  return await Promise.all(flatten(requests));
 }

@@ -19,6 +19,10 @@ export function filter(schema: object, access: string[]) {
   return result;
 }
 
+export function flatten<T>(arr: T[][]): T[] {
+  return ([] as T[]).concat(...arr);
+}
+
 export function merge(a: object, b: object, path: string[] = []) {
   const result: any = { ...a };
 
