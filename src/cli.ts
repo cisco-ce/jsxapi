@@ -3,7 +3,9 @@
 import commander from 'commander';
 
 import * as fs from 'fs';
+import * as path from 'path';
 import * as REPL from 'repl';
+import xdgBasedir from 'xdg-basedir';
 
 import { connect } from './';
 import log from './log';
@@ -17,7 +19,12 @@ function evalFile(source: any, xapi: XAPI) {
 
 function startRepl(xapi: XAPI) {
   const repl = REPL.start({});
-  repl.setupHistory('.jsxapi-cli-history', () => undefined);
+  const { cache } = xdgBasedir;
+  if (cache) {
+    const jsxapiCache = path.join(cache, 'jsxapi');
+    fs.mkdirSync(jsxapiCache, { recursive: true });
+    repl.setupHistory(path.join(jsxapiCache, 'history'), () => undefined);
+  }
   repl.on('exit', () => xapi.close());
   repl.context.xapi = xapi;
 }
