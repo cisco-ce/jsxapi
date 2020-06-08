@@ -20,7 +20,7 @@ function evalFile(source: any, xapi: XAPI) {
 function startRepl(xapi: XAPI) {
   const repl = REPL.start({});
   const { cache } = xdgBasedir;
-  if (cache) {
+  if (cache && repl.setupHistory) {
     const jsxapiCache = path.join(cache, 'jsxapi');
     fs.mkdirSync(jsxapiCache, { recursive: true });
     repl.setupHistory(path.join(jsxapiCache, 'history'), () => undefined);
