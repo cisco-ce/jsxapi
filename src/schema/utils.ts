@@ -35,6 +35,9 @@ export function merge(a: object, b: object, path: string[] = []) {
     } else if (typeof value !== typeof result[key]) {
       throw new Error(`Mismatching types: ${pathStr}`);
     } else if (Array.isArray(value)) {
+      if (!Array.isArray(result[key])) {
+        throw new Error(`Unexpected array: ${pathStr}`);
+      }
       if (typeof result[key][0] === 'object') {
         result[key][0] = merge(result[key][0], value[0], fullPath);
       } else {
