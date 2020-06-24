@@ -4,6 +4,7 @@ import {
   createGetResponse,
   createRequest,
   createSetResponse,
+  createDocumentResponse,
 } from '../../src/xapi/rpc';
 
 import { ParameterError, XAPIError } from '../../src/xapi/exc';
@@ -184,6 +185,53 @@ describe('xapi/rpc', () => {
         expect(() => createCommandResponse(data)).toThrow(
           /Wrong number of keys/,
         );
+      });
+    });
+  });
+
+  describe('createDocumentResponse', () => {
+    it('maps status schema to StatusSchema', () => {
+      const request = {
+        method: 'xDoc',
+        params: {
+          Path: ['Stat', 'Audio', 'Volume'],
+          Type: 'Schema',
+        },
+      };
+
+      const data = JSON.parse(`
+        {
+          "StatusSchema": {
+            "Audio": {
+              "Volume": {
+                "ValueSpace": {
+                  "type": "Integer"
+                },
+                "access": "public-api",
+                "description": "Shows the volume level (dB) of the loudspeaker output.",
+                "read": "Admin;Integrator;User"
+              },
+              "VolumeMute": {
+                "ValueSpace": {
+                  "Value": [
+                    "On",
+                    "Off"
+                  ],
+                  "type": "Literal"
+                },
+                "access": "public-api",
+                "description": "Shows whether the endpoint volume is set to mute.",
+                "read": "Admin;User"
+              }
+            }
+          }
+        }`);
+
+      expect(createDocumentResponse(request, data)).toEqual({
+        ValueSpace: { type: "Integer" },
+        access: 'public-api',
+        description: 'Shows the volume level (dB) of the loudspeaker output.',
+        read: 'Admin;Integrator;User',
       });
     });
   });

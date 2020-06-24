@@ -19,6 +19,7 @@ describe('XAPI', () => {
       'Command',
       'config',
       'Config',
+      'doc',
       'event',
       'Event',
       'feedback',
@@ -280,6 +281,32 @@ describe('XAPI', () => {
           },
         );
       });
+
+      it('supports passing body as second argument', () => {
+        const body = `<Bookings></Bookings>`;
+
+        xapi.command('Bookings Update', body);
+
+        expect(execStub).toHaveBeenCalledWith(
+          'xCommand/Bookings/Update',
+          {
+            body,
+          },
+        );
+      });
+
+      it('supports passing empty params and then a body', () => {
+        const body = `<Bookings></Bookings>`;
+
+        xapi.command('Bookings Update', undefined, body);
+
+        expect(execStub).toHaveBeenCalledWith(
+          'xCommand/Bookings/Update',
+          {
+            body,
+          },
+        );
+      });
     });
 
     describe('.config', () => {
@@ -308,6 +335,20 @@ describe('XAPI', () => {
 
           expect(execStub).toHaveNthReturnedWith(1, result);
         });
+      });
+    });
+
+    describe('.doc', () => {
+      it('invokes and returns .execute()', () => {
+        const result = xapi.doc('Configuration');
+
+        expect(execStub).toHaveBeenCalledTimes(1);
+        expect(execStub).toHaveBeenCalledWith('xDoc', {
+          Path: ['Configuration'],
+          Type: 'Schema',
+        });
+
+        expect(execStub).toHaveNthReturnedWith(1, result);
       });
     });
 

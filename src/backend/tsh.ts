@@ -178,6 +178,28 @@ export default class TSHBackend extends Backend {
   /**
    * @ignore
    */
+  private ['xDoc()'](request: any, send: any) {
+    const { Path, Type } = request.params;
+
+    const tshParams: any = {
+      Format: 'JSON',
+      Path: Path.join('/'),
+      Schema: Type === 'Schema' ? 'True' : 'False',
+    };
+
+    const paramsStr = Object.keys(tshParams)
+      .sort()
+      .map((k) => paramString(k, tshParams[k]))
+      .join(' ');
+
+    return send(`xDocument ${paramsStr}`).then((response: any) =>
+      rpc.createDocumentResponse(request, response),
+    );
+  }
+
+  /**
+   * @ignore
+   */
   private ['xFeedback/Subscribe()']({ params }: any, send: any) {
     const query: string = params.Query.map((part: number | string) =>
       typeof part === 'number' ? `[${part}]` : `/${part}`,

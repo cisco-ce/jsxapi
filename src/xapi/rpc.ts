@@ -172,6 +172,22 @@ function digObj(path: Array<string | number>, obj: any) {
   return value;
 }
 
+export function createDocumentResponse(request: any, response: any) {
+  const { Path, Type } = request.params;
+  const isSchema = Type === 'Schema';
+  const path = [...Path];
+  const document = path[0].toLowerCase();
+
+  // Shim document/query inconsitencies
+  if (isSchema && 'status'.startsWith(document)) {
+    path[0] = 'StatusSchema';
+  } else if ('configuration'.startsWith(document)) {
+    path[0] = 'Configuration';
+  }
+
+  return digObj(path, response);
+}
+
 export function createGetResponse(request: any, response: any) {
   if ({}.hasOwnProperty.call(response, 'CommandResponse')) {
     assertResponseSuccess(response.CommandResponse);
