@@ -1,5 +1,5 @@
 import DuplexPassThrough from 'duplex-passthrough';
-import { Client } from 'ssh2';
+import { Client, ConnectConfig } from 'ssh2';
 
 import { Stream } from 'stream';
 import log from '../log';
@@ -43,7 +43,7 @@ interface SshOptions {
 export default function connectSSH(options: Partial<SshOptions>) {
   let closing = false;
 
-  const mergedOpts: SshOptions = Object.assign(
+  const mergedOpts: SshOptions & ConnectConfig = Object.assign(
     {
       client: new Client(),
       transport: new DuplexPassThrough(),
@@ -109,6 +109,12 @@ export default function connectSSH(options: Partial<SshOptions>) {
 
       transport.wrapStream(sshStream);
     });
+  }
+
+  const agentSock = process.env['SSH_AUTH_SOCK'];
+  if (agentSock) {
+    log.info(`Using SSH agent socket "${agentSock}"`)
+    mergedOpts.agent = agentSock;
   }
 
   client
