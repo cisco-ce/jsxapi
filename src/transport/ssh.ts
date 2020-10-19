@@ -111,9 +111,9 @@ export default function connectSSH(options: Partial<SshOptions>) {
     });
   }
 
-  const agentSock = process.env['SSH_AUTH_SOCK'];
+  const agentSock = process.env.SSH_AUTH_SOCK;
   if (agentSock) {
-    log.info(`Using SSH agent socket "${agentSock}"`)
+    log.info(`Using SSH agent socket "${agentSock}"`);
     mergedOpts.agent = agentSock;
   }
 
