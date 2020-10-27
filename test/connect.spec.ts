@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import connect, { globalDefaults } from '../src/connect';
 import log from '../src/log';
+import XAPI from '../src/xapi';
 
 describe('connect()', () => {
   let initBackend: jest.Mock;
@@ -16,12 +17,12 @@ describe('connect()', () => {
 
   describe('args', () => {
     it('throws with no arguments', () => {
-      const doConnect = connect(initBackend, {}) as any;
+      const doConnect = connect(initBackend, {})(XAPI) as any;
       expect(() => doConnect()).toThrow(/invalid arguments/i);
     });
 
     it('allows invoking with a single string URL', () => {
-      const doConnect = connect(initBackend, {});
+      const doConnect = connect(initBackend, {})(XAPI);
 
       doConnect('ssh://host.example.com');
 
@@ -35,7 +36,7 @@ describe('connect()', () => {
     it('allows invoking with a single object', () => {
       const doConnect = connect(initBackend, {
         protocol: 'ssh:',
-      });
+      })(XAPI);
 
       doConnect({
         host: 'host.example.com',
@@ -53,7 +54,7 @@ describe('connect()', () => {
     it('allows passing defaults', () => {
       const doConnect = connect(initBackend, {
         protocol: 'ssh:',
-      });
+      })(XAPI);
 
       doConnect('');
 
@@ -67,7 +68,7 @@ describe('connect()', () => {
         port: 22,
         protocol: 'ssh:',
         username: 'integrator',
-      });
+      })(XAPI);
 
       doConnect({
         port: 80,

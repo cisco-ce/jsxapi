@@ -17,6 +17,9 @@ class Component {
 
   /**
    * Normalizes a path including the component prefix.
+   *
+   * @param path Path to normalize.
+   * @return Normalized path.
    */
   public normalizePath(path: Path) {
     const normalized = normalizePath(path);

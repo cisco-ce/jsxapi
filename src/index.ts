@@ -1,5 +1,6 @@
 import WS from 'ws';
 
+import { Backend } from './backend';
 import TSHBackend from './backend/tsh';
 import WSBackend from './backend/ws';
 import connectOverload from './connect';
@@ -7,6 +8,7 @@ import connectSSH from './transport/ssh';
 import spawnTSH from './transport/tsh';
 import websocketConnect from './transport/ws';
 import { Options } from './types';
+import XAPI from './xapi';
 
 export { default as XAPI } from './xapi';
 
@@ -39,7 +41,19 @@ function initBackend(opts: Options) {
   }
 }
 
+export function connectGen<T extends XAPI>(xapi: new (backend: Backend) => T) {
+  return connectOverload<T>(initBackend, { protocol: 'wss:' })(xapi);
+}
+
 /**
- * Function for connecting to the XAPI.
+ * Connect to an XAPI endpoint.
+ *
+ * ```typescript
+ * const xapi = connect('ssh://host.example.com:22');
+ * ```
+ *
+ * @param url Connection specification.
+ * @param options Connect options.
+ * @return XAPI interface connected to the given URI.
  */
-export const connect = connectOverload(initBackend, { protocol: 'ssh:' });
+export const connect = connectGen(XAPI);

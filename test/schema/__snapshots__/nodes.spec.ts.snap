@@ -1,0 +1,95 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`schema nodes Root can build entire module 1`] = `
+"import { XAPI, connectGen } from \\"jsxapi\\";
+import { Registration } from \\"jsxapi/lib/xapi/feedback\\";
+
+export class TypedXAPI extends XAPI {}
+
+export default TypedXAPI;
+export const connect = connectGen(TypedXAPI);
+
+export interface TypedXAPI {
+  Command: CommandTree;
+  Config: ConfigTree;
+  Status: StatusTree;
+} 
+
+export interface Gettable<T> {
+  get(): Promise<T>;
+}
+
+export interface Settable<T> {
+  set(value: T): Promise<void>;
+}
+
+export interface Listenable<T> {
+  on(handler: (value: T) => void): Registration;
+  once(handler: (value: T) => void): Registration;
+}
+
+type Configify<T> = [T] extends [object]
+  ? { [P in keyof T]: Configify<T[P]>; } & Gettable<T> & Listenable<T>
+  : Gettable<T> & Settable<T> & Listenable<T>;
+
+type Eventify<T> = { [P in keyof T]: Eventify<T[P]>; } & Listenable<T>;
+
+type Statusify<T> = { [P in keyof T]: Statusify<T[P]>; } & Gettable<T> & Listenable<T>;
+
+export interface CommandTree {
+  Audio: {
+    Microphones: {
+      Mute<R=any>(): Promise<R>,
+    },
+    Sound: {
+      Play<R=any>(args: AudioPlayArgs): Promise<R>,
+    },
+  };
+  Dial<R=any>(args: DialArgs): Promise<R>;
+  SystemUnit: {
+    FactoryReset<R=any>(args: SystemUnitFactoryResetArgs): Promise<R>,
+  };
+}
+
+export interface ConfigTree {
+  SystemUnit: {
+    Name: string,
+  };
+}
+
+export interface StatusTree {
+  Audio: {
+    Volume: number,
+  };
+}
+
+export interface AudioPlayArgs {
+  Sound: 'Alert' | 'Busy' | 'CallInitiate';
+  Loop?: 'On' | 'Off';
+}
+
+export interface DialArgs {
+  Number: string;
+}
+
+export interface SystemUnitFactoryResetArgs {
+  Confirm: Yes;
+  Keep?: ('LocalSetup' | 'Network' | 'Provisioning')[];
+}"
+`;
+
+exports[`schema nodes Tree renders levels of nesting 1`] = `"Audio: {}"`;
+
+exports[`schema nodes Tree renders levels of nesting 2`] = `
+"Audio: {
+  Microphones: {},
+}"
+`;
+
+exports[`schema nodes Tree renders levels of nesting 3`] = `
+"Audio: {
+  Microphones: {
+    LedIndicator: 'On' | 'Off',
+  },
+}"
+`;
