@@ -150,7 +150,7 @@ export class XAPI extends EventEmitter {
 
   constructor(
     private readonly backend: Backend,
-    options: XapiOptions = { seal: true }) {
+    options: XapiOptions = {}) {
     super();
 
     this.feedback = new Feedback(this, options.feedbackInterceptor);
@@ -160,7 +160,7 @@ export class XAPI extends EventEmitter {
     this.Status = createXapiProxy(this, this.status);
 
     // Restrict object mutation
-    if (options.seal) {
+    if (!options.hasOwnProperty('seal') || options.seal) {
       Object.defineProperties(this, {
         Command: { writable: false },
         Config: { writable: false },

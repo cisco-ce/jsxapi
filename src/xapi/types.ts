@@ -19,7 +19,7 @@ export type Listener<T = any> = (ev: T, root: any) => void;
 
 export interface XapiOptions {
   feedbackInterceptor?: FeedbackInterceptor;
-  seal: boolean;
+  seal?: boolean;
 }
 
 export interface XapiRequest {

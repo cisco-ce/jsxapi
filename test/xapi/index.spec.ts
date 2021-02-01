@@ -13,7 +13,7 @@ describe('XAPI', () => {
     xapi = new XAPI(backend);
   });
 
-  describe('property is not writable', () => {
+  describe('property', () => {
     const props = [
       'command',
       'Command',
@@ -26,12 +26,29 @@ describe('XAPI', () => {
       'status',
       'Status',
     ];
+
     props.forEach((prop) => {
-      it(prop, () => {
+      it(`${prop} is not writable by default`, () => {
         const fn = () => {
           (xapi as any)[prop] = {};
         };
         expect(fn).toThrow(TypeError);
+      });
+
+      it(`${prop} is not writable with non-default XAPI options`, () => {
+        const fn = () => {
+          const xapi = new XAPI(backend, { feedbackInterceptor: () => {} });
+          (xapi as any)[prop] = {};
+        };
+        expect(fn).toThrow(TypeError);
+      });
+
+      it(`${prop} is writable if overridden`, () => {
+        const fn = () => {
+          const xapi = new XAPI(backend, { seal: false });
+          (xapi as any)[prop] = {};
+        };
+        expect(fn).not.toThrow(TypeError);
       });
     });
   });
