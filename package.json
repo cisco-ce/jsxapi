@@ -39,7 +39,7 @@
     "watch": "(cd src; tsc --watch)"
   },
   "dependencies": {
-    "commander": "^4.1.1",
+    "commander": "^7.2.0",
     "core-js": "^3.14.0",
     "duplex-passthrough": "^1.0.2",
     "duplexer": "^0.1.2",
