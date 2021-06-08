@@ -209,7 +209,7 @@ export class Generic implements Type {
 export class Function extends Node implements Type {
   constructor(
     readonly name: string,
-    readonly args: Array<[string, Type]> = [],
+    readonly args: [string, Type][] = [],
     readonly ret: Type = new Plain('void'),
   ) {
     super();
