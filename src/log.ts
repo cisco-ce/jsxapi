@@ -4,7 +4,7 @@
  * their level can be set independently.
  */
 
-import * as loglevel from 'loglevel';
+import loglevel from 'loglevel';
 
 if (!(loglevel as any).isPatched) {
   const origMethodFactory = loglevel.methodFactory;
