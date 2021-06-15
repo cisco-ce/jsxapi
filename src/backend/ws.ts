@@ -37,7 +37,7 @@ export default class WSBackend extends EventEmitter implements Backend {
     this.ws.onerror = this.handleError;
     this.ws.onmessage = this.handleMessage;
 
-    let resolveReady: () => void;
+    let resolveReady: (ready: boolean) => void;
     /**
      * @type {Promise}
      */
@@ -46,7 +46,7 @@ export default class WSBackend extends EventEmitter implements Backend {
     });
     this.ws.onopen = () => {
       this.emit('ready');
-      resolveReady();
+      resolveReady(true);
     };
   }
 

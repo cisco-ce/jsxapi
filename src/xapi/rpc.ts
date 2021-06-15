@@ -154,7 +154,7 @@ export function createCommandResponse(response: any) {
   return Object.keys(collapsed).length ? collapsed : null;
 }
 
-function digObj(path: Array<string | number>, obj: any) {
+function digObj(path: (string | number)[], obj: any) {
   const parts = path.slice();
   let value = obj;
 

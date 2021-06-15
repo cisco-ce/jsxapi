@@ -13,7 +13,7 @@ export type Path = string | string[];
 /**
  * A normalized path is an array of path elements.
  */
-export type NormalizedPath = Array<string | number>;
+export type NormalizedPath = (string | number)[];
 
 export type Listener<T = any> = (ev: T, root: any) => void;
 

@@ -86,7 +86,7 @@ function parseValueSpace(valuespace: ValueSpace, path: string[]): Type {
  * Command have { command: 'True' } in the schema.
  */
 function isCommandLeaf(value: unknown): value is CommandLeaf {
-  return value && (value as CommandLeaf).command === 'True';
+  return !!value && (value as CommandLeaf).command === 'True';
 }
 
 /**

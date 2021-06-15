@@ -26,7 +26,7 @@ class Component {
     const { prefix } = this;
     return !prefix
       ? normalized
-      : ([prefix] as Array<string | number>).concat(normalized);
+      : ([prefix] as (string | number)[]).concat(normalized);
   }
 }
 
@@ -38,7 +38,7 @@ export class Config extends mix(Component, Listenable, Gettable, Settable)
   public prefix = 'Configuration';
 
   // fake mixins
-  public normalizePath!: (path: Path) => Array<string | number>;
+  public normalizePath!: (path: Path) => (string | number)[];
 
   public on!: <T = any>(path: Path, listener: Listener<T>) => Registration;
   public once!: <T = any>(path: Path, listener: Listener<T>) => Registration;
@@ -60,7 +60,7 @@ export class Event extends mix(Component, Listenable)
   public prefix = 'Event';
 
   // fake mixins
-  public normalizePath!: (path: Path) => Array<string | number>;
+  public normalizePath!: (path: Path) => (string | number)[];
 
   public on!: <T = any>(path: Path, listener: Listener<T>) => Registration;
   public once!: <T = any>(path: Path, listener: Listener<T>) => Registration;
@@ -79,7 +79,7 @@ export class Status extends mix(Component, Listenable, Gettable)
   public prefix = 'Status';
 
   // fake mixins
-  public normalizePath!: (path: Path) => Array<string | number>;
+  public normalizePath!: (path: Path) => (string | number)[];
 
   public on!: <T = any>(path: Path, listener: Listener<T>) => Registration;
   public once!: <T = any>(path: Path, listener: Listener<T>) => Registration;
