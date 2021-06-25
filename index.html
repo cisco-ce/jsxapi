@@ -4,16 +4,17 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>jsxapi</title>
-	<meta name="description" content="">
+	<meta name="description" content="Documentation for jsxapi">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <header>
 	<div class="tsd-page-toolbar">
 		<div class="container">
 			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
 					<div class="field">
 						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
 						<input id="tsd-search-field" type="text" />
@@ -40,8 +41,6 @@
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 							<input type="checkbox" id="tsd-filter-externals" checked />
 							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-							<input type="checkbox" id="tsd-filter-only-exported" />
-							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -51,12 +50,7 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<ul class="tsd-breadcrumb">
-				<li>
-					<a href="globals.html">Globals</a>
-				</li>
-			</ul>
-			<h1> jsxapi</h1>
+			<h1>jsxapi</h1>
 		</div>
 	</div>
 </header>
@@ -67,7 +61,7 @@
 				<a href="#jsxapi" id="jsxapi" style="color: inherit; text-decoration: none;">
 					<h1>JSXAPI</h1>
 				</a>
-				<p><a href="https://travis-ci.org/cisco-ce/jsxapi"><img src="https://travis-ci.org/cisco-ce/jsxapi.svg?branch=master" alt="Build Status"></a></p>
+				<p><a href="https://travis-ci.com/cisco-ce/jsxapi"><img src="https://travis-ci.com/cisco-ce/jsxapi.svg?branch=master" alt="Build Status"></a></p>
 				<p><a href="https://cisco-ce.github.io/jsxapi/">API Documentation</a></p>
 				<p>A set of tools to integrate with the Cisco Telepresence Endpoint APIs in
 				JavaScript.</p>
@@ -77,79 +71,83 @@
 				<a href="#connecting-using-websockets" id="connecting-using-websockets" style="color: inherit; text-decoration: none;">
 					<h3>Connecting using WebSockets</h3>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> jsxapi = <span class="hljs-built_in">require</span>(<span class="hljs-string">'jsxapi'</span>);
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">jsxapi</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;jsxapi&#039;</span><span style="color: #000000">);</span>
 
-jsxapi
-  .connect(<span class="hljs-string">'wss://host.example.com'</span>, {
-    <span class="hljs-attr">username</span>: <span class="hljs-string">'admin'</span>,
-    <span class="hljs-attr">password</span>: <span class="hljs-string">'password'</span>,
-  })
-  .on(<span class="hljs-string">'error'</span>, <span class="hljs-built_in">console</span>.error)
-  .on(<span class="hljs-string">'ready'</span>, <span class="hljs-keyword">async</span> (xapi) =&gt; {
-    <span class="hljs-keyword">const</span> volume = <span class="hljs-keyword">await</span> xapi.status.get(<span class="hljs-string">'Audio Volume'</span>);
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`volume is: <span class="hljs-subst">${volume}</span>`</span>);
-    xapi.close();
-  });</code></pre>
+<span style="color: #001080">jsxapi</span>
+<span style="color: #000000">  .</span><span style="color: #795E26">connect</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;wss://host.example.com&#039;</span><span style="color: #000000">, {</span>
+<span style="color: #000000">    </span><span style="color: #001080">username:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;admin&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">password:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;password&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">  })</span>
+<span style="color: #000000">  .</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;error&#039;</span><span style="color: #000000">, </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #001080">error</span><span style="color: #000000">)</span>
+<span style="color: #000000">  .</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;ready&#039;</span><span style="color: #000000">, </span><span style="color: #0000FF">async</span><span style="color: #000000"> (</span><span style="color: #001080">xapi</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">volume</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">status</span><span style="color: #000000">.</span><span style="color: #795E26">get</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Audio Volume&#039;</span><span style="color: #000000">);</span>
+<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">`volume is: </span><span style="color: #0000FF">${</span><span style="color: #001080">volume</span><span style="color: #0000FF">}</span><span style="color: #A31515">`</span><span style="color: #000000">);</span>
+<span style="color: #000000">    </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #795E26">close</span><span style="color: #000000">();</span>
+<span style="color: #000000">  });</span>
+</code></pre>
 				<a href="#connecting-using-ssh" id="connecting-using-ssh" style="color: inherit; text-decoration: none;">
 					<h3>Connecting using SSH</h3>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> jsxapi = <span class="hljs-built_in">require</span>(<span class="hljs-string">'jsxapi'</span>);
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">jsxapi</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;jsxapi&#039;</span><span style="color: #000000">);</span>
 
-jsxapi
-  .connect(<span class="hljs-string">'ssh://host.example.com'</span>, {
-    <span class="hljs-attr">username</span>: <span class="hljs-string">'admin'</span>,
-    <span class="hljs-attr">password</span>: <span class="hljs-string">'password'</span>,
-  })
-  .on(<span class="hljs-string">'error'</span>, <span class="hljs-built_in">console</span>.error)
-  .on(<span class="hljs-string">'ready'</span>, <span class="hljs-keyword">async</span> (xapi) =&gt; {
-    <span class="hljs-keyword">const</span> volume = <span class="hljs-keyword">await</span> xapi.status.get(<span class="hljs-string">'Audio Volume'</span>);
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`volume is: <span class="hljs-subst">${volume}</span>`</span>);
-    xapi.close();
-  });</code></pre>
+<span style="color: #001080">jsxapi</span>
+<span style="color: #000000">  .</span><span style="color: #795E26">connect</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;ssh://host.example.com&#039;</span><span style="color: #000000">, {</span>
+<span style="color: #000000">    </span><span style="color: #001080">username:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;admin&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">password:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;password&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">  })</span>
+<span style="color: #000000">  .</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;error&#039;</span><span style="color: #000000">, </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #001080">error</span><span style="color: #000000">)</span>
+<span style="color: #000000">  .</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;ready&#039;</span><span style="color: #000000">, </span><span style="color: #0000FF">async</span><span style="color: #000000"> (</span><span style="color: #001080">xapi</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">volume</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">status</span><span style="color: #000000">.</span><span style="color: #795E26">get</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Audio Volume&#039;</span><span style="color: #000000">);</span>
+<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">`volume is: </span><span style="color: #0000FF">${</span><span style="color: #001080">volume</span><span style="color: #0000FF">}</span><span style="color: #A31515">`</span><span style="color: #000000">);</span>
+<span style="color: #000000">    </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #795E26">close</span><span style="color: #000000">();</span>
+<span style="color: #000000">  });</span>
+</code></pre>
 				<a href="#new-style-api" id="new-style-api" style="color: inherit; text-decoration: none;">
 					<h3>New style API</h3>
 				</a>
 				<p>The aim of the new style API is to improve readability, while also being more
 				suited towards automatic type generation and auto-completion.</p>
-				<pre><code class="language-javascript"><span class="hljs-comment">// Set up a call</span>
-xapi.Command.Dial({ <span class="hljs-attr">Number</span>: <span class="hljs-string">'user@example.com'</span> });
+				<pre><code class="language-javascript"><span style="color: #008000">// Set up a call</span>
+<span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">Command</span><span style="color: #000000">.</span><span style="color: #795E26">Dial</span><span style="color: #000000">({ </span><span style="color: #001080">Number:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;user@example.com&#039;</span><span style="color: #000000"> });</span>
 
-<span class="hljs-comment">// Fetch volume and print it</span>
-xapi.Status.Audio.Volume
-  .get()
-  .then(<span class="hljs-function">(<span class="hljs-params">volume</span>) =&gt;</span> { <span class="hljs-built_in">console</span>.log(volume); });
+<span style="color: #008000">// Fetch volume and print it</span>
+<span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">Status</span><span style="color: #000000">.</span><span style="color: #001080">Audio</span><span style="color: #000000">.</span><span style="color: #001080">Volume</span>
+<span style="color: #000000">  .</span><span style="color: #795E26">get</span><span style="color: #000000">()</span>
+<span style="color: #000000">  .</span><span style="color: #795E26">then</span><span style="color: #000000">((</span><span style="color: #001080">volume</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> { </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">volume</span><span style="color: #000000">); });</span>
 
-<span class="hljs-comment">// Set a configuration</span>
-xapi.Config.SystemUnit.Name.set(<span class="hljs-string">'My System'</span>);
+<span style="color: #008000">// Set a configuration</span>
+<span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">Config</span><span style="color: #000000">.</span><span style="color: #001080">SystemUnit</span><span style="color: #000000">.</span><span style="color: #001080">Name</span><span style="color: #000000">.</span><span style="color: #795E26">set</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;My System&#039;</span><span style="color: #000000">);</span>
 
-<span class="hljs-comment">// Listen to feedback</span>
-<span class="hljs-keyword">const</span> off = xapi.Event.Standby.on(<span class="hljs-function">(<span class="hljs-params">event</span>) =&gt;</span> {
-  <span class="hljs-comment">// ...</span>
-});
+<span style="color: #008000">// Listen to feedback</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">off</span><span style="color: #000000"> = </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">Event</span><span style="color: #000000">.</span><span style="color: #001080">Standby</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">((</span><span style="color: #001080">event</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #008000">// ...</span>
+<span style="color: #000000">});</span>
 
-<span class="hljs-comment">// De-register feedback</span>
-off();</code></pre>
+<span style="color: #008000">// De-register feedback</span>
+<span style="color: #795E26">off</span><span style="color: #000000">();</span>
+</code></pre>
 				<a href="#old-style-api" id="old-style-api" style="color: inherit; text-decoration: none;">
 					<h3>Old style API</h3>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-comment">// Set up a call</span>
-xapi.command(<span class="hljs-string">'Dial'</span>, { <span class="hljs-attr">Number</span>: <span class="hljs-string">'user@example.com'</span> });
+				<pre><code class="language-javascript"><span style="color: #008000">// Set up a call</span>
+<span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #795E26">command</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Dial&#039;</span><span style="color: #000000">, { </span><span style="color: #001080">Number:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;user@example.com&#039;</span><span style="color: #000000"> });</span>
 
-<span class="hljs-comment">// Fetch volume and print it</span>
-xapi.status
-  .get(<span class="hljs-string">'Audio Volume'</span>)
-  .then(<span class="hljs-function">(<span class="hljs-params">volume</span>) =&gt;</span> { <span class="hljs-built_in">console</span>.log(volume); });
+<span style="color: #008000">// Fetch volume and print it</span>
+<span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">status</span>
+<span style="color: #000000">  .</span><span style="color: #795E26">get</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Audio Volume&#039;</span><span style="color: #000000">)</span>
+<span style="color: #000000">  .</span><span style="color: #795E26">then</span><span style="color: #000000">((</span><span style="color: #001080">volume</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> { </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">volume</span><span style="color: #000000">); });</span>
 
-<span class="hljs-comment">// Set a configuration</span>
-xapi.config.set(<span class="hljs-string">'SystemUnit Name'</span>, <span class="hljs-string">'My System'</span>);
+<span style="color: #008000">// Set a configuration</span>
+<span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">config</span><span style="color: #000000">.</span><span style="color: #795E26">set</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;SystemUnit Name&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;My System&#039;</span><span style="color: #000000">);</span>
 
-<span class="hljs-comment">// Listen to feedback</span>
-<span class="hljs-keyword">const</span> off = xapi.event.on(<span class="hljs-string">'Standby'</span>, (event) =&gt; {
-  <span class="hljs-comment">// ...</span>
-});
+<span style="color: #008000">// Listen to feedback</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">off</span><span style="color: #000000"> = </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Standby&#039;</span><span style="color: #000000">, (</span><span style="color: #001080">event</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #008000">// ...</span>
+<span style="color: #000000">});</span>
 
-<span class="hljs-comment">// De-register feedback</span>
-off();</code></pre>
+<span style="color: #008000">// De-register feedback</span>
+<span style="color: #795E26">off</span><span style="color: #000000">();</span>
+</code></pre>
 				<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
 					<h2>Documentation</h2>
 				</a>
@@ -157,11 +155,13 @@ off();</code></pre>
 					module directory. Documentation will be located under <code>docs/</code> can then be opened
 				in a browser.</p>
 				<p>More specifically:</p>
-				<pre><code><span class="hljs-attr">mkdir</span> <span class="hljs-string">tmp</span>
-<span class="hljs-attr">cd</span> <span class="hljs-string">tmp</span>
-<span class="hljs-attr">npm</span> <span class="hljs-string">install jsxapi</span>
-<span class="hljs-attr">cd</span> <span class="hljs-string">node_modules/jsxapi</span>
-<span class="hljs-attr">npm</span> <span class="hljs-string">install</span></code></pre><p>Then open <code>./docs/index.html</code>.</p>
+				<pre><code><span style="color: #001080">mkdir</span><span style="color: #000000"> </span><span style="color: #001080">tmp</span>
+<span style="color: #001080">cd</span><span style="color: #000000"> </span><span style="color: #001080">tmp</span>
+<span style="color: #001080">npm</span><span style="color: #000000"> </span><span style="color: #001080">install</span><span style="color: #000000"> </span><span style="color: #001080">jsxapi</span>
+<span style="color: #001080">cd</span><span style="color: #000000"> </span><span style="color: #001080">node_modules</span><span style="color: #000000">/</span><span style="color: #001080">jsxapi</span>
+<span style="color: #001080">npm</span><span style="color: #000000"> </span><span style="color: #001080">install</span>
+</code></pre>
+				<p>Then open <code>./docs/index.html</code>.</p>
 				<a href="#questions-and-support" id="questions-and-support" style="color: inherit; text-decoration: none;">
 					<h2>Questions and support?</h2>
 				</a>
@@ -192,271 +192,103 @@ off();</code></pre>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class="globals  ">
-						<a href="globals.html"><em>Globals</em></a>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/backend.html">backend</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/backend_tsh.html">backend/tsh</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/backend_ws.html">backend/ws</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/browser.html">browser</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/cli.html">cli</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/connect.html">connect</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/index.html">index</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/json_parser.html">json-<wbr>parser</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/log.html">log</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/schema.html">schema</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/schema_fetch.html">schema/fetch</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/schema_generate.html">schema/generate</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/schema_nodes.html">schema/nodes</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/schema_utils.html">schema/utils</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/transport_duplexer.html">transport/duplexer</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/transport_ssh.html">transport/ssh</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/transport_stream.html">transport/stream</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/transport_tsh.html">transport/tsh</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/transport_ws.html">transport/ws</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/types.html">types</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/version.html">version</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/xapi.html">xapi</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/xapi_components.html">xapi/components</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/xapi_exc.html">xapi/exc</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/xapi_feedback.html">xapi/feedback</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/xapi_mixins.html">xapi/mixins</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/xapi_normalizepath.html">xapi/normalize<wbr>Path</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/xapi_proxy.html">xapi/proxy</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/xapi_rpc.html">xapi/rpc</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/xapi_types.html">xapi/types</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class">
-						<a href="classes/backendimpl.html" class="tsd-kind-icon">Backend<wbr>Impl</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-not-exported">
-						<a href="classes/component.html" class="tsd-kind-icon">Component</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/config.html" class="tsd-kind-icon">Config</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/event.html" class="tsd-kind-icon">Event</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/feedback.html" class="tsd-kind-icon">Feedback</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/feedbackgroup.html" class="tsd-kind-icon">Feedback<wbr>Group</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/gettable.html" class="tsd-kind-icon">Gettable</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/illegalvalueerror.html" class="tsd-kind-icon">Illegal<wbr>Value<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/invalidpatherror.html" class="tsd-kind-icon">Invalid<wbr>Path<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/jsonparser.html" class="tsd-kind-icon">JSONParser</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/listenable.html" class="tsd-kind-icon">Listenable</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/parametererror.html" class="tsd-kind-icon">Parameter<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/settable.html" class="tsd-kind-icon">Settable</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/status.html" class="tsd-kind-icon">Status</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/streamtransport.html" class="tsd-kind-icon">Stream<wbr>Transport</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/tshbackend.html" class="tsd-kind-icon">TSHBackend</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/wsbackend.html" class="tsd-kind-icon">WSBackend</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/xapi.html" class="tsd-kind-icon">XAPI</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/xapierror.html" class="tsd-kind-icon">XAPIError</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/backend.html" class="tsd-kind-icon">Backend</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/closeablestream.html" class="tsd-kind-icon">Closeable<wbr>Stream</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/connect.html" class="tsd-kind-icon">Connect</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-not-exported">
-						<a href="interfaces/feedbackid.html" class="tsd-kind-icon">Feedback<wbr>Id</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/options.html" class="tsd-kind-icon">Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/registration.html" class="tsd-kind-icon">Registration</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-not-exported">
-						<a href="interfaces/requests.html" class="tsd-kind-icon">Requests</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-not-exported">
-						<a href="interfaces/sshoptions.html" class="tsd-kind-icon">Ssh<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/xapierror.html" class="tsd-kind-icon">Xapi<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/xapioptions.html" class="tsd-kind-icon">Xapi<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/xapirequest.html" class="tsd-kind-icon">Xapi<wbr>Request</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/xapiresponse.html" class="tsd-kind-icon">Xapi<wbr>Response</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/xapiresult.html" class="tsd-kind-icon">Xapi<wbr>Result</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#canceler" class="tsd-kind-icon">Canceler</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#createwebsocket" class="tsd-kind-icon">Create<wbr>Web<wbr>Socket</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#feedbackinterceptor" class="tsd-kind-icon">Feedback<wbr>Interceptor</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#handler" class="tsd-kind-icon">Handler</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#initbackend" class="tsd-kind-icon">Init<wbr>Backend</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="globals.html#listener" class="tsd-kind-icon">Listener</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#normalizedpath" class="tsd-kind-icon">Normalized<wbr>Path</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#path" class="tsd-kind-icon">Path</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-is-not-exported">
-						<a href="globals.html#state" class="tsd-kind-icon">State</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-is-not-exported">
-						<a href="globals.html#actions" class="tsd-kind-icon">ACTIONS</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#command_error" class="tsd-kind-icon">COMMAND_<wbr>ERROR</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#illegal_value" class="tsd-kind-icon">ILLEGAL_<wbr>VALUE</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#invalid_path" class="tsd-kind-icon">INVALID_<wbr>PATH</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#invalid_response" class="tsd-kind-icon">INVALID_<wbr>RESPONSE</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#invalid_status" class="tsd-kind-icon">INVALID_<wbr>STATUS</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#method_not_found" class="tsd-kind-icon">METHOD_<wbr>NOT_<wbr>FOUND</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#parameter_error" class="tsd-kind-icon">PARAMETER_<wbr>ERROR</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-is-not-exported">
-						<a href="globals.html#tsh_bin" class="tsd-kind-icon">TSH_<wbr>BIN</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#unknown_error" class="tsd-kind-icon">UNKNOWN_<wbr>ERROR</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-is-not-exported">
-						<a href="globals.html#version" class="tsd-kind-icon">VERSION</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#connect" class="tsd-kind-icon">connect</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-is-not-exported">
-						<a href="globals.html#scalars" class="tsd-kind-icon">scalars</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="globals.html#assertvalidcommandresponse" class="tsd-kind-icon">assert<wbr>Valid<wbr>Command<wbr>Response</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="globals.html#base64enc" class="tsd-kind-icon">base64<wbr>Enc</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#collapse" class="tsd-kind-icon">collapse</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#connectoverload" class="tsd-kind-icon">connect<wbr>Overload</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#connectssh" class="tsd-kind-icon">connectSSH</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#createcommandresponse" class="tsd-kind-icon">create<wbr>Command<wbr>Response</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#createerrorresponse" class="tsd-kind-icon">create<wbr>Error<wbr>Response</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#creategetresponse" class="tsd-kind-icon">create<wbr>Get<wbr>Response</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#createproxy" class="tsd-kind-icon">create<wbr>Proxy</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#createrequest" class="tsd-kind-icon">create<wbr>Request</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#createresponse" class="tsd-kind-icon">create<wbr>Response</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#createsetresponse" class="tsd-kind-icon">create<wbr>Set<wbr>Response</a>
-					</li>
-					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-not-exported">
-						<a href="globals.html#defaultinterceptor" class="tsd-kind-icon">default<wbr>Interceptor</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="globals.html#digobj" class="tsd-kind-icon">dig<wbr>Obj</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="globals.html#dispatch" class="tsd-kind-icon">dispatch</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="globals.html#evalfile" class="tsd-kind-icon">eval<wbr>File</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="globals.html#formatvalue" class="tsd-kind-icon">format<wbr>Value</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="globals.html#generateauthsubproto" class="tsd-kind-icon">generate<wbr>Auth<wbr>Sub<wbr>Proto</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="globals.html#initbackend" class="tsd-kind-icon">init<wbr>Backend</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="globals.html#isscalar" class="tsd-kind-icon">is<wbr>Scalar</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="globals.html#main" class="tsd-kind-icon">main</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#mix" class="tsd-kind-icon">mix</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#normalizepath" class="tsd-kind-icon">normalize<wbr>Path</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="globals.html#paramstring" class="tsd-kind-icon">param<wbr>String</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#parsefeedbackresponse" class="tsd-kind-icon">parse<wbr>Feedback<wbr>Response</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#parsejson" class="tsd-kind-icon">parseJSON</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="globals.html#readpkg" class="tsd-kind-icon">read<wbr>Pkg</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="globals.html#resolveoptions" class="tsd-kind-icon">resolve<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#spawntsh" class="tsd-kind-icon">spawnTSH</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-not-exported">
-						<a href="globals.html#startrepl" class="tsd-kind-icon">start<wbr>Repl</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#websocketconnect" class="tsd-kind-icon">websocket<wbr>Connect</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#globaldefaults" class="tsd-kind-icon">global<wbr>Defaults</a>
-					</li>
 				</ul>
 			</nav>
 		</div>
@@ -467,57 +299,20 @@ off();</code></pre>
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
-				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-namespace"><span class="tsd-kind-icon">Namespace</span></li>
 				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
 				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
-				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
 				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
-				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
-			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
-				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
 			</ul>
 		</div>
 	</div>
@@ -527,6 +322,5 @@ off();</code></pre>
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>

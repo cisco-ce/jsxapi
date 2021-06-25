@@ -1,0 +1,518 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>default | jsxapi</title>
+	<meta name="description" content="Documentation for jsxapi">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">jsxapi</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../modules.html">jsxapi</a>
+				</li>
+				<li>
+					<a href="../modules/xapi_feedback.html">xapi/feedback</a>
+				</li>
+				<li>
+					<a href="xapi_feedback.default.html">default</a>
+				</li>
+			</ul>
+			<h1>Class default</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Feedback handler for the XAPI.</p>
+					</div>
+					<a href="#register-a-feedback-listener" id="register-a-feedback-listener" style="color: inherit; text-decoration: none;">
+						<h3>Register a feedback listener</h3>
+					</a>
+					<pre><code class="language-typescript"><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">feedback</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Status/Audio/Volume&#039;</span><span style="color: #000000">, </span><span style="color: #001080">data</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">`Received feedback data: </span><span style="color: #0000FF">${</span><span style="color: #001080">data</span><span style="color: #0000FF">}</span><span style="color: #A31515">`</span><span style="color: #000000">);</span>
+<span style="color: #000000">});</span>
+</code></pre>
+					<a href="#get-the-feedback-root-payload" id="get-the-feedback-root-payload" style="color: inherit; text-decoration: none;">
+						<h3>Get the feedback root payload</h3>
+					</a>
+					<pre><code class="language-typescript"><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">feedback</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Status/Audio/Volume&#039;</span><span style="color: #000000">, (</span><span style="color: #001080">data</span><span style="color: #000000">, </span><span style="color: #001080">payload</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">`System volume changed to: </span><span style="color: #0000FF">${</span><span style="color: #001080">data</span><span style="color: #0000FF">}</span><span style="color: #A31515">`</span><span style="color: #000000">);</span>
+<span style="color: #000000">  </span><span style="color: #267F99">JSON</span><span style="color: #000000">.</span><span style="color: #795E26">stringify</span><span style="color: #000000">(</span><span style="color: #001080">payload</span><span style="color: #000000">) </span><span style="color: #008000">// =&gt; { Status: { Audio: { Volume: data } } }</span>
+<span style="color: #000000">});</span>
+</code></pre>
+					<a href="#listen-to-array-elements" id="listen-to-array-elements" style="color: inherit; text-decoration: none;">
+						<h3>Listen to array elements</h3>
+					</a>
+					<pre><code class="language-typescript"><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">feedback</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Status/Call[42]/Status&#039;</span><span style="color: #000000">, </span><span style="color: #001080">callStatus</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">`Call status for call number 42 is: </span><span style="color: #0000FF">${</span><span style="color: #001080">callStatus</span><span style="color: #0000FF">}</span><span style="color: #A31515">`</span><span style="color: #000000">);</span>
+<span style="color: #000000">});</span>
+</code></pre>
+					<a href="#bundle-feedback-listeners-for-easy-unsubscription" id="bundle-feedback-listeners-for-easy-unsubscription" style="color: inherit; text-decoration: none;">
+						<h3>Bundle feedback listeners for easy unsubscription</h3>
+					</a>
+					<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">feedbackGroup</span><span style="color: #000000"> = </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">feedback</span><span style="color: #000000">.</span><span style="color: #795E26">group</span><span style="color: #000000">([</span>
+<span style="color: #000000">  </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">status</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Audio/Volume&#039;</span><span style="color: #000000">, </span><span style="color: #001080">volumeListener</span><span style="color: #000000">),</span>
+<span style="color: #000000">  </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">status</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Call&#039;</span><span style="color: #000000">, </span><span style="color: #001080">callListener</span><span style="color: #000000">),</span>
+<span style="color: #000000">]);</span>
+
+<span style="color: #008000">// Disable feedback listening for all listeners of the group.</span>
+<span style="color: #001080">feedbackGroup</span><span style="color: #000000">.</span><span style="color: #795E26">off</span><span style="color: #000000">();</span>
+</code></pre>
+					<a href="#register-listener-with-array-path" id="register-listener-with-array-path" style="color: inherit; text-decoration: none;">
+						<h3>Register listener with Array path</h3>
+					</a>
+					<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">off</span><span style="color: #000000"> = </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">feedback</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Status/Audio/Volume&#039;</span><span style="color: #000000">, </span><span style="color: #001080">listener</span><span style="color: #000000">);</span>
+<span style="color: #795E26">off</span><span style="color: #000000">(); </span><span style="color: #008000">// De-register feedback</span>
+</code></pre>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">default</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="xapi_feedback.default.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="xapi_feedback.default.html#eventemitter" class="tsd-kind-icon">event<wbr>Emitter</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="xapi_feedback.default.html#interceptor" class="tsd-kind-icon">interceptor</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="xapi_feedback.default.html#xapi" class="tsd-kind-icon">xapi</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="xapi_feedback.default.html#dispatch" class="tsd-kind-icon">dispatch</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="xapi_feedback.default.html#group" class="tsd-kind-icon">group</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="xapi_feedback.default.html#off" class="tsd-kind-icon">off</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="xapi_feedback.default.html#on" class="tsd-kind-icon">on</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="xapi_feedback.default.html#once" class="tsd-kind-icon">once</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new default<span class="tsd-signature-symbol">(</span>xapi<span class="tsd-signature-symbol">: </span><a href="xapi.xapi-1.html" class="tsd-signature-type" data-tsd-kind="Class">XAPI</a>, interceptor<span class="tsd-signature-symbol">?: </span><a href="../modules/xapi_feedback.html#feedbackinterceptor" class="tsd-signature-type" data-tsd-kind="Type alias">FeedbackInterceptor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="xapi_feedback.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/010cf63/src/xapi/feedback.ts#L170">src/xapi/feedback.ts:170</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>xapi: <a href="xapi.xapi-1.html" class="tsd-signature-type" data-tsd-kind="Class">XAPI</a></h5>
+								</li>
+								<li>
+									<h5>interceptor: <a href="../modules/xapi_feedback.html#feedbackinterceptor" class="tsd-signature-type" data-tsd-kind="Type alias">FeedbackInterceptor</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="xapi_feedback.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="eventemitter" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> event<wbr>Emitter</h3>
+					<div class="tsd-signature tsd-kind-icon">event<wbr>Emitter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">EventEmitter</span><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/010cf63/src/xapi/feedback.ts#L170">src/xapi/feedback.ts:170</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>XAPI instance.</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>Feedback interceptor.</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="interceptor" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> interceptor</h3>
+					<div class="tsd-signature tsd-kind-icon">interceptor<span class="tsd-signature-symbol">:</span> <a href="../modules/xapi_feedback.html#feedbackinterceptor" class="tsd-signature-type" data-tsd-kind="Type alias">FeedbackInterceptor</a><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="xapi" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> xapi</h3>
+					<div class="tsd-signature tsd-kind-icon">xapi<span class="tsd-signature-symbol">:</span> <a href="xapi.xapi-1.html" class="tsd-signature-type" data-tsd-kind="Class">XAPI</a></div>
+					<aside class="tsd-sources">
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="dispatch" class="tsd-anchor"></a>
+					<h3>dispatch</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">dispatch<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="xapi_feedback.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/010cf63/src/xapi/feedback.ts#L258">src/xapi/feedback.ts:258</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Dispatches feedback data to the registered handlers.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>data: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>JSON data structure of feedback data.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="xapi_feedback.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></h4>
+							<p>Returns self for chaining.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="group" class="tsd-anchor"></a>
+					<h3>group</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">group<span class="tsd-signature-symbol">(</span>handlers<span class="tsd-signature-symbol">: </span><a href="../modules/xapi_types.html#handler" class="tsd-signature-type" data-tsd-kind="Type alias">Handler</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="xapi_feedback.feedbackgroup.html" class="tsd-signature-type" data-tsd-kind="Class">FeedbackGroup</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/010cf63/src/xapi/feedback.ts#L294">src/xapi/feedback.ts:294</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates a grouper object which tracks which tracks the feedback paths and
+									listeners being added to it.</p>
+								</div>
+								<a href="#bundle-feedback-listeners-for-easy-unsubscription" id="bundle-feedback-listeners-for-easy-unsubscription" style="color: inherit; text-decoration: none;">
+									<h3>Bundle feedback listeners for easy unsubscription</h3>
+								</a>
+								<pre><code class="language-typescript"><span style="color: #008000">// Create a group</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">group</span><span style="color: #000000"> = </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">feedback</span><span style="color: #000000">.</span><span style="color: #795E26">group</span><span style="color: #000000">([</span>
+<span style="color: #000000">  </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">status</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Audio Volume&#039;</span><span style="color: #000000">, (</span><span style="color: #001080">volume</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #008000">// ...</span>
+<span style="color: #000000">  }),</span>
+<span style="color: #000000">  </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">config</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Audio DefaultVolume&#039;</span><span style="color: #000000">, (</span><span style="color: #001080">volume</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #008000">// ...</span>
+<span style="color: #000000">  }),</span>
+<span style="color: #000000">]);</span>
+
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">handler</span><span style="color: #000000"> = </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">status</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Call&#039;</span><span style="color: #000000">, (</span><span style="color: #001080">call</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> { ... });</span>
+
+<span style="color: #008000">// Add handler to the group</span>
+<span style="color: #001080">group</span><span style="color: #000000">.</span><span style="color: #795E26">add</span><span style="color: #000000">(</span><span style="color: #001080">handler</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// Remove handler from the group</span>
+<span style="color: #001080">group</span><span style="color: #000000">.</span><span style="color: #795E26">remove</span><span style="color: #000000">(</span><span style="color: #001080">handler</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// Unregister from all feedback handlers</span>
+<span style="color: #001080">group</span><span style="color: #000000">.</span><span style="color: #795E26">off</span><span style="color: #000000">();</span>
+</code></pre>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>handlers: <a href="../modules/xapi_types.html#handler" class="tsd-signature-type" data-tsd-kind="Type alias">Handler</a><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="xapi_feedback.feedbackgroup.html" class="tsd-signature-type" data-tsd-kind="Class">FeedbackGroup</a></h4>
+							<p>Proxy object for xapi.feedback.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="off" class="tsd-anchor"></a>
+					<h3>off</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">off<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/010cf63/src/xapi/feedback.ts#L246">src/xapi/feedback.ts:246</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Remove feedback registration.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>deprecated</dt>
+									<dd><p>use deactivation handler from <code>.on()</code> and <code>.once()</code> instead.</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="on" class="tsd-anchor"></a>
+					<h3>on</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">on<span class="tsd-signature-symbol">(</span>path<span class="tsd-signature-symbol">: </span><a href="../modules/xapi_types.html#path" class="tsd-signature-type" data-tsd-kind="Type alias">Path</a>, listener<span class="tsd-signature-symbol">: </span><a href="../modules/xapi_types.html#listener" class="tsd-signature-type" data-tsd-kind="Type alias">Listener</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/xapi_feedback.registration.html" class="tsd-signature-type" data-tsd-kind="Interface">Registration</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/010cf63/src/xapi/feedback.ts#L181">src/xapi/feedback.ts:181</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Registers a feedback listener with the backend service which is invoked
+									when there is feedback matching the subscription query.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>path: <a href="../modules/xapi_types.html#path" class="tsd-signature-type" data-tsd-kind="Type alias">Path</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Path to subscribe to.</p>
+									</div>
+								</li>
+								<li>
+									<h5>listener: <a href="../modules/xapi_types.html#listener" class="tsd-signature-type" data-tsd-kind="Type alias">Listener</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Listener invoked on feedback.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/xapi_feedback.registration.html" class="tsd-signature-type" data-tsd-kind="Interface">Registration</a></h4>
+							<p>Feedback cancellation function.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+					<a name="once" class="tsd-anchor"></a>
+					<h3>once</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">once&lt;T&gt;<span class="tsd-signature-symbol">(</span>path<span class="tsd-signature-symbol">: </span><a href="../modules/xapi_types.html#path" class="tsd-signature-type" data-tsd-kind="Type alias">Path</a>, listener<span class="tsd-signature-symbol">: </span><a href="../modules/xapi_types.html#listener" class="tsd-signature-type" data-tsd-kind="Type alias">Listener</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/xapi_feedback.registration.html" class="tsd-signature-type" data-tsd-kind="Interface">Registration</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/cisco-ce/jsxapi/blob/010cf63/src/xapi/feedback.ts#L228">src/xapi/feedback.ts:228</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Registers a feedback listener similar to <a href="xapi_feedback.default.html#on">on</a>, but the subscription
+									is removed after the first invocation of the listener.</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T = <span class="tsd-signature-type">any</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>path: <a href="../modules/xapi_types.html#path" class="tsd-signature-type" data-tsd-kind="Type alias">Path</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Path to subscribe to.</p>
+									</div>
+								</li>
+								<li>
+									<h5>listener: <a href="../modules/xapi_types.html#listener" class="tsd-signature-type" data-tsd-kind="Type alias">Listener</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Listener invoked on feedback.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/xapi_feedback.registration.html" class="tsd-signature-type" data-tsd-kind="Interface">Registration</a></h4>
+							<p>Feedback cancellation function.</p>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="../modules.html">Exports</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/xapi_feedback.html">xapi/feedback</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="xapi_feedback.feedbackgroup.html" class="tsd-kind-icon">Feedback<wbr>Group</a>
+					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-module">
+						<a href="xapi_feedback.default.html" class="tsd-kind-icon">default</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="xapi_feedback.default.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="xapi_feedback.default.html#eventemitter" class="tsd-kind-icon">event<wbr>Emitter</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="xapi_feedback.default.html#interceptor" class="tsd-kind-icon">interceptor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="xapi_feedback.default.html#xapi" class="tsd-kind-icon">xapi</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="xapi_feedback.default.html#dispatch" class="tsd-kind-icon">dispatch</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="xapi_feedback.default.html#group" class="tsd-kind-icon">group</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="xapi_feedback.default.html#off" class="tsd-kind-icon">off</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="xapi_feedback.default.html#on" class="tsd-kind-icon">on</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+								<a href="xapi_feedback.default.html#once" class="tsd-kind-icon">once</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/xapi_feedback.registration.html" class="tsd-kind-icon">Registration</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/xapi_feedback.html#feedbackinterceptor" class="tsd-kind-icon">Feedback<wbr>Interceptor</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-namespace"><span class="tsd-kind-icon">Namespace</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
