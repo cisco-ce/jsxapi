@@ -1,6 +1,6 @@
 # JSXAPI
 
-[![Build Status](https://travis-ci.com/cisco-ce/jsxapi.svg?branch=master)](https://travis-ci.org/cisco-ce/jsxapi)
+[![Build Status](https://travis-ci.com/cisco-ce/jsxapi.svg?branch=master)](https://travis-ci.com/cisco-ce/jsxapi)
 
 [API Documentation](https://cisco-ce.github.io/jsxapi/)
 
