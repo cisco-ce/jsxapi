@@ -1,326 +1,78 @@
-<!doctype html>
-<html class="default no-js">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>jsxapi</title>
-	<meta name="description" content="Documentation for jsxapi">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="assets/css/main.css">
-	<script async src="assets/js/search.js" id="search-script"></script>
-</head>
-<body>
-<header>
-	<div class="tsd-page-toolbar">
-		<div class="container">
-			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
-					<div class="field">
-						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
-						<input id="tsd-search-field" type="text" />
-					</div>
-					<ul class="results">
-						<li class="state loading">Preparing search index...</li>
-						<li class="state failure">The search index is not available</li>
-					</ul>
-					<a href="index.html" class="title">jsxapi</a>
-				</div>
-				<div class="table-cell" id="tsd-widgets">
-					<div id="tsd-filter">
-						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
-						<div class="tsd-filter-group">
-							<div class="tsd-select" id="tsd-filter-visibility">
-								<span class="tsd-select-label">All</span>
-								<ul class="tsd-select-list">
-									<li data-value="public">Public</li>
-									<li data-value="protected">Public/Protected</li>
-									<li data-value="private" class="selected">All</li>
-								</ul>
-							</div>
-							<input type="checkbox" id="tsd-filter-inherited" checked />
-							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
-							<input type="checkbox" id="tsd-filter-externals" checked />
-							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-						</div>
-					</div>
-					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="tsd-page-title">
-		<div class="container">
-			<h1>jsxapi</h1>
-		</div>
-	</div>
-</header>
-<div class="container container-main">
-	<div class="row">
-		<div class="col-8 col-content">
-			<div class="tsd-panel tsd-typography">
-				<a href="#jsxapi" id="jsxapi" style="color: inherit; text-decoration: none;">
-					<h1>JSXAPI</h1>
-				</a>
-				<p><a href="https://travis-ci.com/cisco-ce/jsxapi"><img src="https://travis-ci.com/cisco-ce/jsxapi.svg?branch=master" alt="Build Status"></a></p>
-				<p><a href="https://cisco-ce.github.io/jsxapi/">API Documentation</a></p>
-				<p>A set of tools to integrate with the Cisco Telepresence Endpoint APIs in
-				JavaScript.</p>
-				<a href="#quick-start-examples" id="quick-start-examples" style="color: inherit; text-decoration: none;">
-					<h2>Quick start examples</h2>
-				</a>
-				<a href="#connecting-using-websockets" id="connecting-using-websockets" style="color: inherit; text-decoration: none;">
-					<h3>Connecting using WebSockets</h3>
-				</a>
-				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">jsxapi</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;jsxapi&#039;</span><span style="color: #000000">);</span>
+<!DOCTYPE html><html class="default no-js"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>jsxapi</title><meta name="description" content="Documentation for jsxapi"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">jsxapi</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1> jsxapi</h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography">
+<a href="#jsxapi" id="jsxapi" style="color: inherit; text-decoration: none;">
+  <h1>JSXAPI</h1>
+</a>
+<p><a href="https://app.travis-ci.com/github/cisco-ce/jsxapi"><img src="https://travis-ci.com/cisco-ce/jsxapi.svg?branch=master" alt="Build Status"></a></p>
+<p><a href="https://cisco-ce.github.io/jsxapi/">API Documentation</a></p>
+<p>A set of tools to integrate with the Cisco Telepresence Endpoint APIs in
+JavaScript.</p>
 
-<span style="color: #001080">jsxapi</span>
-<span style="color: #000000">  .</span><span style="color: #795E26">connect</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;wss://host.example.com&#039;</span><span style="color: #000000">, {</span>
-<span style="color: #000000">    </span><span style="color: #001080">username:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;admin&#039;</span><span style="color: #000000">,</span>
-<span style="color: #000000">    </span><span style="color: #001080">password:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;password&#039;</span><span style="color: #000000">,</span>
-<span style="color: #000000">  })</span>
-<span style="color: #000000">  .</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;error&#039;</span><span style="color: #000000">, </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #001080">error</span><span style="color: #000000">)</span>
-<span style="color: #000000">  .</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;ready&#039;</span><span style="color: #000000">, </span><span style="color: #0000FF">async</span><span style="color: #000000"> (</span><span style="color: #001080">xapi</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">volume</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">status</span><span style="color: #000000">.</span><span style="color: #795E26">get</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Audio Volume&#039;</span><span style="color: #000000">);</span>
-<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">`volume is: </span><span style="color: #0000FF">${</span><span style="color: #001080">volume</span><span style="color: #0000FF">}</span><span style="color: #A31515">`</span><span style="color: #000000">);</span>
-<span style="color: #000000">    </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #795E26">close</span><span style="color: #000000">();</span>
-<span style="color: #000000">  });</span>
+<a href="#quick-start-examples" id="quick-start-examples" style="color: inherit; text-decoration: none;">
+  <h2>Quick start examples</h2>
+</a>
+
+<a href="#connecting-using-websockets" id="connecting-using-websockets" style="color: inherit; text-decoration: none;">
+  <h3>Connecting using WebSockets</h3>
+</a>
+<pre><code class="language-javascript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">jsxapi</span><span class="hl-1"> = </span><span class="hl-3">require</span><span class="hl-1">(</span><span class="hl-4">&#39;jsxapi&#39;</span><span class="hl-1">);</span><br/><br/><span class="hl-5">jsxapi</span><br/><span class="hl-1">  .</span><span class="hl-3">connect</span><span class="hl-1">(</span><span class="hl-4">&#39;wss://host.example.com&#39;</span><span class="hl-1">, {</span><br/><span class="hl-1">    </span><span class="hl-5">username:</span><span class="hl-1"> </span><span class="hl-4">&#39;admin&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">password:</span><span class="hl-1"> </span><span class="hl-4">&#39;password&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">  })</span><br/><span class="hl-1">  .</span><span class="hl-3">on</span><span class="hl-1">(</span><span class="hl-4">&#39;error&#39;</span><span class="hl-1">, </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-5">error</span><span class="hl-1">)</span><br/><span class="hl-1">  .</span><span class="hl-3">on</span><span class="hl-1">(</span><span class="hl-4">&#39;ready&#39;</span><span class="hl-1">, </span><span class="hl-0">async</span><span class="hl-1"> (</span><span class="hl-5">xapi</span><span class="hl-1">) </span><span class="hl-0">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">volume</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-5">xapi</span><span class="hl-1">.</span><span class="hl-5">status</span><span class="hl-1">.</span><span class="hl-3">get</span><span class="hl-1">(</span><span class="hl-4">&#39;Audio Volume&#39;</span><span class="hl-1">);</span><br/><span class="hl-1">    </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-3">log</span><span class="hl-1">(</span><span class="hl-4">`volume is: </span><span class="hl-0">${</span><span class="hl-5">volume</span><span class="hl-0">}</span><span class="hl-4">`</span><span class="hl-1">);</span><br/><span class="hl-1">    </span><span class="hl-5">xapi</span><span class="hl-1">.</span><span class="hl-3">close</span><span class="hl-1">();</span><br/><span class="hl-1">  });</span>
 </code></pre>
-				<a href="#connecting-using-ssh" id="connecting-using-ssh" style="color: inherit; text-decoration: none;">
-					<h3>Connecting using SSH</h3>
-				</a>
-				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">jsxapi</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;jsxapi&#039;</span><span style="color: #000000">);</span>
 
-<span style="color: #001080">jsxapi</span>
-<span style="color: #000000">  .</span><span style="color: #795E26">connect</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;ssh://host.example.com&#039;</span><span style="color: #000000">, {</span>
-<span style="color: #000000">    </span><span style="color: #001080">username:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;admin&#039;</span><span style="color: #000000">,</span>
-<span style="color: #000000">    </span><span style="color: #001080">password:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;password&#039;</span><span style="color: #000000">,</span>
-<span style="color: #000000">  })</span>
-<span style="color: #000000">  .</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;error&#039;</span><span style="color: #000000">, </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #001080">error</span><span style="color: #000000">)</span>
-<span style="color: #000000">  .</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;ready&#039;</span><span style="color: #000000">, </span><span style="color: #0000FF">async</span><span style="color: #000000"> (</span><span style="color: #001080">xapi</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">volume</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">status</span><span style="color: #000000">.</span><span style="color: #795E26">get</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Audio Volume&#039;</span><span style="color: #000000">);</span>
-<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">`volume is: </span><span style="color: #0000FF">${</span><span style="color: #001080">volume</span><span style="color: #0000FF">}</span><span style="color: #A31515">`</span><span style="color: #000000">);</span>
-<span style="color: #000000">    </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #795E26">close</span><span style="color: #000000">();</span>
-<span style="color: #000000">  });</span>
+<a href="#connecting-using-ssh" id="connecting-using-ssh" style="color: inherit; text-decoration: none;">
+  <h3>Connecting using SSH</h3>
+</a>
+<pre><code class="language-javascript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">jsxapi</span><span class="hl-1"> = </span><span class="hl-3">require</span><span class="hl-1">(</span><span class="hl-4">&#39;jsxapi&#39;</span><span class="hl-1">);</span><br/><br/><span class="hl-5">jsxapi</span><br/><span class="hl-1">  .</span><span class="hl-3">connect</span><span class="hl-1">(</span><span class="hl-4">&#39;ssh://host.example.com&#39;</span><span class="hl-1">, {</span><br/><span class="hl-1">    </span><span class="hl-5">username:</span><span class="hl-1"> </span><span class="hl-4">&#39;admin&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">password:</span><span class="hl-1"> </span><span class="hl-4">&#39;password&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">  })</span><br/><span class="hl-1">  .</span><span class="hl-3">on</span><span class="hl-1">(</span><span class="hl-4">&#39;error&#39;</span><span class="hl-1">, </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-5">error</span><span class="hl-1">)</span><br/><span class="hl-1">  .</span><span class="hl-3">on</span><span class="hl-1">(</span><span class="hl-4">&#39;ready&#39;</span><span class="hl-1">, </span><span class="hl-0">async</span><span class="hl-1"> (</span><span class="hl-5">xapi</span><span class="hl-1">) </span><span class="hl-0">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">volume</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-5">xapi</span><span class="hl-1">.</span><span class="hl-5">status</span><span class="hl-1">.</span><span class="hl-3">get</span><span class="hl-1">(</span><span class="hl-4">&#39;Audio Volume&#39;</span><span class="hl-1">);</span><br/><span class="hl-1">    </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-3">log</span><span class="hl-1">(</span><span class="hl-4">`volume is: </span><span class="hl-0">${</span><span class="hl-5">volume</span><span class="hl-0">}</span><span class="hl-4">`</span><span class="hl-1">);</span><br/><span class="hl-1">    </span><span class="hl-5">xapi</span><span class="hl-1">.</span><span class="hl-3">close</span><span class="hl-1">();</span><br/><span class="hl-1">  });</span>
 </code></pre>
-				<a href="#new-style-api" id="new-style-api" style="color: inherit; text-decoration: none;">
-					<h3>New style API</h3>
-				</a>
-				<p>The aim of the new style API is to improve readability, while also being more
-				suited towards automatic type generation and auto-completion.</p>
-				<pre><code class="language-javascript"><span style="color: #008000">// Set up a call</span>
-<span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">Command</span><span style="color: #000000">.</span><span style="color: #795E26">Dial</span><span style="color: #000000">({ </span><span style="color: #001080">Number:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;user@example.com&#039;</span><span style="color: #000000"> });</span>
 
-<span style="color: #008000">// Fetch volume and print it</span>
-<span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">Status</span><span style="color: #000000">.</span><span style="color: #001080">Audio</span><span style="color: #000000">.</span><span style="color: #001080">Volume</span>
-<span style="color: #000000">  .</span><span style="color: #795E26">get</span><span style="color: #000000">()</span>
-<span style="color: #000000">  .</span><span style="color: #795E26">then</span><span style="color: #000000">((</span><span style="color: #001080">volume</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> { </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">volume</span><span style="color: #000000">); });</span>
-
-<span style="color: #008000">// Set a configuration</span>
-<span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">Config</span><span style="color: #000000">.</span><span style="color: #001080">SystemUnit</span><span style="color: #000000">.</span><span style="color: #001080">Name</span><span style="color: #000000">.</span><span style="color: #795E26">set</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;My System&#039;</span><span style="color: #000000">);</span>
-
-<span style="color: #008000">// Listen to feedback</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">off</span><span style="color: #000000"> = </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">Event</span><span style="color: #000000">.</span><span style="color: #001080">Standby</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">((</span><span style="color: #001080">event</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #008000">// ...</span>
-<span style="color: #000000">});</span>
-
-<span style="color: #008000">// De-register feedback</span>
-<span style="color: #795E26">off</span><span style="color: #000000">();</span>
+<a href="#new-style-api" id="new-style-api" style="color: inherit; text-decoration: none;">
+  <h3>New style API</h3>
+</a>
+<p>The aim of the new style API is to improve readability, while also being more
+suited towards automatic type generation and auto-completion.</p>
+<pre><code class="language-javascript"><span class="hl-7">// Set up a call</span><br/><span class="hl-5">xapi</span><span class="hl-1">.</span><span class="hl-5">Command</span><span class="hl-1">.</span><span class="hl-3">Dial</span><span class="hl-1">({ </span><span class="hl-5">Number:</span><span class="hl-1"> </span><span class="hl-4">&#39;user@example.com&#39;</span><span class="hl-1"> });</span><br/><br/><span class="hl-7">// Fetch volume and print it</span><br/><span class="hl-5">xapi</span><span class="hl-1">.</span><span class="hl-5">Status</span><span class="hl-1">.</span><span class="hl-5">Audio</span><span class="hl-1">.</span><span class="hl-5">Volume</span><br/><span class="hl-1">  .</span><span class="hl-3">get</span><span class="hl-1">()</span><br/><span class="hl-1">  .</span><span class="hl-3">then</span><span class="hl-1">((</span><span class="hl-5">volume</span><span class="hl-1">) </span><span class="hl-0">=&gt;</span><span class="hl-1"> { </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-3">log</span><span class="hl-1">(</span><span class="hl-5">volume</span><span class="hl-1">); });</span><br/><br/><span class="hl-7">// Set a configuration</span><br/><span class="hl-5">xapi</span><span class="hl-1">.</span><span class="hl-5">Config</span><span class="hl-1">.</span><span class="hl-5">SystemUnit</span><span class="hl-1">.</span><span class="hl-5">Name</span><span class="hl-1">.</span><span class="hl-3">set</span><span class="hl-1">(</span><span class="hl-4">&#39;My System&#39;</span><span class="hl-1">);</span><br/><br/><span class="hl-7">// Listen to feedback</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">off</span><span class="hl-1"> = </span><span class="hl-5">xapi</span><span class="hl-1">.</span><span class="hl-5">Event</span><span class="hl-1">.</span><span class="hl-5">Standby</span><span class="hl-1">.</span><span class="hl-3">on</span><span class="hl-1">((</span><span class="hl-5">event</span><span class="hl-1">) </span><span class="hl-0">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-7">// ...</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-7">// De-register feedback</span><br/><span class="hl-3">off</span><span class="hl-1">();</span>
 </code></pre>
-				<a href="#old-style-api" id="old-style-api" style="color: inherit; text-decoration: none;">
-					<h3>Old style API</h3>
-				</a>
-				<pre><code class="language-javascript"><span style="color: #008000">// Set up a call</span>
-<span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #795E26">command</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Dial&#039;</span><span style="color: #000000">, { </span><span style="color: #001080">Number:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;user@example.com&#039;</span><span style="color: #000000"> });</span>
 
-<span style="color: #008000">// Fetch volume and print it</span>
-<span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">status</span>
-<span style="color: #000000">  .</span><span style="color: #795E26">get</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Audio Volume&#039;</span><span style="color: #000000">)</span>
-<span style="color: #000000">  .</span><span style="color: #795E26">then</span><span style="color: #000000">((</span><span style="color: #001080">volume</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> { </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">volume</span><span style="color: #000000">); });</span>
-
-<span style="color: #008000">// Set a configuration</span>
-<span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">config</span><span style="color: #000000">.</span><span style="color: #795E26">set</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;SystemUnit Name&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;My System&#039;</span><span style="color: #000000">);</span>
-
-<span style="color: #008000">// Listen to feedback</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">off</span><span style="color: #000000"> = </span><span style="color: #001080">xapi</span><span style="color: #000000">.</span><span style="color: #001080">event</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Standby&#039;</span><span style="color: #000000">, (</span><span style="color: #001080">event</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #008000">// ...</span>
-<span style="color: #000000">});</span>
-
-<span style="color: #008000">// De-register feedback</span>
-<span style="color: #795E26">off</span><span style="color: #000000">();</span>
+<a href="#old-style-api" id="old-style-api" style="color: inherit; text-decoration: none;">
+  <h3>Old style API</h3>
+</a>
+<pre><code class="language-javascript"><span class="hl-7">// Set up a call</span><br/><span class="hl-5">xapi</span><span class="hl-1">.</span><span class="hl-3">command</span><span class="hl-1">(</span><span class="hl-4">&#39;Dial&#39;</span><span class="hl-1">, { </span><span class="hl-5">Number:</span><span class="hl-1"> </span><span class="hl-4">&#39;user@example.com&#39;</span><span class="hl-1"> });</span><br/><br/><span class="hl-7">// Fetch volume and print it</span><br/><span class="hl-5">xapi</span><span class="hl-1">.</span><span class="hl-5">status</span><br/><span class="hl-1">  .</span><span class="hl-3">get</span><span class="hl-1">(</span><span class="hl-4">&#39;Audio Volume&#39;</span><span class="hl-1">)</span><br/><span class="hl-1">  .</span><span class="hl-3">then</span><span class="hl-1">((</span><span class="hl-5">volume</span><span class="hl-1">) </span><span class="hl-0">=&gt;</span><span class="hl-1"> { </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-3">log</span><span class="hl-1">(</span><span class="hl-5">volume</span><span class="hl-1">); });</span><br/><br/><span class="hl-7">// Set a configuration</span><br/><span class="hl-5">xapi</span><span class="hl-1">.</span><span class="hl-5">config</span><span class="hl-1">.</span><span class="hl-3">set</span><span class="hl-1">(</span><span class="hl-4">&#39;SystemUnit Name&#39;</span><span class="hl-1">, </span><span class="hl-4">&#39;My System&#39;</span><span class="hl-1">);</span><br/><br/><span class="hl-7">// Listen to feedback</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">off</span><span class="hl-1"> = </span><span class="hl-5">xapi</span><span class="hl-1">.</span><span class="hl-5">event</span><span class="hl-1">.</span><span class="hl-3">on</span><span class="hl-1">(</span><span class="hl-4">&#39;Standby&#39;</span><span class="hl-1">, (</span><span class="hl-5">event</span><span class="hl-1">) </span><span class="hl-0">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-7">// ...</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-7">// De-register feedback</span><br/><span class="hl-3">off</span><span class="hl-1">();</span>
 </code></pre>
-				<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
-					<h2>Documentation</h2>
-				</a>
-				<p>The full API documentation can be built by running <code>npm install</code> in a <code>jsxapi</code>
-					module directory. Documentation will be located under <code>docs/</code> can then be opened
-				in a browser.</p>
-				<p>More specifically:</p>
-				<pre><code><span style="color: #001080">mkdir</span><span style="color: #000000"> </span><span style="color: #001080">tmp</span>
-<span style="color: #001080">cd</span><span style="color: #000000"> </span><span style="color: #001080">tmp</span>
-<span style="color: #001080">npm</span><span style="color: #000000"> </span><span style="color: #001080">install</span><span style="color: #000000"> </span><span style="color: #001080">jsxapi</span>
-<span style="color: #001080">cd</span><span style="color: #000000"> </span><span style="color: #001080">node_modules</span><span style="color: #000000">/</span><span style="color: #001080">jsxapi</span>
-<span style="color: #001080">npm</span><span style="color: #000000"> </span><span style="color: #001080">install</span>
+
+<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
+  <h2>Documentation</h2>
+</a>
+<p>The full API documentation can be built by running <code>npm install</code> in a <code>jsxapi</code>
+module directory. Documentation will be located under <code>docs/</code> can then be opened
+in a browser.</p>
+<p>More specifically:</p>
+<pre><code><span class="hl-5">mkdir</span><span class="hl-1"> </span><span class="hl-5">tmp</span><br/><span class="hl-5">cd</span><span class="hl-1"> </span><span class="hl-5">tmp</span><br/><span class="hl-5">npm</span><span class="hl-1"> </span><span class="hl-5">install</span><span class="hl-1"> </span><span class="hl-5">jsxapi</span><br/><span class="hl-5">cd</span><span class="hl-1"> </span><span class="hl-5">node_modules</span><span class="hl-1">/</span><span class="hl-5">jsxapi</span><br/><span class="hl-5">npm</span><span class="hl-1"> </span><span class="hl-5">install</span>
 </code></pre>
-				<p>Then open <code>./docs/index.html</code>.</p>
-				<a href="#questions-and-support" id="questions-and-support" style="color: inherit; text-decoration: none;">
-					<h2>Questions and support?</h2>
-				</a>
-				<p>Find more information regarding Cisco&#39;s Room Devices over at
-					<a href="https://developer.cisco.com/site/roomdevices/">developer.cisco.com</a> or the
-					<a href="https://supportforums.cisco.com/t5/telepresence/bd-p/5886-discussions-telepresence">TelePresence and Video</a>
-				support forums.</p>
-				<p>Questions about the xAPI, integrations and customizations? Using
-					<a href="https://www.webex.com/team-collaboration.html">Webex Teams</a> join the xAPI Devs
-					space community for realtime support by <a href="https://eurl.io/#rkp76XDrG">clicking this link</a>
-				and entering your Webex Teams-registered e-mail address at the prompt.</p>
-				<a href="#development-amp-contribution" id="development-amp-contribution" style="color: inherit; text-decoration: none;">
-					<h2>Development &amp; Contribution</h2>
-				</a>
-				<a href="#release-procedure" id="release-procedure" style="color: inherit; text-decoration: none;">
-					<h3>Release procedure</h3>
-				</a>
-				<p>Making a release is quite simple:</p>
-				<ul>
-					<li>Perform all changes/commits.</li>
-					<li>Determine the version change (<code>npm help semver</code>).</li>
-					<li>Update &quot;CHANGELOG.md&quot; with version number, date and change summary.</li>
-					<li>Run <code>npm version</code> with the appropriate version bump.</li>
-					<li>Run <code>npm publish</code> to push the package version to the registry.</li>
-				</ul>
-			</div>
-		</div>
-		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation primary">
-				<ul>
-					<li class=" ">
-						<a href="modules.html">Exports</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/backend.html">backend</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/backend_tsh.html">backend/tsh</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/backend_ws.html">backend/ws</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/browser.html">browser</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/cli.html">cli</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/connect.html">connect</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/index.html">index</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/json_parser.html">json-<wbr>parser</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/log.html">log</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/schema.html">schema</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/schema_fetch.html">schema/fetch</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/schema_generate.html">schema/generate</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/schema_nodes.html">schema/nodes</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/schema_utils.html">schema/utils</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/transport_duplexer.html">transport/duplexer</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/transport_ssh.html">transport/ssh</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/transport_stream.html">transport/stream</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/transport_tsh.html">transport/tsh</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/transport_ws.html">transport/ws</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/types.html">types</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/version.html">version</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/xapi.html">xapi</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/xapi_components.html">xapi/components</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/xapi_exc.html">xapi/exc</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/xapi_feedback.html">xapi/feedback</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/xapi_mixins.html">xapi/mixins</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/xapi_normalizepath.html">xapi/normalize<wbr>Path</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/xapi_proxy.html">xapi/proxy</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/xapi_rpc.html">xapi/rpc</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/xapi_types.html">xapi/types</a>
-					</li>
-				</ul>
-			</nav>
-			<nav class="tsd-navigation secondary menu-sticky">
-				<ul class="before-current">
-				</ul>
-			</nav>
-		</div>
-	</div>
-</div>
-<footer class="with-border-bottom">
-	<div class="container">
-		<h2>Legend</h2>
-		<div class="tsd-legend-group">
-			<ul class="tsd-legend">
-				<li class="tsd-kind-namespace"><span class="tsd-kind-icon">Namespace</span></li>
-				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
-				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
-			</ul>
-		</div>
-	</div>
-</footer>
-<div class="container tsd-generator">
-	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
-</div>
-<div class="overlay"></div>
-<script src="assets/js/main.js"></script>
-</body>
-</html>
+<p>Then open <code>./docs/index.html</code>.</p>
+
+<a href="#questions-and-support" id="questions-and-support" style="color: inherit; text-decoration: none;">
+  <h2>Questions and support?</h2>
+</a>
+<p>Find more information regarding Cisco&#39;s Room Devices over at
+<a href="https://developer.cisco.com/site/roomdevices/">developer.cisco.com</a> or the
+<a href="https://supportforums.cisco.com/t5/telepresence/bd-p/5886-discussions-telepresence">TelePresence and Video</a>
+support forums.</p>
+<p>Questions about the xAPI, integrations and customizations? Using
+<a href="https://www.webex.com/team-collaboration.html">Webex Teams</a> join the xAPI Devs
+space community for realtime support by <a href="https://eurl.io/#rkp76XDrG">clicking this link</a>
+and entering your Webex Teams-registered e-mail address at the prompt.</p>
+
+<a href="#development-amp-contribution" id="development-amp-contribution" style="color: inherit; text-decoration: none;">
+  <h2>Development &amp; Contribution</h2>
+</a>
+
+<a href="#release-procedure" id="release-procedure" style="color: inherit; text-decoration: none;">
+  <h3>Release procedure</h3>
+</a>
+<p>Making a release is quite simple:</p>
+<ul>
+<li>Perform all changes/commits.</li>
+<li>Determine the version change (<code>npm help semver</code>).</li>
+<li>Update &quot;CHANGELOG.md&quot; with version number, date and change summary.</li>
+<li>Run <code>npm version</code> with the appropriate version bump.</li>
+<li>Run <code>npm publish</code> to push the package version to the registry.</li>
+</ul>
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Modules</a></li><li class=" tsd-kind-module"><a href="modules/backend.html">backend</a></li><li class=" tsd-kind-module"><a href="modules/backend_tsh.html">backend/tsh</a></li><li class=" tsd-kind-module"><a href="modules/backend_ws.html">backend/ws</a></li><li class=" tsd-kind-module"><a href="modules/browser.html">browser</a></li><li class=" tsd-kind-module"><a href="modules/connect.html">connect</a></li><li class=" tsd-kind-module"><a href="modules/index.html">index</a></li><li class=" tsd-kind-module"><a href="modules/json_parser.html">json-<wbr/>parser</a></li><li class=" tsd-kind-module"><a href="modules/log.html">log</a></li><li class=" tsd-kind-module"><a href="modules/schema.html">schema</a></li><li class=" tsd-kind-module"><a href="modules/schema_fetch.html">schema/fetch</a></li><li class=" tsd-kind-module"><a href="modules/schema_generate.html">schema/generate</a></li><li class=" tsd-kind-module"><a href="modules/schema_nodes.html">schema/nodes</a></li><li class=" tsd-kind-module"><a href="modules/schema_utils.html">schema/utils</a></li><li class=" tsd-kind-module"><a href="modules/transport_duplexer.html">transport/duplexer</a></li><li class=" tsd-kind-module"><a href="modules/transport_ssh.html">transport/ssh</a></li><li class=" tsd-kind-module"><a href="modules/transport_stream.html">transport/stream</a></li><li class=" tsd-kind-module"><a href="modules/transport_tsh.html">transport/tsh</a></li><li class=" tsd-kind-module"><a href="modules/transport_ws.html">transport/ws</a></li><li class=" tsd-kind-module"><a href="modules/types.html">types</a></li><li class=" tsd-kind-module"><a href="modules/version.html">version</a></li><li class=" tsd-kind-module"><a href="modules/xapi.html">xapi</a></li><li class=" tsd-kind-module"><a href="modules/xapi_components.html">xapi/components</a></li><li class=" tsd-kind-module"><a href="modules/xapi_exc.html">xapi/exc</a></li><li class=" tsd-kind-module"><a href="modules/xapi_feedback.html">xapi/feedback</a></li><li class=" tsd-kind-module"><a href="modules/xapi_mixins.html">xapi/mixins</a></li><li class=" tsd-kind-module"><a href="modules/xapi_normalizePath.html">xapi/normalize<wbr/>Path</a></li><li class=" tsd-kind-module"><a href="modules/xapi_proxy.html">xapi/proxy</a></li><li class=" tsd-kind-module"><a href="modules/xapi_rpc.html">xapi/rpc</a></li><li class=" tsd-kind-module"><a href="modules/xapi_types.html">xapi/types</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-namespace"><span class="tsd-kind-icon">Namespace</span></li><li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li><li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li><li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li><li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li><li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>
