@@ -25,7 +25,7 @@ export default function websocketConnect(createWebSocket: CreateWebSocket, opts:
   url.set('pathname', '/ws');
   url.set('host', host);
   url.set('protocol', protocol);
-  url.set('port', port);
+  url.set('port', `${port}`);
 
   const auth = generateAuthSubProto(username, password);
   return createWebSocket(url.href, auth);

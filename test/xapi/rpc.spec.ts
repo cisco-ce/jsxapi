@@ -151,7 +151,7 @@ describe('xapi/rpc', () => {
         createCommandResponse(data);
       } catch (error) {
         expect(error).toBeInstanceOf(XAPIError);
-        expect(error.data).toEqual(
+        expect(error instanceof XAPIError && error.data).toEqual(
           collapse(data.CommandResponse.OptionKeyRemoveResult),
         );
         return;
