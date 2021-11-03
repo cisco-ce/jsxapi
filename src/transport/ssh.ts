@@ -20,7 +20,7 @@ if (!DuplexPassThrough.prototype.on.isPatched) {
   DuplexPassThrough.prototype.addListener = patchedFunc;
 }
 
-interface SshOptions {
+export interface SshOptions {
   username?: string;
   client: any;
   password?: string;

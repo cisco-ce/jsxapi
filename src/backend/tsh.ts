@@ -26,7 +26,8 @@ function paramString(key: string, value: string | string[]) {
   return values.map((v) => `${key}: ${formatValue(v)}`).join(' ');
 }
 
-type State = 'idle' | 'connecting' | 'initializing' | 'closed' | 'ready';
+export type State = 'idle' | 'connecting' | 'initializing' | 'closed' | 'ready';
+
 /**
  * Backend to communicate with a {@link Duplex} stream talking tshell (tsh).
  *

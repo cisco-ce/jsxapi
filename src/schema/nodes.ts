@@ -122,7 +122,7 @@ type Statusify<T> = { [P in keyof T]: Statusify<T[P]>; } & Gettable<T> & Listena
   }
 }
 
-class Imports extends Node {
+export class Imports extends Node {
   private imports = new Map<string, ImportStatement>();
 
   public addImports(path: string, imports: string[]) {
@@ -174,7 +174,7 @@ function renderTree(nodes: Node[], terminator: string) {
   return redent(serialized.join('\n'), 2);
 }
 
-type Valuespace = Type | string;
+export type Valuespace = Type | string;
 
 function vsToType(vs: Valuespace): Type {
   return typeof vs === 'string' ? new Plain(vs) : vs;
@@ -254,7 +254,7 @@ export class Literal implements Type {
   }
 }
 
-class Interface extends Node implements Type {
+export class Interface extends Node implements Type {
   constructor(readonly name: string, readonly extend: string[] = []) {
     super();
   }
@@ -276,12 +276,12 @@ class Interface extends Node implements Type {
   }
 }
 
-interface MainOptions {
+export interface MainOptions {
   base: string;
   withConnect: boolean;
 }
 
-class MainClass extends Interface {
+export class MainClass extends Interface {
   private connectGen = 'connectGen';
   private readonly options: MainOptions;
 
@@ -313,7 +313,7 @@ ${super.serialize()} `;
   }
 }
 
-interface MemberOpts {
+export interface MemberOpts {
   docstring: string;
   required: boolean;
 }
@@ -377,7 +377,7 @@ export class ArrayTree extends Tree {
   }
 }
 
-interface CommandOpts {
+export interface CommandOpts {
   docstring: string;
   multiline: boolean;
 }

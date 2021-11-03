@@ -1,40 +1,11 @@
-import XAPI from '.';
 import { Registration } from './feedback';
-import { Gettable, Listenable, mix, Settable } from './mixins';
-import normalizePath from './normalizePath';
+import { Component, Gettable, Listenable, Settable } from './mixins';
 import { Listener, Path } from './types';
-
-/**
- * Common base class for XAPI section types (commands, configs, events, statuses).
- */
-class Component {
-  /**
-   * Prefix to add to all paths for the component.
-   */
-  public prefix = '';
-
-  constructor(public readonly xapi: XAPI) {}
-
-  /**
-   * Normalizes a path including the component prefix.
-   *
-   * @param path Path to normalize.
-   * @return Normalized path.
-   */
-  public normalizePath(path: Path) {
-    const normalized = normalizePath(path);
-    const { prefix } = this;
-    return !prefix
-      ? normalized
-      : ([prefix] as (string | number)[]).concat(normalized);
-  }
-}
 
 /**
  * Interface to XAPI configurations.
  */
-export class Config extends mix(Component, Listenable, Gettable, Settable)
-  implements Component, Listenable, Gettable, Settable {
+export class Config extends Listenable(Settable(Gettable(Component))) {
   public prefix = 'Configuration';
 
   // fake mixins
@@ -46,17 +17,12 @@ export class Config extends mix(Component, Listenable, Gettable, Settable)
 
   public get!: <T = any>(path: Path) => Promise<T>;
   public set!: (path: Path, value: number | string) => Promise<any>;
-
-  constructor(public readonly xapi: XAPI) {
-    super();
-  }
 }
 
 /**
  * Interface to XAPI events.
  */
-export class Event extends mix(Component, Listenable)
-  implements Component, Listenable {
+export class Event extends Listenable(Component) {
   public prefix = 'Event';
 
   // fake mixins
@@ -65,17 +31,12 @@ export class Event extends mix(Component, Listenable)
   public on!: <T = any>(path: Path, listener: Listener<T>) => Registration;
   public once!: <T = any>(path: Path, listener: Listener<T>) => Registration;
   public off!: () => void;
-
-  constructor(readonly xapi: XAPI) {
-    super();
-  }
 }
 
 /**
  * Interface to XAPI statuses.
  */
-export class Status extends mix(Component, Listenable, Gettable)
-  implements Component, Listenable, Gettable {
+export class Status extends Listenable(Gettable(Component)) {
   public prefix = 'Status';
 
   // fake mixins
@@ -86,8 +47,4 @@ export class Status extends mix(Component, Listenable, Gettable)
   public off!: () => void;
 
   public get!: <T = any>(path: Path) => Promise<T>;
-
-  constructor(public readonly xapi: XAPI) {
-    super();
-  }
 }
