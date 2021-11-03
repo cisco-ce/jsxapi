@@ -22,7 +22,7 @@ export type FeedbackInterceptor =
 /**
  * Type representing a feedback id.
  */
-interface FeedbackId {
+export interface FeedbackId {
   Id: number;
 }
 

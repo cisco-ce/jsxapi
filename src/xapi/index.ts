@@ -11,7 +11,7 @@ import Feedback from './feedback';
 import createXapiProxy from './proxy';
 import { Path, XapiError, XapiOptions, XapiResponse } from './types';
 
-interface Requests {
+export interface Requests {
   [idx: string]: {
     resolve(result: any): void;
     reject(result: XapiError): void;
