@@ -1,6 +1,11 @@
 Changes
 -------
 
+##### v5.1.1 (2021-11-03)
+
+ * Update dependencies.
+ * Tweak mixing implementation.
+
 ##### v5.1.0 (2021-06-25)
 
  * Add schema tools.
