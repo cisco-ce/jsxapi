@@ -1,6 +1,11 @@
 Changes
 -------
 
+##### v5.1.0 (2021-06-25)
+
+ * Add schema tools.
+ * Support `SSH_AUTH_SOCK` for agent integration.
+
 ##### v5.0.3 (2020-03-16)
 
  * Add version string to XAPI instance.
