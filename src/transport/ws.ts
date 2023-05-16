@@ -1,5 +1,6 @@
 import Url from 'url-parse';
 
+import { Buffer } from 'buffer';
 import { Options } from '../types';
 
 export type CreateWebSocket = (url: string, auth: string) => WebSocket;
