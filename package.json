@@ -41,7 +41,7 @@
   "dependencies": {
     "@types/events": "^3.0.0",
     "buffer": "^6.0.3",
-    "commander": "^7.2.0",
+    "commander": "^10.0.1",
     "core-js": "^3.14.0",
     "duplex-passthrough": "^1.0.2",
     "duplexer": "^0.1.2",
