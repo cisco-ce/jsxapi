@@ -16,7 +16,7 @@ if (!(loglevel as any).isPatched) {
   Object.assign(loglevel, {
     isPatched: true,
 
-    methodFactory(methodName: string, logLevel: any, loggerName: string) {
+    methodFactory(methodName: loglevel.LogLevelNames, logLevel: any, loggerName: string) {
       if (loggerName) {
         loggers.add(loggerName);
       }
