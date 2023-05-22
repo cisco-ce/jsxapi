@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import commander from 'commander';
+import {Command, Option} from 'commander';
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -37,7 +37,8 @@ function startRepl(xapi: XAPI) {
  * See [[Options]] for options.
  */
 function main() {
-  commander
+  const program = new Command();
+  program
     .command('generate-api <hosts...>')
     .description('generate a typed XAPI based on schemas on <hosts>')
     .action(async (hosts) => {
@@ -48,7 +49,7 @@ function main() {
       xapis.forEach((xapi: XAPI) => xapi.close());
     });
 
-  commander
+  program
     .version(version)
     .arguments('<host> [file]')
     .description('connect to a codec and launch a repl')
@@ -56,16 +57,14 @@ function main() {
     .option('-U, --username <user>', 'username to authenticate with', 'admin')
     .option('-P, --password <password>', 'password to authenticate with', '')
     .option('-C, --command <command>', 'command to execute on remote host', '')
-    .option(
+    .addOption(new Option(
       '-l, --loglevel <level>',
-      'set application log level (trace|debug|info|warn|error|silent)',
-      /^(trace|debug|info|warn|error|silent)$/i,
-      'warn',
-    )
+      'set application log level',
+    ).default('warn').choices(['trace', 'debug', 'info', 'warn', 'error', 'silent']))
     .action((host, file, options) => {
       if (!host) {
         log.error('Please specify a host to connect to');
-        commander.help();
+        program.help();
       }
 
       const source = file && fs.readFileSync(file);

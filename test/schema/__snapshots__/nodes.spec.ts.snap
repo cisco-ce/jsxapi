@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`schema nodes Root can build entire module 1`] = `
-"import { XAPI, connectGen } from \\"jsxapi\\";
-import { Registration } from \\"jsxapi/lib/xapi/feedback\\";
+"import { XAPI, connectGen } from "jsxapi";
+import { Registration } from "jsxapi/lib/xapi/feedback";
 
 export class TypedXAPI extends XAPI {}
 

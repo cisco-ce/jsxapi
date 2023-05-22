@@ -1,6 +1,7 @@
 import { JSONParser } from '../json-parser';
 import log from '../log';
 import * as rpc from '../xapi/rpc';
+import { Buffer } from 'buffer';
 
 import { CloseableStream } from '../xapi/types';
 import Backend from './';
