@@ -58,7 +58,7 @@
   "devDependencies": {
     "@types/jest": "^29.5.1",
     "@types/ssh2": "^1.11.11",
-    "@types/url-parse": "^1.4.4",
+    "@types/url-parse": "^1.4.8",
     "@types/ws": "^7.4.7",
     "jest": "^29.5.0",
     "json-loader": "^0.5.4",
