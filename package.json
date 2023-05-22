@@ -50,7 +50,7 @@
     "loglevel": "^1.8.1",
     "redent": "^3.0.0",
     "ssh2": "^1.13.0",
-    "url-parse": "^1.5.3",
+    "url-parse": "^1.5.10",
     "ws": "^7.5.5",
     "xdg-basedir": "^4.0.0",
     "xml-escape": "^1.1.0"
