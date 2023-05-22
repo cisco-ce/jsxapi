@@ -18,10 +18,10 @@ describe('connectSSH', () => {
     logger.disableAll();
 
     client = new Client();
-    clientConnectStub = jest.spyOn(client, 'connect').mockImplementation(() => {});
-    clientShellStub = jest.spyOn(client, 'shell').mockImplementation(() => { return true; });
-    clientExecStub = jest.spyOn(client, 'exec').mockImplementation(() => { return true; });
-    clientEndStub = jest.spyOn(client, 'end').mockImplementation(() => {});
+    clientConnectStub = jest.spyOn(client, 'connect').mockImplementation(() => { return client; });
+    clientShellStub = jest.spyOn(client, 'shell').mockImplementation(() => { return client; });
+    clientExecStub = jest.spyOn(client, 'exec').mockImplementation(() => { return client; });
+    clientEndStub = jest.spyOn(client, 'end').mockImplementation(() => { return client; });
 
     dataSpy = jest.fn();
     errorSpy = jest.fn();
