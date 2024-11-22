@@ -1,6 +1,10 @@
 Changes
 -------
 
+##### v6.0.0 (2024-11-22)
+ * Update dependencies
+ * Remove support for nodejs <= 16
+
 ##### v5.1.1 (2021-11-03)
 
  * Update dependencies.
