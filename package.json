@@ -52,7 +52,7 @@
     "ssh2": "^1.13.0",
     "url-parse": "^1.5.10",
     "ws": "^8.18.0",
-    "xdg-basedir": "^4.0.0",
+    "xdg-basedir": "^5.1.0",
     "xml-escape": "^1.1.0"
   },
   "devDependencies": {
